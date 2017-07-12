@@ -11,24 +11,10 @@ namespace SocialManager_Server
     {
         private static void Main(String[] args)
         {
-            // Testing database
-            Models.ServerDatabase db = new Models.ServerDatabase();
-
-            if (db.DatabaseExists() == false)
+            foreach(Models.Client c in new Models.ServerDatabase().Clients)
             {
-                db.CreateDatabase();
+                Console.WriteLine(c.FirstName);
             }
-
-            db.Clients.InsertOnSubmit(new Models.Client() { FirstName = "Ester" });
-            db.Clients.InsertOnSubmit(new Models.Client() { FirstName = "Guillem" });
-
-            db.SubmitChanges();
-
-            foreach (Models.Client c in db.Clients)
-            {
-                Console.WriteLine(c.ClientID + " " + c.FirstName);
-            }
-
             Server server = new Server("Social Manager Server");
             server.MainLoop();
         }

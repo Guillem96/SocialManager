@@ -77,15 +77,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientsManagement.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="Models\ServerDatabase.cs" />
-    <Compile Include="Connections\PacketTypes.cs" />
-    <Compile Include="Packet.cs" />
+    <Compile Include="Packets\Packet.cs" />
+    <Compile Include="Packets\RegisterReqPacket.cs" />
+    <Compile Include="Packets\Types.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Connections\UDPConnection.cs" />
+    <Compile Include="XmlUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -11,7 +11,9 @@ namespace SocialManager_Server
 {
     class Server
     {
-
+        /// <summary>
+        /// Client status. Contains his alea and his current status
+        /// </summary>
         private class ClientStatus
         {
             internal enum Status { Disconnected, Alive, RegisterReq, LoginReq }
@@ -35,7 +37,6 @@ namespace SocialManager_Server
         private string name;
         private Connections.UDPConnection udp;
         private List<ClientStatus> clients;
-        private static IPEndPoint DefaultUdpEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 
         public Server(string name)
         {
@@ -57,7 +58,27 @@ namespace SocialManager_Server
         {
             while (true)
             {
+                // Recieve the packet
+                IPEndPoint tmp = new IPEndPoint(IPAddress.Any, 11000);
+                var data = udp.RecieveMessage(ref tmp);
 
+                // Read the type of the packet
+                var packet = Packets.Packet.Unpack(data);
+
+                // Depending on the type extract the remaning data
+                switch (packet.Type)
+                {
+                    case Packets.PacketTypes.RegisterReq:
+                        packet = Packets.RegisterReqPacket.Unpack(data);
+                        Console.WriteLine(packet.ToString());
+                        if (ClientsManagement.RegisterClient((Packets.RegisterReqPacket)packet))                       
+                            udp.SendMessage(Encoding.ASCII.GetBytes("Has sido registrado."), tmp);
+                        else
+                            udp.SendMessage(Encoding.ASCII.GetBytes("Error. No registrado."), tmp);
+
+                        
+                        break;
+                }
             }
         }
 
