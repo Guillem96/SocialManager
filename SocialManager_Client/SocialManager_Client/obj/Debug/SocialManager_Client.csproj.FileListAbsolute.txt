@@ -1,5 +1,0 @@
-C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager_Client\SocialManager_Client\bin\Debug\SocialManager_Client.exe.config
-C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager_Client\SocialManager_Client\bin\Debug\SocialManager_Client.exe
-C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager_Client\SocialManager_Client\bin\Debug\SocialManager_Client.pdb
-C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager_Client\SocialManager_Client\obj\Debug\SocialManager_Client.exe
-C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager_Client\SocialManager_Client\obj\Debug\SocialManager_Client.pdb
