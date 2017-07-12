@@ -1,0 +1,17 @@
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\SocialManager-Server.exe.config
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\SocialManager-Server.exe
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\SocialManager-Server.pdb
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\obj\Debug\SocialManager-Server.csprojResolveAssemblyReference.cache
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\obj\Debug\SocialManager-Server.exe
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\obj\Debug\SocialManager-Server.pdb
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\EntityFramework.dll
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\EntityFramework.xml
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\Microsoft.Data.Tools.Schema.Sql.dll
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\Microsoft.Data.Tools.Schema.Sql.UnitTesting.dll
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\Microsoft.Data.Tools.Schema.Sql.UnitTestingAdapter.dll
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\Microsoft.Data.Tools.Utilities.dll
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\Microsoft.SqlServer.TransactSql.ScriptDom.dll
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Guillem\Desktop\Curs C# ESPAI\ProyectoFinal\SocialManager-Server\SocialManager-Server\obj\Debug\SocialManager-Server.csproj.SocialManager-Server.exe.config
