@@ -14,5 +14,6 @@ namespace SocialManager_Server.Connections
     {
         public abstract void SendMessage(byte[] msg, IPEndPoint address);
         public abstract byte[] RecieveMessage(ref IPEndPoint address);
+        public abstract void SendError(string message, IPEndPoint addresss);
     }
 }

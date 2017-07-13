@@ -12,7 +12,7 @@ namespace SocialManager_Server
     /// </summary>
     static class ClientsManagement
     {
-        public static bool RegisterClient(Packets.RegisterReqPacket packet, IPEndPoint ip, out string message)
+        public static bool RegisterClient(Packets.ProfilePacket packet, IPEndPoint ip, out string message)
         {
             try
             {
@@ -59,6 +59,36 @@ namespace SocialManager_Server
                 return false;
             }
             
+        }
+
+        public static bool LoginClient(Packets.LoginReqPacket packet, ref Models.Client c, out string message)
+        {
+            try
+            {
+                using(Models.ServerDatabase db = new Models.ServerDatabase())
+                {
+                    c = db.Clients.Where(a => a.Username == packet.Username).First();
+                    // If user exists
+                    if (c == null)
+                    {
+                        message = "No user with " + packet.Username + " username in the database.";
+                        return false;
+                    }
+                    // if password is correct
+                    if(c.Password != packet.Password)
+                    {
+                        message = "Incorrect password.";
+                        return false;
+                    }
+                    message = "Cool!";
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                message = "Unexpected error.";
+                return false;
+            }
         }
     }
 }

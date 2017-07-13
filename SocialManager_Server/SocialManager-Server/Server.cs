@@ -40,15 +40,17 @@ namespace SocialManager_Server
             // Read the type of the packet
             var packet = Packets.Packet.Unpack<Packets.Packet>(data);
 
+            // Client who has send the request
+            Client current = null;
+            string message = "";
+
             // Depending on the type extract the remaning data
             switch ((Packets.PacketTypes)packet.Type)
             {
                 // Recieve a register request
                 case Packets.PacketTypes.RegisterReq:
-                    Packets.RegisterReqPacket regPacket = Packets.Packet.Unpack<Packets.RegisterReqPacket>(data);
-                    Console.WriteLine(packet.ToString());
-                    string message = "";
-
+                    Packets.ProfilePacket regPacket = Packets.Packet.Unpack<Packets.ProfilePacket>(data);
+                    Console.WriteLine(Encoding.ASCII.GetString(data));
                     // Send a package depending on registration success
                     if (ClientsManagement.RegisterClient(regPacket, tmp, out message))
                     {
@@ -58,7 +60,35 @@ namespace SocialManager_Server
                     }
                     else
                     {
-                        udp.SendMessage(new Packets.AckErrorPacket(Packets.PacketTypes.Error, message).Pack(), tmp);
+                        udp.SendError(message, tmp);
+                    }
+                    break;
+
+                // Recieve Login request
+                case Packets.PacketTypes.LoginReq:
+                    Packets.LoginReqPacket logPacket = Packets.Packet.Unpack<Packets.LoginReqPacket>(data);
+                    if(ClientsManagement.LoginClient(logPacket, ref current, out message))
+                    {
+                        // Client login 
+                        DebugInfo("Client " + current.ToString() + " is now logged in.");
+                        string alea = GenerateAlea();
+                        ChangeStatus(logPacket.Username, ClientStatus.Status.Logged, alea);
+                        // Send the profile info to client
+                        DebugInfo("Sending profile info to " + logPacket.Username + ".");
+                        udp.SendMessage(new Packets.ProfilePacket(
+                                                    Packets.PacketTypes.LoginAck,
+                                                    alea, // New alea generated
+                                                    current.FirstName,
+                                                    current.LastName,
+                                                    current.Age,
+                                                    current.PhoneNumber,
+                                                    current.Genre,
+                                                    current.Username,
+                                                    current.Password).Pack(), tmp);
+                    }
+                    else
+                    {
+                        udp.SendError(message, tmp);
                     }
                     break;
             }

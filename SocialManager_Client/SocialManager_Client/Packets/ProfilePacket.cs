@@ -14,7 +14,7 @@ namespace SocialManager_Client.Packets
     /// </summary>
     [Serializable]
     [XmlRoot(ElementName = "Packet")]
-    public class RegisterReqPacket : Packet
+    public class ProfilePacket : Packet
     {
         private string firstName;
         private string lastName;
@@ -42,12 +42,13 @@ namespace SocialManager_Client.Packets
         [XmlElement(ElementName = "Email")]
         public string Email { get => email; set => email = value; }
 
-        public RegisterReqPacket() : base()
+        public ProfilePacket() : base()
         {
 
         }
 
-        internal RegisterReqPacket(string alea,
+        internal ProfilePacket(PacketTypes type,
+                                    string alea,
                                     string firstName, 
                                     string lastName,
                                     int age,
@@ -55,7 +56,7 @@ namespace SocialManager_Client.Packets
                                     Profile.Sex genre,
                                     string username,
                                     string password,
-                                    string email) : base(PacketTypes.RegisterReq, alea)
+                                    string email) : base(type, alea)
         {
             this.FirstName = firstName;
             this.LastName = lastName;

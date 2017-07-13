@@ -48,5 +48,10 @@ namespace SocialManager_Server.Models
         public string Email { get => email; set => email = value; }
         [Column(CanBeNull = false)]
         public byte[] Ip { get => ip; set => ip = value; }
+
+        public override string ToString()
+        {
+            return Username + " - " + FirstName + " " + LastName;
+        }
     }
 }

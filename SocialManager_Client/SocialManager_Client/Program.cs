@@ -16,7 +16,7 @@ namespace SocialManager_Client
             return Console.ReadLine();
         }
 
-        static Profile AskProfile()
+        static void Register(Client c)
         {
             Profile p = new Profile();
             p.FirstName = Ask("First name: ");
@@ -27,23 +27,51 @@ namespace SocialManager_Client
             p.PhoneNumber = Ask("Phone number: ");
             p.Username = Ask("Usrname: ");
             p.Password = Ask("Password: ");
-            return p;
+
+            string message = "";
+
+            c.Register(p, out message);
+
+            Console.WriteLine(message);
+        }
+
+        static void Login(Client c)
+        {
+            string username = Ask("Username: ");
+            string password = Ask("Password: ");
+
+            string message = "";
+            c.Login(username, password, out message);
+            Console.WriteLine(message);
         }
 
         static void Main(string[] args)
         {
             
-
-            //Profile p = new Profile("Guillem", "Orellana", 21, "600886706", Profile.Sex.Male, "Guillem96", "1234", "guillem.orellana@gmail.com");
-
             Client c = new Client();
 
-            string msg;
+            while (true)
+            {
+                int op = int.Parse(Ask("1. Register" + Environment.NewLine +
+                                        "2. Login" + Environment.NewLine +
+                                        "3. Exit" + Environment.NewLine +
+                                        "Option: "));
 
-            c.Register(AskProfile(), out msg);
-
-            Console.WriteLine(msg);
-
+                switch (op)
+                {
+                    case 1:
+                        Register(c);
+                        break;
+                    case 2:
+                        Login(c);
+                        break;
+                    case 3:
+                        return;
+                }
+            }
+            
+            Register(c);
+            
             Console.Read();
         }
     }

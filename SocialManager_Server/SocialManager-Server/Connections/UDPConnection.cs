@@ -41,5 +41,11 @@ namespace SocialManager_Server.Connections
         {
             socket.Send(msg, msg.Length, address);
         }
+
+        public override void SendError(string message, IPEndPoint address)
+        {
+            byte[] packet = new Packets.AckErrorPacket(Packets.PacketTypes.Error, message).Pack();
+            SendMessage(packet, address);
+        }
     }
 }
