@@ -66,15 +66,10 @@ namespace SocialManager_Server.Packets
 
         public override string ToString()
         {
-            return base.ToString() + Environment.NewLine +
-                    "First name: " + FirstName + Environment.NewLine +
-                    "Last name: " + LastName + Environment.NewLine +
-                    "Age: " + Age + Environment.NewLine +
-                    "Phone number: " + PhoneNumber + Environment.NewLine +
-                    "Genre: " + Genre.ToString() + Environment.NewLine +
-                    "Email: " + Email + Environment.NewLine +
-                    "Username: " + Username + Environment.NewLine +
-                    "Password: " + Password;
+            return base.ToString() + String.Format(@", FirstName={0}, LastName={1}, Age={2}, PhoneNumber={3}
+                                       , Genre={4}, Email={5}, Username={6}, Password={7}]",
+                                       FirstName, LastName, Age, PhoneNumber, Genre.ToString(), Email,
+                                       Username, Password);
         }
     }
 }

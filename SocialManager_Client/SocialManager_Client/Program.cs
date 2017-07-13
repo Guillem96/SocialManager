@@ -10,6 +10,7 @@ namespace SocialManager_Client
 {
     class Program
     {
+        // This part won't exist in a few days, it's here only for testing
         private static string Ask(string msg)
         {
             Console.Write(msg);

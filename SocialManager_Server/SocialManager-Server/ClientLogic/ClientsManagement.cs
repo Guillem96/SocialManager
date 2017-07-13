@@ -5,27 +5,26 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocialManager_Server
+namespace SocialManager_Server.ClientLogic
 {
     /// <summary>
     /// Manage client requests
     /// </summary>
     static class ClientsManagement
     {
-        public static bool RegisterClient(Packets.ProfilePacket packet, IPEndPoint ip, out string message)
+        public static bool RegisterClient(Packets.ProfilePacket packet, IPEndPoint ip, ref Models.Client c, out string message)
         {
             try
             {
                 // Do checks before registering the user
                 if (!packet.Alea.Equals("0000000"))
                 {
-                    Console.WriteLine("Alea error.");
                     message = "Alea must be 7 0s";
                     return false;
                 }
 
                 // Declaring the new client
-                Models.Client c = new Models.Client()
+                c = new Models.Client()
                 {
                     FirstName = packet.FirstName,
                     LastName = packet.LastName,
@@ -41,9 +40,8 @@ namespace SocialManager_Server
                 // Open database and check if client already exists
                 using (Models.ServerDatabase db = new Models.ServerDatabase())
                 {
-                    if (db.Clients.Where(a => a.Username == c.Username).Count() != 0)
+                    if (db.Clients.Where(a => a.Username == packet.Username).Count() != 0)
                     {
-                        Console.WriteLine("Client is already registered.");
                         message = "Username " + c.Username + " already exists.";
                         return false;
                     }
@@ -67,13 +65,15 @@ namespace SocialManager_Server
             {
                 using(Models.ServerDatabase db = new Models.ServerDatabase())
                 {
-                    c = db.Clients.Where(a => a.Username == packet.Username).First();
+                    var cli = db.Clients.Where(a => a.Username == packet.Username);
                     // If user exists
-                    if (c == null)
+                    if (cli.Count() == 0)
                     {
                         message = "No user with " + packet.Username + " username in the database.";
                         return false;
                     }
+
+                    c = cli.First();
                     // if password is correct
                     if(c.Password != packet.Password)
                     {
@@ -89,6 +89,33 @@ namespace SocialManager_Server
                 message = "Unexpected error.";
                 return false;
             }
+        }
+
+        public static bool AliveClient(Packets.AlivePacket packet, ClientStatus current, out string message)
+        {
+            // No user in database
+            if (current == null)
+            {
+                message = "AliveInf: User not found in database.";
+                return false;
+            }
+
+            // Trying to send alive when disconnected
+            if (current.Stat == ClientStatus.Status.Disconnected)
+            {
+                message = "AliveInf: User is disconnected.";
+                return false;
+            }
+
+            // Incorrect alea number
+            if (!packet.Alea.Equals(current.Alea))
+            {
+                message = "AliveInf: Incorrect alea number.";
+                return false;
+            }
+
+            message = "Cool!";
+            return true;
         }
     }
 }

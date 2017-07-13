@@ -12,7 +12,7 @@ namespace SocialManager_Server
         private static void Main(String[] args)
         {
             // Start server
-            Server server = new Server("Social Manager server");
+            ServerLogic.Server server = new ServerLogic.Server("Social Manager server");
             server.MainLoop();
         }
     }

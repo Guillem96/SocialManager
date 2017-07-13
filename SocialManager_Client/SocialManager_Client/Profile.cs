@@ -51,5 +51,17 @@ namespace SocialManager_Client
             Password = password;
             Email = email;
         }
+
+        public void SetFromPacket(Packets.ProfilePacket p)
+        {     
+            FirstName = p.FirstName;
+            LastName = p.LastName;
+            PhoneNumber = p.PhoneNumber;
+            Age = p.Age;
+            Username = p.Username;
+            Password = p.Password;
+            Email = p.Email;
+            Genre = p.Genre;
+        }
     }
 }

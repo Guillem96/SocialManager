@@ -9,27 +9,23 @@ namespace SocialManager_Server.Packets
 {
     [Serializable]
     [XmlRoot(ElementName = "Packet")]
-    public class LoginReqPacket : Packet
+    public class AlivePacket : Packet
     {
         private string username;
-        private string password;
 
         [XmlElement(ElementName = "Username")]
         public string Username { get => username; set => username = value; }
-        [XmlElement(ElementName = "Password")]
-        public string Password { get => password; set => password = value; }
 
-        public LoginReqPacket() { }
+        public AlivePacket() : base() { }
 
-        internal LoginReqPacket(PacketTypes type, string alea, string username, string password) : base(type, alea)
+        internal AlivePacket(PacketTypes type, string alea, string username) : base(type, alea)
         {
             Username = username;
-            Password = password;
         }
 
         public override string ToString()
         {
-            return base.ToString() + ", Username=" + Username + ", Password=" + Password + "]";
+            return base.ToString() + ", Username=" + Username + "]";
         }
     }
 }

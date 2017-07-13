@@ -31,8 +31,8 @@ namespace SocialManager_Client.Packets
 
         public override string ToString()
         {
-            return base.ToString() + Environment.NewLine +
-                    Message;
+            return base.ToString() + ", Message=" + Message + "]";
+
         }
     }
 }

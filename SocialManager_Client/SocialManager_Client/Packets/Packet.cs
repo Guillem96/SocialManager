@@ -44,8 +44,7 @@ namespace SocialManager_Client.Packets
 
         public override string ToString()
         {
-            return "Type: " + ((PacketTypes)Type).ToString() + Environment.NewLine +
-                       "Alea: " + Alea;
+            return "[Type=" + ((Packets.PacketTypes)type).ToString() + ", Alea=" + Alea;
         }
     }
 }
