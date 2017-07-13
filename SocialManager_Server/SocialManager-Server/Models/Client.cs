@@ -4,9 +4,13 @@ using System.Linq;
 using System.Data.Linq.Mapping;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace SocialManager_Server.Models
 {
+    /// <summary>
+    /// Database models. Stores client information.
+    /// </summary>
     [Table(Name ="Clients")]
     class Client
     {
@@ -21,7 +25,9 @@ namespace SocialManager_Server.Models
         private Sex genre;
         private string username;
         private string password;
+        private byte[] ip; 
 
+        // Define columns
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int ClientID { get => clientID; set => clientID = value; }
         [Column(CanBeNull = false)]
@@ -40,5 +46,7 @@ namespace SocialManager_Server.Models
         internal Sex Genre { get => genre; set => genre = value; }
         [Column(CanBeNull = false)]
         public string Email { get => email; set => email = value; }
+        [Column(CanBeNull = false)]
+        public byte[] Ip { get => ip; set => ip = value; }
     }
 }

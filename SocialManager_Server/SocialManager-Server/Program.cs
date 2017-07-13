@@ -11,11 +11,14 @@ namespace SocialManager_Server
     {
         private static void Main(String[] args)
         {
-            foreach(Models.Client c in new Models.ServerDatabase().Clients)
+            // Show clients in database, only for testing
+            foreach (Models.Client c in new Models.ServerDatabase().Clients)
             {
                 Console.WriteLine(c.FirstName);
             }
-            Server server = new Server("Social Manager Server");
+
+            // Start server
+            Server server = new Server("Social Manager server");
             server.MainLoop();
         }
     }

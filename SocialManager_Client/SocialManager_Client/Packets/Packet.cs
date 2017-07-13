@@ -12,11 +12,11 @@ namespace SocialManager_Client.Packets
     [Serializable]
     public class Packet
     {
-        internal PacketTypes type;
+        internal byte type;
         protected string alea;
 
         [XmlElement(ElementName = "Type")]
-        internal PacketTypes Type { get => type; set => type = value; }
+        public byte Type { get => type; set => type = value; }
         [XmlElement(ElementName = "Alea")]
         public string Alea { get => alea; set => alea = value; }
 
@@ -28,7 +28,7 @@ namespace SocialManager_Client.Packets
         internal Packet(PacketTypes type, string alea)
         {
             this.Alea = alea;
-            this.Type = type;
+            this.Type = (byte)type;
         }
 
         public virtual byte[] Pack()
@@ -36,15 +36,16 @@ namespace SocialManager_Client.Packets
             return Encoding.ASCII.GetBytes(this.XmlSerializeToString());
         }
 
-        public static Packet Unpack(byte[] bytes)
+        public static T Unpack<T>(byte[] bytes)
         {
-            return XmlUtilities.XmlDeserializeFromString<Packet>
-                                                            (Encoding.ASCII.GetString(bytes));
+            return XmlUtilities.XmlDeserializeFromString<T>
+                                                    (Encoding.ASCII.GetString(bytes));
         }
 
         public override string ToString()
         {
-            return "Type: " + Type.ToString();
+            return "Type: " + ((PacketTypes)Type).ToString() + Environment.NewLine +
+                       "Alea: " + Alea;
         }
     }
 }

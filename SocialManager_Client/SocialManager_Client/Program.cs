@@ -10,24 +10,39 @@ namespace SocialManager_Client
 {
     class Program
     {
+        private static string Ask(string msg)
+        {
+            Console.Write(msg);
+            return Console.ReadLine();
+        }
+
+        static Profile AskProfile()
+        {
+            Profile p = new Profile();
+            p.FirstName = Ask("First name: ");
+            p.LastName = Ask("Last name: ");
+            p.Age = int.Parse(Ask("Age: "));
+            p.Genre = Ask("Genre (M o F): ").Equals("M") ? Profile.Sex.Male : Profile.Sex.Female;
+            p.Email = Ask("Email: ");
+            p.PhoneNumber = Ask("Phone number: ");
+            p.Username = Ask("Usrname: ");
+            p.Password = Ask("Password: ");
+            return p;
+        }
+
         static void Main(string[] args)
         {
-            // Testing register
-            var client = new UdpClient();
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 11000); // endpoint where server is listening
-            client.Connect(ep);
+            
 
-            Packets.RegisterReqPacket reg = 
-                        new Packets.RegisterReqPacket("0000000", "Guillem", "Orellana", 21, "600886706", Profile.Sex.Male, "Guillem96", "1234", "guillem.orellana@gmail.com");
-            //Console.WriteLine(Packets.RegisterReqPacket.Unpack(reg.Pack()).ToString());
-            //// send data
-            byte[] data = Encoding.ASCII.GetBytes(reg.XmlSerializeToString());
-            client.Send(data, data.Length);
+            //Profile p = new Profile("Guillem", "Orellana", 21, "600886706", Profile.Sex.Male, "Guillem96", "1234", "guillem.orellana@gmail.com");
 
-            //// then receive data
-            var receivedData = client.Receive(ref ep);
+            Client c = new Client();
 
-            Console.Write(Encoding.ASCII.GetString(receivedData));
+            string msg;
+
+            c.Register(AskProfile(), out msg);
+
+            Console.WriteLine(msg);
 
             Console.Read();
         }

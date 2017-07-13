@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace SocialManager_Server.Models
 {
+    /// <summary>
+    /// The database.
+    /// </summary>
     class ServerDatabase : DataContext
     {
+        // Clients table
         public Table<Client> Clients;
 
         public ServerDatabase() : base(@"Data Source=.\SQLEXPRESS;

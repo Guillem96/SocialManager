@@ -4,92 +4,69 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using SocialManager_Server.Models;
 
 namespace SocialManager_Server
 {
-    class Server
+    class Server : SuperSever
     {
-        /// <summary>
-        /// Client status. Contains his alea and his current status
-        /// </summary>
-        private class ClientStatus
+        public Server(string name) : base(name)
         {
-            internal enum Status { Disconnected, Alive, RegisterReq, LoginReq }
-
-            private Client client;
-            private Status stat;
-            private string alea;
-
-            public Client Client { get => client; set => client = value; }
-            public Status Stat { get => stat; set => stat = value; }
-            public string Alea { get => alea; set => alea = value; }
-
-            ClientStatus(Client cli, Status stat = Status.Disconnected)
-            {
-                Client = cli;
-                Alea = new Random(DateTime.Now.Millisecond).Next(0, 9999999).ToString();
-                Stat = stat; 
-            }
-        }
-
-        private string name;
-        private Connections.UDPConnection udp;
-        private List<ClientStatus> clients;
-
-        public Server(string name)
-        {
-            this.name = name;
-            udp = new Connections.UDPConnection(11000);
-        }
-
-
-        public void MainLoop()
-        {
-            Console.WriteLine("Server is running...");
-            UDP();
         }
 
         /// <summary>
         /// Used for accepting connections and registering clients
         /// </summary>
-        private void UDP()
+        protected override void UDP()
         {
+            DebugInfo("UDP connection started.");
             while (true)
             {
-                // Recieve the packet
+                // Recieve the packet; TODO: Read the port from file
+                DebugInfo("Waiting UDP requests.");
                 IPEndPoint tmp = new IPEndPoint(IPAddress.Any, 11000);
                 var data = udp.RecieveMessage(ref tmp);
 
-                // Read the type of the packet
-                var packet = Packets.Packet.Unpack(data);
-
-                // Depending on the type extract the remaning data
-                switch (packet.Type)
-                {
-                    case Packets.PacketTypes.RegisterReq:
-                        packet = Packets.RegisterReqPacket.Unpack(data);
-                        Console.WriteLine(packet.ToString());
-                        if (ClientsManagement.RegisterClient((Packets.RegisterReqPacket)packet))                       
-                            udp.SendMessage(Encoding.ASCII.GetBytes("Has sido registrado."), tmp);
-                        else
-                            udp.SendMessage(Encoding.ASCII.GetBytes("Error. No registrado."), tmp);
-
-                        
-                        break;
-                }
+                // New request
+                DebugInfo("Crearting new thread.");
+                Thread t = new Thread(() => UdpRequests(data, tmp));
+                t.Start();
             }
         }
 
-        /// <summary>
-        /// Used for chat.
-        /// </summary>
-        private void TCP()
+        private void UdpRequests(byte[] data, IPEndPoint tmp)
         {
+            // Read the type of the packet
+            var packet = Packets.Packet.Unpack<Packets.Packet>(data);
 
+            // Depending on the type extract the remaning data
+            switch ((Packets.PacketTypes)packet.Type)
+            {
+                // Recieve a register request
+                case Packets.PacketTypes.RegisterReq:
+                    Packets.RegisterReqPacket regPacket = Packets.Packet.Unpack<Packets.RegisterReqPacket>(data);
+                    Console.WriteLine(packet.ToString());
+                    string message = "";
+
+                    // Send a package depending on registration success
+                    if (ClientsManagement.RegisterClient(regPacket, tmp, out message))
+                    {
+                        udp.SendMessage(new Packets.AckErrorPacket(Packets.PacketTypes.RegisterAck,
+                                                                    "Congratulations now you are registered.").Pack(), tmp);
+                        DebugInfo(regPacket.FirstName + " " + regPacket.LastName + " has been registered as " + regPacket.Username);
+                    }
+                    else
+                    {
+                        udp.SendMessage(new Packets.AckErrorPacket(Packets.PacketTypes.Error, message).Pack(), tmp);
+                    }
+                    break;
+            }
         }
 
-
+        protected override void TCP()
+        {
+            return;
+        }
     }
 }

@@ -10,6 +10,9 @@ using SocialManager_Server.Models;
 
 namespace SocialManager_Server.Packets
 {
+    /// <summary>
+    /// Package sended by the client in order to register
+    /// </summary>
     [SerializableAttribute]
     [XmlRoot(ElementName = "Packet")]
     public class RegisterReqPacket : Packet
@@ -59,17 +62,6 @@ namespace SocialManager_Server.Packets
             this.Genre = genre;
             this.Username = username;
             this.Password = password;
-        }
-
-        public override byte[] Pack()
-        {
-            return Encoding.ASCII.GetBytes(this.XmlSerializeToString());
-        }
-
-        public static new RegisterReqPacket Unpack(byte[] bytes)
-        {
-            return XmlUtilities.XmlDeserializeFromString<RegisterReqPacket>
-                                                            (Encoding.ASCII.GetString(bytes));
         }
 
         public override string ToString()

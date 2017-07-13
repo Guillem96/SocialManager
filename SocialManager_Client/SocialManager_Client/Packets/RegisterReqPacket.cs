@@ -67,20 +67,10 @@ namespace SocialManager_Client.Packets
             Email = email;
         }
 
-        public override byte[] Pack()
-        {
-            return Encoding.ASCII.GetBytes(this.XmlSerializeToString());
-        }
-
-        public static new RegisterReqPacket Unpack(byte[] bytes)
-        {
-            return XmlUtilities.XmlDeserializeFromString<RegisterReqPacket>
-                                                            (Encoding.ASCII.GetString(bytes));
-        }
-
         public override string ToString()
         {
-            return "First name: " + FirstName + Environment.NewLine +
+            return base.ToString() + Environment.NewLine +
+                    "First name: " + FirstName + Environment.NewLine +
                     "Last name: " + LastName + Environment.NewLine +
                     "Age: " + Age + Environment.NewLine +
                     "Phone number: " + PhoneNumber + Environment.NewLine +
