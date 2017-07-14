@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Net;
+using System.Text;
 using System.Timers;
 
 namespace SocialManager_Client
 {
-    class Client
+    public class Client
     {
         private Connections.UDPConnection udp;
         private Profile profile;
@@ -26,7 +27,7 @@ namespace SocialManager_Client
             aliveTimer.Enabled = false;
         }
 
-        public bool Register(Profile newProfile, out string message)
+        internal bool Register(Profile newProfile, out string message)
         {
             try
             {
@@ -96,7 +97,6 @@ namespace SocialManager_Client
 
                 // Recieve the data
                 var data = udp.RecieveMessage();
-
                 // Unpack the data and check the type
                 Packets.Packet p = Packets.Packet.Unpack<Packets.Packet>(data);
                 switch ((Packets.PacketTypes)p.Type)

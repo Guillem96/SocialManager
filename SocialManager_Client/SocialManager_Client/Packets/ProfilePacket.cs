@@ -24,6 +24,7 @@ namespace SocialManager_Client.Packets
         private string username;
         private string password;
         private string email;
+        private List<Profile> contacts;
 
         [XmlElement(ElementName = "FirsName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -41,6 +42,9 @@ namespace SocialManager_Client.Packets
         public string Password { get => password; set => password = value; }
         [XmlElement(ElementName = "Email")]
         public string Email { get => email; set => email = value; }
+        [XmlArray("ContactsArray")]
+        [XmlArrayItem("Contacts")]
+        public List<Profile> Contacts { get => contacts; set => contacts = value; }
 
         public ProfilePacket() : base()
         {

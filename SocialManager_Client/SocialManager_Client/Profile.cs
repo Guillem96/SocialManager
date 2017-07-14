@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SocialManager_Client
 {
     /// <summary>
     /// Client profile
     /// </summary>
-    class Profile
+    [Serializable]
+    [XmlRoot("Profile")]
+    public class Profile
     {
         internal enum Sex { Male, Female }
 
@@ -21,26 +25,38 @@ namespace SocialManager_Client
         private string username;
         private string password;
         private string email;
+        private List<Profile> contacts;
 
+        [XmlElement("FirstName")]
         public string FirstName { get => firstName; set => firstName = value; }
+        [XmlElement("LastName")]
         public string LastName { get => lastName; set => lastName = value; }
+        [XmlElement("Age")]
         public int Age { get => age; set => age = value; }
+        [XmlElement("PhoneNumber")]
         public string PhoneNumber { get => phoneNumber; set => phoneNumber = value; }
+        [XmlElement("Genre")]
         internal Sex Genre { get => genre; set => genre = value; }
+        [XmlElement("Username")]
         public string Username { get => username; set => username = value; }
+        [XmlElement("Password")]
         public string Password { get => password; set => password = value; }
+        [XmlElement("Email")]
         public string Email { get => email; set => email = value; }
+        [XmlIgnore]
+        public List<Profile> Contacts { get => contacts; set => contacts = value; }
 
         public Profile() { }
 
-        public Profile(string firstName, 
+        internal Profile(string firstName, 
                         string lastName, 
                         int age, 
                         string phoneNumber, 
                         Sex genre, 
                         string username, 
                         string password,
-                        string email)
+                        string email,
+                        List<Profile> contacts)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -50,6 +66,7 @@ namespace SocialManager_Client
             Username = username;
             Password = password;
             Email = email;
+            Contacts = contacts;
         }
 
         public void SetFromPacket(Packets.ProfilePacket p)
@@ -62,6 +79,7 @@ namespace SocialManager_Client
             Password = p.Password;
             Email = p.Email;
             Genre = p.Genre;
+            Contacts = p.Contacts;
         }
     }
 }

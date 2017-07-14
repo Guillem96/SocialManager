@@ -14,6 +14,8 @@ namespace SocialManager_Server.Models
     {
         // Clients table
         public Table<Client> Clients;
+        public Table<Contact> Contacts;
+
 
         public ServerDatabase() : base(@"Data Source=.\SQLEXPRESS;
                                         AttachDbFilename=" + 

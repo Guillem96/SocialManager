@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using SocialManager_Server.Models;
+using System.Data.Linq;
 
 namespace SocialManager_Server.Packets
 {
@@ -25,6 +26,8 @@ namespace SocialManager_Server.Packets
         private string username;
         private string password;
         private string email;
+        private List<Client> contacts;
+
 
         [XmlElement(ElementName = "FirsName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -42,6 +45,9 @@ namespace SocialManager_Server.Packets
         public string Password { get => password; set => password = value; }
         [XmlElement(ElementName = "Email")]
         public string Email { get => email; set => email = value; }
+        [XmlArray("Contacts")]
+        [XmlArrayItem("ContactsItem")]
+        public List<Client> Contacts { get => contacts; set => contacts = value; }
 
         public ProfilePacket() : base() { }
 
@@ -53,15 +59,18 @@ namespace SocialManager_Server.Packets
                                     string phoneNumber,
                                     Client.Sex genre,
                                     string username,
-                                    string password) : base(type, alea)
+                                    string password,
+                                    List<Client> contacts
+                                    ) : base(type, alea)
         {
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Age = age;
-            this.PhoneNumber = phoneNumber;
-            this.Genre = genre;
-            this.Username = username;
-            this.Password = password;
+            FirstName = firstName;
+            LastName = lastName;
+            Age = age;
+            PhoneNumber = phoneNumber;
+            Genre = genre;
+            Username = username;
+            Password = password;
+            Contacts = contacts;
         }
 
         public override string ToString()

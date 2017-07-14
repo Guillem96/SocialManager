@@ -61,7 +61,19 @@ namespace SocialManager_Server.ServerLogic
                 server.ChangeStatus(logPacket.Username, ClientStatus.Status.Logged, alea, DateTime.Now);
                 // Send the profile info of the database to client
                 server.DebugInfo("Sending profile info to " + logPacket.Username + ".");
-                server.Udp.SendMessage(new Packets.ProfilePacket(
+                using (var db = new Models.ServerDatabase())
+                {
+                    List<Models.Client> contacts = 
+                                            db.Contacts
+                                                .Where(c => c.Client1.Username == current.Username || c.Client2.Username == current.Username)
+                                                .Select(c => c.Client1.Username == current.Username ? c.Client2 : c.Client1).ToList();
+
+                    foreach (Models.Contact c in db.Contacts)
+                    {
+                        Console.WriteLine(c.ToString());
+                    }
+
+                    server.Udp.SendMessage(new Packets.ProfilePacket(
                                             Packets.PacketTypes.LoginAck,
                                             alea, // New alea generated
                                             current.FirstName,
@@ -70,7 +82,11 @@ namespace SocialManager_Server.ServerLogic
                                             current.PhoneNumber,
                                             current.Genre,
                                             current.Username,
-                                            current.Password).Pack(), ip);
+                                            current.Password,
+                                            contacts
+                                            ).Pack(), ip);
+                }
+                
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -74,8 +75,9 @@ namespace SocialManager_Server.ClientLogic
                     }
 
                     c = cli.First();
+
                     // if password is correct
-                    if(c.Password != packet.Password)
+                    if (c.Password != packet.Password)
                     {
                         message = "Incorrect password.";
                         return false;
