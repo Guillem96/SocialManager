@@ -27,4 +27,4 @@ TweetinviAPI                        {1.2.0.1}                                Soc
 
 ## Authors
 
-* **Guillem Orellana Trullols** - [PurpleBooth](https://github.com/Guillem96)
+* **Guillem Orellana Trullols** - [Guillem96](https://github.com/Guillem96)
