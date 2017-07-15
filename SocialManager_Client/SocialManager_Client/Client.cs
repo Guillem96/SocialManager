@@ -12,12 +12,14 @@ namespace SocialManager_Client
         private string alea;
         private Timer aliveTimer;
 
+        public Profile Profile { get => profile; set => profile = value; }
+
         public Client()
         {
             // TODO: Read server info from a file
             udp = new Connections.UDPConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 11000));
             alea = "0000000";
-            profile = new Profile();
+            Profile = new Profile();
 
             // Set timer to send alives every 5 seconds.
             // Timer will be enabled afer logging
@@ -104,7 +106,7 @@ namespace SocialManager_Client
                     case Packets.PacketTypes.LoginAck:
                         // Complete login
                         Packets.ProfilePacket profileP = Packets.Packet.Unpack<Packets.ProfilePacket>(data);
-                        profile.SetFromPacket(profileP);
+                        Profile.SetFromPacket(profileP);
                         alea = p.Alea;
                         DebugInfo("Login: Done.");
                         DebugInfo("Login: Alive timer is enabled.");
@@ -138,7 +140,7 @@ namespace SocialManager_Client
                 byte[] alive = new Packets.AlivePacket(
                                                     Packets.PacketTypes.AliveInf,
                                                     alea,
-                                                    profile.Username
+                                                    Profile.Username
                                                     ).Pack();
 
                 // Send alive packet

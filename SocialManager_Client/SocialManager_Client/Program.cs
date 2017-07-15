@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
-[assembly: InternalsVisibleTo("Program.XmlSerializers")]
 
 namespace SocialManager_Client
 {
@@ -39,19 +36,48 @@ namespace SocialManager_Client
             Console.WriteLine(message);
         }
 
-        static void Login(Client c)
+        static bool Login(Client c)
         {
             string username = Ask("Username: ");
             string password = Ask("Password: ");
 
             string message = "";
-            c.Login(username, password, out message);
+            bool res = c.Login(username, password, out message);
             Console.WriteLine(message);
+            return res;
         }
 
+        static void Alive(Client c)
+        {
+            // Until Logout
+            while (true)
+            {
+                int op = int.Parse(Ask("1. Logout" + Environment.NewLine +
+                                        "2. Show Profile" + Environment.NewLine +
+                                        "3. Add Contact (Not implemented)" + Environment.NewLine +
+                                        "4. Send Message (Not implemented)" + Environment.NewLine +
+                                        "Option: "));
+
+                switch (op)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        Console.WriteLine(c.Profile.ToString());
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    default:
+                        Console.WriteLine("Unexpected option.");
+                        break;
+                }
+            }
+        }
         static void Main(string[] args)
         {
-            
+
             Client c = new Client();
 
             while (true)
@@ -67,15 +93,16 @@ namespace SocialManager_Client
                         Register(c);
                         break;
                     case 2:
-                        Login(c);
+                        if (Login(c))
+                        {
+                            Alive(c);
+                        }
                         break;
                     case 3:
                         return;
                 }
             }
-            
-            Register(c);
-            
+
             Console.Read();
         }
     }

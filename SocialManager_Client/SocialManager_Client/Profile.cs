@@ -81,5 +81,17 @@ namespace SocialManager_Client
             Genre = p.Genre;
             Contacts = p.Contacts;
         }
+
+        public override string ToString()
+        {
+            return "First Name: " + FirstName + Environment.NewLine +
+                    "Last Name: " + LastName + Environment.NewLine +
+                    "Age: " + Age + Environment.NewLine +
+                    "Phone Number: " + PhoneNumber + Environment.NewLine +
+                    "Username: " + Username + Environment.NewLine +
+                    "Email: " + Email + Environment.NewLine +
+                    "Genre: " + Genre.ToString() + Environment.NewLine +
+                    "Contacts: " + String.Join(Environment.NewLine + "\t", Contacts.Select(c=> c.Username));
+        }
     }
 }
