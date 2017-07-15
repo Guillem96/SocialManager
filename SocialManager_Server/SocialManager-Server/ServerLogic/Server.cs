@@ -56,6 +56,11 @@ namespace SocialManager_Server.ServerLogic
                 case Packets.PacketTypes.AliveInf:
                     UdpUtilities.Alive(data, tmp, this);
                     break;
+
+                // Recieve Logout Request
+                case Packets.PacketTypes.LogoutReq:
+                    UdpUtilities.Logout(data, tmp, this);
+                    break;
             }
         }
 

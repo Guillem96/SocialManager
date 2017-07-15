@@ -11,10 +11,12 @@ namespace SocialManager_Server.Packets
                           RegisterReq = 0x00
                         , LoginReq = 0x02
                         , AliveInf = 0x04
+                        , LogoutReq = 0x06
                           // Server side
                         , RegisterAck = 0x01
                         , LoginAck = 0x03
                         , AliveAck = 0x05
+                        , LogoutAck = 0x07
                         // Both
                         , Error = 0x99
                         ,

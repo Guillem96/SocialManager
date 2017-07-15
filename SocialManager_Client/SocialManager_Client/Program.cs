@@ -49,6 +49,7 @@ namespace SocialManager_Client
 
         static void Alive(Client c)
         {
+            string message = "";
             // Until Logout
             while (true)
             {
@@ -61,6 +62,15 @@ namespace SocialManager_Client
                 switch (op)
                 {
                     case 1:
+                        if(c.Logout(out message))
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            Console.WriteLine(message);
+                        }
+
                         break;
                     case 2:
                         Console.WriteLine(c.Profile.ToString());

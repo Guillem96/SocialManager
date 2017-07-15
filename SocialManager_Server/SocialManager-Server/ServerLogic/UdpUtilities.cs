@@ -23,7 +23,7 @@ namespace SocialManager_Server.ServerLogic
             server.DebugInfo("Register request recieved.");
             server.DebugInfo("RegisterReq Packet: " + regPacket.ToString());
             // Send a package depending on registration success
-            if (ClientsManagement.RegisterClient(regPacket, ip, ref current, out message))
+            if (ClientsManagement.RegisterClient(regPacket, ip, current, out message))
             {
                 // Send RegisterAck if all data is correct
                 server.Udp.SendMessage(new AckErrorPacket(
@@ -68,11 +68,7 @@ namespace SocialManager_Server.ServerLogic
                                                 .Where(c => c.Client1.Username == current.Username || c.Client2.Username == current.Username)
                                                 .Select(c => c.Client1.Username == current.Username ? c.Client2 : c.Client1).ToList();
 
-                    foreach (Models.Contact c in db.Contacts)
-                    {
-                        Console.WriteLine(c.ToString());
-                    }
-
+                    // Return user profile with the ack
                     server.Udp.SendMessage(new Packets.ProfilePacket(
                                             Packets.PacketTypes.LoginAck,
                                             alea, // New alea generated
@@ -95,13 +91,42 @@ namespace SocialManager_Server.ServerLogic
             }
         }
 
+        public static void Logout(byte[] data, IPEndPoint ip, Server server)
+        {
+            string message = "";
+
+            // Use alive packet because contains the same info as a logoutReq packet.
+            AlivePacket logoutPacket = Packet.Unpack<AlivePacket>(data);
+
+            server.DebugInfo("Logut request recieved.");
+            server.DebugInfo("LogoutReq Packet: " + logoutPacket.ToString());
+
+            ClientStatus current = server.GetClient(logoutPacket.Username);
+
+            if(ClientsManagement.LogoutClient(logoutPacket, current, out message))
+            {
+                server.DebugInfo("Logout: Correct logut from " + logoutPacket.Username);
+                server.DebugInfo(logoutPacket.Username + " now is disconnected.");
+                current.Disconnect();
+
+                // Return ack
+                server.Udp.SendMessage(new AckErrorPacket(PacketTypes.LogoutAck, "Logged out correctly.").Pack(), ip);
+            }
+            else
+            {
+                server.DebugInfo("Logout: Incorrect logut.");
+                // Send error
+                server.Udp.SendError(message, ip);
+            }
+        }
+
         public static void Alive(byte[] data, IPEndPoint ip, Server server)
         {
             string message = "";
 
             AlivePacket aPacket = Packet.Unpack<AlivePacket>(data);
 
-            server.DebugInfo("Alive infrecieved.");
+            server.DebugInfo("Alive inf recieved.");
             server.DebugInfo("AliveInf Packet: " + aPacket.ToString());
 
             ClientStatus current = server.GetClient(aPacket.Username);
@@ -111,11 +136,11 @@ namespace SocialManager_Server.ServerLogic
                 // Save the last alive
                 current.LastAlive = DateTime.Now;
                 // Send ack
-                server.Udp.SendMessage(new AlivePacket(PacketTypes.AliveAck, aPacket.Alea, aPacket.Username).Pack(), ip);
+                server.Udp.SendMessage(new AckErrorPacket(PacketTypes.AliveAck, "Alive correct").Pack(), ip);
             }
             else
             {
-                server.DebugInfo("Alive: Incorrect alea number from " + aPacket.Username);
+                server.DebugInfo("Alive: Incorrect alive from " + aPacket.Username);
                 server.DebugInfo(aPacket.Username + " now is disconnected.");
                 // Disconnect the client
                 current.Disconnect();

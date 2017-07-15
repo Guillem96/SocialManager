@@ -13,7 +13,7 @@ namespace SocialManager_Server.ClientLogic
     /// </summary>
     static class ClientsManagement
     {
-        public static bool RegisterClient(Packets.ProfilePacket packet, IPEndPoint ip, ref Models.Client c, out string message)
+        public static bool RegisterClient(Packets.ProfilePacket packet, IPEndPoint ip, Models.Client c, out string message)
         {
             try
             {
@@ -93,26 +93,50 @@ namespace SocialManager_Server.ClientLogic
             }
         }
 
+        public static bool LogoutClient(Packets.AlivePacket packet, ClientStatus current, out string message)
+        {
+            bool res = CheckBasics(current, ClientStatus.Status.Disconnected, packet.Alea, out message);
+
+            if (!res)
+            {
+                message = "Logout Error: " + message;
+            }
+
+            return res;
+        }
+
         public static bool AliveClient(Packets.AlivePacket packet, ClientStatus current, out string message)
+        {
+            bool res = CheckBasics(current, ClientStatus.Status.Disconnected, packet.Alea, out message);
+
+            if (!res)
+            {
+                message = "AliveInf Error: " + message;
+            }
+
+            return res;
+        }
+
+        private static bool CheckBasics(ClientStatus current, ClientStatus.Status equalsTo, string alea,out string message)
         {
             // No user in database
             if (current == null)
             {
-                message = "AliveInf: User not found in database.";
+                message = "User not found in database.";
                 return false;
             }
 
             // Trying to send alive when disconnected
-            if (current.Stat == ClientStatus.Status.Disconnected)
+            if (current.Stat == equalsTo)
             {
-                message = "AliveInf: User is disconnected.";
+                message = "User is disconnected.";
                 return false;
             }
 
             // Incorrect alea number
-            if (!packet.Alea.Equals(current.Alea))
+            if (!alea.Equals(current.Alea))
             {
-                message = "AliveInf: Incorrect alea number.";
+                message = "Incorrect alea number.";
                 return false;
             }
 
