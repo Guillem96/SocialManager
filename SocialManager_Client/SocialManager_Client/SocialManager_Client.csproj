@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="Connections\Connection.cs" />
+    <Compile Include="Contact.cs" />
     <Compile Include="Packets\AckErrorPacket.cs" />
     <Compile Include="Packets\AlivePacket.cs" />
     <Compile Include="Packets\LoginReqPacket.cs" />

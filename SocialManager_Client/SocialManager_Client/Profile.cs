@@ -25,7 +25,7 @@ namespace SocialManager_Client
         private string username;
         private string password;
         private string email;
-        private List<Profile> contacts;
+        private List<Contact> contacts;
 
         [XmlElement("FirstName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -44,7 +44,7 @@ namespace SocialManager_Client
         [XmlElement("Email")]
         public string Email { get => email; set => email = value; }
         [XmlIgnore]
-        public List<Profile> Contacts { get => contacts; set => contacts = value; }
+        public List<Contact> Contacts { get => contacts; set => contacts = value; }
 
         public Profile() { }
 
@@ -56,7 +56,7 @@ namespace SocialManager_Client
                         string username, 
                         string password,
                         string email,
-                        List<Profile> contacts)
+                        List<Contact> contacts)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -91,7 +91,7 @@ namespace SocialManager_Client
                     "Username: " + Username + Environment.NewLine +
                     "Email: " + Email + Environment.NewLine +
                     "Genre: " + Genre.ToString() + Environment.NewLine +
-                    "Contacts: " + String.Join(Environment.NewLine + "\t", Contacts.Select(c=> c.Username));
+                    "Contacts: " + String.Join(Environment.NewLine + "\t", Contacts.Select(c=> c.Profile.Username));
         }
     }
 }

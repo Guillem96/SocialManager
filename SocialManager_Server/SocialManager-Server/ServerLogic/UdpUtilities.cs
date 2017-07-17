@@ -63,23 +63,25 @@ namespace SocialManager_Server.ServerLogic
                 server.DebugInfo("Sending profile info to " + logPacket.Username + ".");
                 using (var db = new Models.ServerDatabase())
                 {
-                    List<Models.Client> contacts = 
-                                            db.Contacts
-                                                .Where(c => c.Client1.Username == current.Username || c.Client2.Username == current.Username)
-                                                .Select(c => c.Client1.Username == current.Username ? c.Client2 : c.Client1).ToList();
+                    List<string> contactsUsername = 
+                                    db.Contacts
+                                        .Where(c => c.Client1.Username == current.Username || c.Client2.Username == current.Username)
+                                        .Select(c => c.Client1.Username == current.Username ? c.Client2.Username : c.Client1.Username).ToList();
 
+                    List<ClientStatus> contacts = contactsUsername.Select(c => server.GetClient(c)).ToList();
+                    
                     // Return user profile with the ack
                     server.Udp.SendMessage(new Packets.ProfilePacket(
-                                            Packets.PacketTypes.LoginAck,
-                                            alea, // New alea generated
-                                            current.FirstName,
-                                            current.LastName,
-                                            current.Age,
-                                            current.PhoneNumber,
-                                            current.Genre,
-                                            current.Username,
-                                            current.Password,
-                                            contacts
+                                                Packets.PacketTypes.LoginAck,
+                                                alea, // New alea generated
+                                                current.FirstName,
+                                                current.LastName,
+                                                current.Age,
+                                                current.PhoneNumber,
+                                                current.Genre,
+                                                current.Username,
+                                                current.Password,
+                                                contacts
                                             ).Pack(), ip);
                 }
                 

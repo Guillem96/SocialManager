@@ -14,7 +14,7 @@ namespace SocialManager_Server.Packets
     /// <summary>
     /// Package sended by the client in order to register
     /// </summary>
-    [SerializableAttribute]
+    [Serializable]
     [XmlRoot(ElementName = "Packet")]
     public class ProfilePacket : Packet
     {
@@ -26,7 +26,7 @@ namespace SocialManager_Server.Packets
         private string username;
         private string password;
         private string email;
-        private List<Client> contacts;
+        private List<ClientLogic.ClientStatus> contacts;
 
 
         [XmlElement(ElementName = "FirsName")]
@@ -47,7 +47,7 @@ namespace SocialManager_Server.Packets
         public string Email { get => email; set => email = value; }
         [XmlArray("Contacts")]
         [XmlArrayItem("ContactsItem")]
-        public List<Client> Contacts { get => contacts; set => contacts = value; }
+        public List<ClientLogic.ClientStatus> Contacts { get => contacts; set => contacts = value; }
 
         public ProfilePacket() : base() { }
 
@@ -60,7 +60,7 @@ namespace SocialManager_Server.Packets
                                     Client.Sex genre,
                                     string username,
                                     string password,
-                                    List<Client> contacts
+                                    List<ClientLogic.ClientStatus> contacts
                                     ) : base(type, alea)
         {
             FirstName = firstName;

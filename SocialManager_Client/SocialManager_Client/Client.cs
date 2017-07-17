@@ -106,6 +106,7 @@ namespace SocialManager_Client
                     case Packets.PacketTypes.LoginAck:
                         // Complete login
                         Packets.ProfilePacket profileP = Packets.Packet.Unpack<Packets.ProfilePacket>(data);
+                        Console.WriteLine(Encoding.ASCII.GetString(data));
                         Profile.SetFromPacket(profileP);
                         alea = p.Alea;
                         DebugInfo("Login: Done.");
