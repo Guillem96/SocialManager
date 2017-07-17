@@ -32,7 +32,6 @@ namespace SocialManager_Server.Models
         public override string ToString()
         {
             return Client1.Username + " - " + Client2.Username;
-
         }
     }
 }

@@ -106,7 +106,10 @@ namespace SocialManager_Server.ServerLogic
         /// </summary>
         public ClientStatus GetClient(string username)
         {
-            return clients.Where(c => c.Client.Username == username).First();
+            return Clients
+                        .Any(c => c.Client.Username == username)
+                        ? clients.Single(c => c.Client.Username == username)
+                        : null;
         }
 
         /// <summary>

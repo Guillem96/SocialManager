@@ -23,7 +23,7 @@ namespace SocialManager_Server.ServerLogic
             server.DebugInfo("Register request recieved.");
             server.DebugInfo("RegisterReq Packet: " + regPacket.ToString());
             // Send a package depending on registration success
-            if (ClientsManagement.RegisterClient(regPacket, ip, current, out message))
+            if (ClientsManagement.RegisterClient(regPacket, ip, ref current, out message))
             {
                 // Send RegisterAck if all data is correct
                 server.Udp.SendMessage(new AckErrorPacket(
@@ -61,6 +61,7 @@ namespace SocialManager_Server.ServerLogic
                 server.ChangeStatus(logPacket.Username, ClientStatus.Status.Logged, alea, DateTime.Now);
                 // Send the profile info of the database to client
                 server.DebugInfo("Sending profile info to " + logPacket.Username + ".");
+
                 using (var db = new Models.ServerDatabase())
                 {
                     List<string> contactsUsername = 
@@ -98,7 +99,7 @@ namespace SocialManager_Server.ServerLogic
             string message = "";
 
             // Use alive packet because contains the same info as a logoutReq packet.
-            AlivePacket logoutPacket = Packet.Unpack<AlivePacket>(data);
+            BasicReqPacket logoutPacket = Packet.Unpack<BasicReqPacket>(data);
 
             server.DebugInfo("Logut request recieved.");
             server.DebugInfo("LogoutReq Packet: " + logoutPacket.ToString());
@@ -126,14 +127,18 @@ namespace SocialManager_Server.ServerLogic
         public static void DeleteAccount(byte[] data, IPEndPoint ip, Server server)
         {
             string message = "";
+           
 
             // Use alive packet because contains the same info as a DeleteAccountReq packet.
-            AlivePacket delPacket = Packet.Unpack<AlivePacket>(data);
+            BasicReqPacket delPacket = Packet.Unpack<BasicReqPacket>(data);
 
             server.DebugInfo("Delete account request recieved.");
             server.DebugInfo("DeleteAccountReq Packet: " + delPacket.ToString());
 
-            ClientStatus current = server.GetClient(delPacket.Username);
+            ClientStatus current = server.Clients
+                                        .Any(c => c.Client.Username == delPacket.Username)
+                                        ? server.GetClient(delPacket.Username)
+                                        : null;
 
             if (ClientsManagement.CheckBasics(current, ClientStatus.Status.Disconnected, delPacket.Alea, out message))
             {
@@ -158,14 +163,14 @@ namespace SocialManager_Server.ServerLogic
         {
             string message = "";
 
-            AlivePacket aPacket = Packet.Unpack<AlivePacket>(data);
+            BasicReqPacket aPacket = Packet.Unpack<BasicReqPacket>(data);
 
             server.DebugInfo("Alive inf recieved.");
             server.DebugInfo("AliveInf Packet: " + aPacket.ToString());
 
             ClientStatus current = server.GetClient(aPacket.Username);
 
-            if(ClientsManagement.AliveClient(aPacket, current, out message))
+            if (ClientsManagement.CheckBasics(current, ClientStatus.Status.Disconnected, aPacket.Alea, out message))
             {
                 // Save the last alive
                 current.LastAlive = DateTime.Now;
@@ -194,6 +199,40 @@ namespace SocialManager_Server.ServerLogic
                     cs.Disconnect();
                     server.DebugInfo(cs.Client.Username + " now is disconnected because he is inactive.");
                 }    
+            }
+        }
+
+        public static void SendContactRequests(byte[] data, Server server, IPEndPoint ip)
+        {
+            string message = "";
+
+            // Unpack the petition
+            BasicReqPacket cPacket = Packet.Unpack<BasicReqPacket>(data);
+
+            List<Models.ContactRequest> requests = null;
+
+            server.DebugInfo("Contact requests list requested by " + cPacket.Username);
+            server.DebugInfo(cPacket.ToString());
+
+            if (ClientsManagement.ContactRequestsList(cPacket,
+                                                        server.GetClient(cPacket.Username),
+                                                        ref requests,
+                                                        out message))
+            {
+
+                // List filled correctly
+                server.Udp.SendMessage(new ContactReqListPacket(PacketTypes.ContactAck,
+                                                                        cPacket.Alea,
+                                                                        requests).Pack(),
+                                                                        ip);
+
+                server.DebugInfo("Contact list requests sended correctly to + " + cPacket.Username);
+            }
+            else
+            {
+                message = "Contact requests list error: " + message;
+                server.DebugInfo(message);
+                server.Udp.SendError(message, ip);
             }
         }
     }

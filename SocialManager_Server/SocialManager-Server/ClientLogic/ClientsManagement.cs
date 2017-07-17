@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Linq;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -13,7 +14,7 @@ namespace SocialManager_Server.ClientLogic
     /// </summary>
     static class ClientsManagement
     {
-        public static bool RegisterClient(Packets.ProfilePacket packet, IPEndPoint ip, Models.Client c, out string message)
+        public static bool RegisterClient(Packets.ProfilePacket packet, IPEndPoint ip, ref Models.Client c, out string message)
         {
             try
             {
@@ -93,18 +94,6 @@ namespace SocialManager_Server.ClientLogic
             }
         }
 
-        public static bool AliveClient(Packets.AlivePacket packet, ClientStatus current, out string message)
-        {
-            bool res = CheckBasics(current, ClientStatus.Status.Disconnected, packet.Alea, out message);
-
-            if (!res)
-            {
-                message = "AliveInf Error: " + message;
-            }
-
-            return res;
-        }
-
         /// <summary>
         /// Checks if user is prepared for his request.
         /// </summary>
@@ -139,6 +128,36 @@ namespace SocialManager_Server.ClientLogic
 
             message = "Cool!";
             return true;
+        }
+
+        public static bool ContactRequestsList(Packets.BasicReqPacket packet, ClientStatus current, ref List<Models.ContactRequest> req,out string message)
+        {
+            try
+            {
+                if (CheckBasics(current, ClientStatus.Status.Disconnected, packet.Alea, out message))
+                {
+                    var db = new Models.ServerDatabase();
+                    
+                    // Fill the list with the requests 
+                    req = db.ContactRequests
+                                .Where( r => r.To.Username == current.Client.Username)
+                                .ToList();
+                    
+                    message = "Cool!";
+                    return true;
+                }
+                else
+                {
+                    message = "Contact Requests List Error: " + message;
+                    return false;
+                }
+            }
+            catch (SqlException)
+            {
+                message = "Contact Requests List Error: Database error.";
+                return false;
+            }
+
         }
     }
 }

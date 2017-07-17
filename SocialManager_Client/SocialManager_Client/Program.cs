@@ -47,6 +47,36 @@ namespace SocialManager_Client
             return res;
         }
 
+        static void AddContactMenu(Client c)
+        {
+            string message = "";
+            // Until Logout
+            while (true)
+            {
+                int op = int.Parse(Ask("1. Exit" + Environment.NewLine +
+                                        "2. Show Contacts Requests" + Environment.NewLine +
+                                        "3. New Contact Requests (Not implemented)" + Environment.NewLine +
+                                        "Option: "));
+
+                switch (op)
+                {
+                    case 1:
+                        Console.WriteLine("------------------------------");
+                        return;
+                    case 2:
+                        c.GetContactRequestList(out message);
+                        Console.WriteLine(String.Join(Environment.NewLine + "- ", c.Profile.ContactRequests.Select(r => r.From.Username).ToList()));
+                        break;
+                    case 3:
+                        break;
+                    
+                    default:
+                        Console.WriteLine("Unexpected option.");
+                        break;
+                }
+            }
+        }
+
         static void Alive(Client c)
         {
             string message = "";
@@ -55,7 +85,7 @@ namespace SocialManager_Client
             {
                 int op = int.Parse(Ask("1. Logout" + Environment.NewLine +
                                         "2. Show Profile" + Environment.NewLine +
-                                        "3. Add Contact (Not implemented)" + Environment.NewLine +
+                                        "3. Add Contact" + Environment.NewLine +
                                         "4. Send Message (Not implemented)" + Environment.NewLine +
                                         "5. Remove acount." + Environment.NewLine +
                                         "Option: "));
@@ -77,6 +107,7 @@ namespace SocialManager_Client
                         Console.WriteLine(c.Profile.ToString());
                         break;
                     case 3:
+                        AddContactMenu(c);
                         break;
                     case 4:
                         break;
@@ -92,6 +123,7 @@ namespace SocialManager_Client
                 }
             }
         }
+
         static void Main(string[] args)
         {
 
@@ -119,8 +151,6 @@ namespace SocialManager_Client
                         return;
                 }
             }
-
-            Console.Read();
         }
     }
 }

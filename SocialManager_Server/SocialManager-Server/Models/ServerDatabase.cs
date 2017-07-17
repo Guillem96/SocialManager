@@ -15,11 +15,12 @@ namespace SocialManager_Server.Models
         // Clients table
         public Table<Client> Clients;
         public Table<Contact> Contacts;
+        public Table<ContactRequest> ContactRequests;
 
 
         public ServerDatabase() : base(@"Data Source=.\SQLEXPRESS;
-                                        AttachDbFilename=" +
-                                        @"C:\Users\Guillem\Desktop\Curs C# ESPAI\SocialManager\SocialManager_Server\ServerDB.MDF;
+                                        AttachDbFilename=
+                                        C:\Users\Guillem\Desktop\Curs C# ESPAI\SocialManager\SocialManager_Server\ServerDB.MDF;
                                         Integrated Security=True;
                                         Connect Timeout=30;
                                         User Instance=True")

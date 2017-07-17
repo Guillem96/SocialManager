@@ -110,10 +110,12 @@
     <Compile Include="Models\Client.cs" />
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\ContactRequest.cs" />
     <Compile Include="Models\ServerDatabase.cs" />
     <Compile Include="Packets\AckErrorPacket.cs" />
-    <Compile Include="Packets\AlivePacket.cs" />
+    <Compile Include="Packets\BasicReqPacket.cs" />
     <Compile Include="Packets\LoginReqPacket.cs" />
+    <Compile Include="Packets\ContactReqListPacket.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\ProfilePacket.cs" />
     <Compile Include="Packets\Types.cs" />

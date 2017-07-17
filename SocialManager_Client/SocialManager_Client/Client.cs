@@ -64,7 +64,7 @@ namespace SocialManager_Client
                         message = "HE SIDO REGISTRADOOOO!!!";
                         return true;
                     case Packets.PacketTypes.Error:
-                        message= "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
+                        message = "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
                         DebugInfo("Register: " + message);
                         break;
                     default:
@@ -74,7 +74,7 @@ namespace SocialManager_Client
                 }
                 return false;
             }
-            catch(System.Net.Sockets.SocketException)
+            catch (System.Net.Sockets.SocketException)
             {
                 DebugInfo("Server is offline.");
                 message = "Server is offline.";
@@ -88,9 +88,9 @@ namespace SocialManager_Client
             {
                 // Pack login request packet
                 Packets.LoginReqPacket log = new Packets.LoginReqPacket(
-                                                    Packets.PacketTypes.LoginReq, 
+                                                    Packets.PacketTypes.LoginReq,
                                                     "0000000",
-                                                    username, 
+                                                    username,
                                                     password
                                                 );
 
@@ -138,7 +138,7 @@ namespace SocialManager_Client
             {
                 // Pack logut request packet
                 // use alive packet because contains the same information as logut request
-                Packets.AlivePacket logout = new Packets.AlivePacket(
+                Packets.BasicReqPacket logout = new Packets.BasicReqPacket(
                                                     Packets.PacketTypes.LogoutReq,
                                                     alea,
                                                     profile.Username
@@ -157,6 +157,7 @@ namespace SocialManager_Client
                         // Complete logut
                         DebugInfo("Logut: Done.");
                         message = "I'm NOT logged in now.";
+                        aliveTimer.Enabled = false;
                         return true;
                     case Packets.PacketTypes.Error:
                         message = "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
@@ -183,7 +184,7 @@ namespace SocialManager_Client
             {
                 // Pack logut request packet
                 // use alive packet because contains the same information as delete account request
-                Packets.AlivePacket delete = new Packets.AlivePacket(
+                Packets.BasicReqPacket delete = new Packets.BasicReqPacket(
                                                     Packets.PacketTypes.DeleteAccountReq,
                                                     alea,
                                                     profile.Username
@@ -221,14 +222,63 @@ namespace SocialManager_Client
                 return false;
             }
 
-        } 
+        }
+
+        public bool GetContactRequestList(out string message)
+        {
+            try
+            {
+                // Prepare the packet to send
+                Packets.BasicReqPacket packet = new Packets.BasicReqPacket(
+                                                        Packets.PacketTypes.ListContactReq,
+                                                        alea,
+                                                        profile.Username
+                                                    );
+
+                // send the package
+                udp.SendMessage(packet.Pack());
+
+                // Recieve packet
+                byte[] data = udp.RecieveMessage();
+
+                // Unpack the data and check the type
+                Packets.Packet p = Packets.Packet.Unpack<Packets.Packet>(data);
+                switch ((Packets.PacketTypes)p.Type)
+                {
+                    case Packets.PacketTypes.ContactAck:
+                        // Update contact requests list
+                        Packets.ContactReqListPacket contactsRequests = 
+                                                    Packets.Packet.Unpack<Packets.ContactReqListPacket>(data);
+
+                        profile.ContactRequests = contactsRequests.Requests;
+
+                        message = "Recieved list correctly";
+                        return true;
+                    case Packets.PacketTypes.Error:
+                        message = "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
+                        DebugInfo("Contact request list: " + message);
+                        break;
+                    default:
+                        DebugInfo("Contact request list: Unexpected type.");
+                        message = "Error, unexpected type.";
+                        break;
+                }
+                return false;
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                DebugInfo("Server is offline.");
+                message = "Server is offline.";
+                return false;
+            }
+        }
 
         public void KeepAlive()
         {
             try
             {
                 // Pack alive info packet
-                byte[] alive = new Packets.AlivePacket(
+                byte[] alive = new Packets.BasicReqPacket(
                                                     Packets.PacketTypes.AliveInf,
                                                     alea,
                                                     Profile.Username
@@ -259,7 +309,7 @@ namespace SocialManager_Client
                         aliveTimer.Enabled = false;
                         return;
                 }
-                     
+
             }
             catch (System.Net.Sockets.SocketException)
             {
@@ -273,4 +323,5 @@ namespace SocialManager_Client
             Console.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] " + message);
         }
     }
+    
 }

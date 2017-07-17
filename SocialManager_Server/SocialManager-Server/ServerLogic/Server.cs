@@ -61,10 +61,16 @@ namespace SocialManager_Server.ServerLogic
                 case Packets.PacketTypes.LogoutReq:
                     UdpUtilities.Logout(data, tmp, this);
                     break;
-
+                // Delete account request
                 case Packets.PacketTypes.DeleteAccountReq:
                     UdpUtilities.DeleteAccount(data, tmp, this);
                     break;
+                
+                // Contact requests list requested
+                case Packets.PacketTypes.ListContactReq:
+                    UdpUtilities.SendContactRequests(data, this, tmp);
+                    break;
+
             }
         }
 

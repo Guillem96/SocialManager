@@ -26,6 +26,7 @@ namespace SocialManager_Client
         private string password;
         private string email;
         private List<Contact> contacts;
+        private List<ContactRequest> contactRequests;
 
         [XmlElement("FirstName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -45,6 +46,9 @@ namespace SocialManager_Client
         public string Email { get => email; set => email = value; }
         [XmlIgnore]
         public List<Contact> Contacts { get => contacts; set => contacts = value; }
+        [XmlIgnore]
+        public List<ContactRequest> ContactRequests { get => contactRequests; set => contactRequests = value; }
+
 
         public Profile() { }
 
@@ -56,7 +60,8 @@ namespace SocialManager_Client
                         string username, 
                         string password,
                         string email,
-                        List<Contact> contacts)
+                        List<Contact> contacts
+                        )
         {
             FirstName = firstName;
             LastName = lastName;
@@ -67,6 +72,7 @@ namespace SocialManager_Client
             Password = password;
             Email = email;
             Contacts = contacts;
+            contactRequests = new List<ContactRequest>();
         }
 
         public void SetFromPacket(Packets.ProfilePacket p)
@@ -80,6 +86,8 @@ namespace SocialManager_Client
             Email = p.Email;
             Genre = p.Genre;
             Contacts = p.Contacts;
+            contactRequests = new List<ContactRequest>();
+
         }
 
         public override string ToString()
