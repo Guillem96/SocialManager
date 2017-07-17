@@ -93,18 +93,6 @@ namespace SocialManager_Server.ClientLogic
             }
         }
 
-        public static bool LogoutClient(Packets.AlivePacket packet, ClientStatus current, out string message)
-        {
-            bool res = CheckBasics(current, ClientStatus.Status.Disconnected, packet.Alea, out message);
-
-            if (!res)
-            {
-                message = "Logout Error: " + message;
-            }
-
-            return res;
-        }
-
         public static bool AliveClient(Packets.AlivePacket packet, ClientStatus current, out string message)
         {
             bool res = CheckBasics(current, ClientStatus.Status.Disconnected, packet.Alea, out message);
@@ -117,7 +105,16 @@ namespace SocialManager_Server.ClientLogic
             return res;
         }
 
-        private static bool CheckBasics(ClientStatus current, ClientStatus.Status equalsTo, string alea,out string message)
+        /// <summary>
+        /// Checks if user is prepared for his request.
+        /// </summary>
+        /// <param name="current">Client who is making the request.</param>
+        /// <param name="equalsTo">Status which the client could not be.</param>
+        /// <param name="alea">Packet alea number.</param>
+        public static bool CheckBasics(ClientStatus current, 
+                                        ClientStatus.Status equalsTo, 
+                                        string alea,
+                                        out string message)
         {
             // No user in database
             if (current == null)

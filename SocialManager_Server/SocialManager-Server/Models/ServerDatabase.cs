@@ -19,7 +19,7 @@ namespace SocialManager_Server.Models
 
         public ServerDatabase() : base(@"Data Source=.\SQLEXPRESS;
                                         AttachDbFilename=" +
-                                        @"C:\Users\guill\Documents\GitHub\SocialManager\SocialManager_Server\ServerDB.MDF;
+                                        @"C:\Users\Guillem\Desktop\Curs C# ESPAI\SocialManager\SocialManager_Server\ServerDB.MDF;
                                         Integrated Security=True;
                                         Connect Timeout=30;
                                         User Instance=True")

@@ -57,6 +57,7 @@ namespace SocialManager_Client
                                         "2. Show Profile" + Environment.NewLine +
                                         "3. Add Contact (Not implemented)" + Environment.NewLine +
                                         "4. Send Message (Not implemented)" + Environment.NewLine +
+                                        "5. Remove acount." + Environment.NewLine +
                                         "Option: "));
 
                 switch (op)
@@ -78,6 +79,12 @@ namespace SocialManager_Client
                     case 3:
                         break;
                     case 4:
+                        break;
+                    case 5:
+                        if(c.DeleteAccount(out message))
+                        {
+                            return;
+                        }
                         break;
                     default:
                         Console.WriteLine("Unexpected option.");

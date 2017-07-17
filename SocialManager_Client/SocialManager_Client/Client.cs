@@ -106,7 +106,6 @@ namespace SocialManager_Client
                     case Packets.PacketTypes.LoginAck:
                         // Complete login
                         Packets.ProfilePacket profileP = Packets.Packet.Unpack<Packets.ProfilePacket>(data);
-                        Console.WriteLine(Encoding.ASCII.GetString(data));
                         Profile.SetFromPacket(profileP);
                         alea = p.Alea;
                         DebugInfo("Login: Done.");
@@ -145,7 +144,7 @@ namespace SocialManager_Client
                                                     profile.Username
                                                 );
 
-                // Send login request package
+                // Send logut request package
                 udp.SendMessage(logout.Pack());
 
                 // Recieve the data
@@ -164,7 +163,7 @@ namespace SocialManager_Client
                         DebugInfo("Logut: " + message);
                         break;
                     default:
-                        DebugInfo("Login: Unexpected type.");
+                        DebugInfo("Logout: Unexpected type.");
                         message = "Error, unexpected type.";
                         break;
                 }
@@ -177,6 +176,53 @@ namespace SocialManager_Client
                 return false;
             }
         }
+
+        public bool DeleteAccount(out string message)
+        {
+            try
+            {
+                // Pack logut request packet
+                // use alive packet because contains the same information as delete account request
+                Packets.AlivePacket delete = new Packets.AlivePacket(
+                                                    Packets.PacketTypes.DeleteAccountReq,
+                                                    alea,
+                                                    profile.Username
+                                                );
+
+                // Send delete account request package
+                udp.SendMessage(delete.Pack());
+
+                // Recieve the data
+                var data = udp.RecieveMessage();
+                // Unpack the data and check the type
+                Packets.Packet p = Packets.Packet.Unpack<Packets.Packet>(data);
+                switch ((Packets.PacketTypes)p.Type)
+                {
+                    case Packets.PacketTypes.DeleteAccountAck:
+                        // Complete Deletion
+                        DebugInfo("Account delete: Done.");
+                        message = "";
+                        return true;
+                    case Packets.PacketTypes.Error:
+                        message = "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
+                        DebugInfo("Delete account error: " + message);
+                        break;
+                    default:
+                        DebugInfo("Delete account: Unexpected type.");
+                        message = "Error, unexpected type.";
+                        break;
+                }
+                return false;
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                DebugInfo("Server is offline.");
+                message = "Server is offline.";
+                return false;
+            }
+
+        } 
+
         public void KeepAlive()
         {
             try

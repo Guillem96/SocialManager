@@ -105,7 +105,7 @@ namespace SocialManager_Server.ServerLogic
 
             ClientStatus current = server.GetClient(logoutPacket.Username);
 
-            if(ClientsManagement.LogoutClient(logoutPacket, current, out message))
+            if(ClientsManagement.CheckBasics(current,ClientStatus.Status.Disconnected, logoutPacket.Alea, out message))
             {
                 server.DebugInfo("Logout: Correct logut from " + logoutPacket.Username);
                 server.DebugInfo(logoutPacket.Username + " now is disconnected.");
@@ -118,6 +118,38 @@ namespace SocialManager_Server.ServerLogic
             {
                 server.DebugInfo("Logout: Incorrect logut.");
                 // Send error
+                message = "Logout error: " + message;
+                server.Udp.SendError(message, ip);
+            }
+        }
+
+        public static void DeleteAccount(byte[] data, IPEndPoint ip, Server server)
+        {
+            string message = "";
+
+            // Use alive packet because contains the same info as a DeleteAccountReq packet.
+            AlivePacket delPacket = Packet.Unpack<AlivePacket>(data);
+
+            server.DebugInfo("Delete account request recieved.");
+            server.DebugInfo("DeleteAccountReq Packet: " + delPacket.ToString());
+
+            ClientStatus current = server.GetClient(delPacket.Username);
+
+            if (ClientsManagement.CheckBasics(current, ClientStatus.Status.Disconnected, delPacket.Alea, out message))
+            {
+                server.DebugInfo("Delete Account: Account was " + delPacket.Username + " correctly deleted.");
+
+                // Send the ack first
+                server.Udp.SendMessage(new AckErrorPacket(PacketTypes.DeleteAccountAck, "Account deleted correctly.").Pack(), ip);
+
+                // Delete client from database
+                server.DeleteCLientFromDataBase(delPacket.Username);
+            }
+            else
+            {
+                server.DebugInfo("Delete account: Acount can't be deleted.");
+                // Send error
+                message = "Delete error: " + message;
                 server.Udp.SendError(message, ip);
             }
         }

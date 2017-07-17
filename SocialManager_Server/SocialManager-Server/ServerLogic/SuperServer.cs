@@ -136,6 +136,28 @@ namespace SocialManager_Server.ServerLogic
             return alea;
         }
 
+        public void DeleteCLientFromDataBase(string username)
+        {
+            using (var db = new Models.ServerDatabase())
+            {
+                // Delete its contacts
+                db.Contacts.DeleteAllOnSubmit(
+                    db.Contacts.Where(c => c.Client1.Username == username ||
+                                            c.Client2.Username == username)
+                );
+
+                // Delete the client
+                db.Clients.DeleteOnSubmit(
+                        db.Clients.Single(c => c.Username == username)
+                    );
+
+                db.SubmitChanges();
+
+                // Delete from registered list
+                clients.Remove(clients.Single(c => c.Client.Username == username));
+            }
+        }
+
         /// <summary>
         /// Shows info from stdout
         /// </summary>
