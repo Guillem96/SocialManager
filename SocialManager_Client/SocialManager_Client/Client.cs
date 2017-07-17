@@ -11,7 +11,7 @@ namespace SocialManager_Client
         private Profile profile;
         private string alea;
         private Timer aliveTimer;
-
+        
         public Profile Profile { get => profile; set => profile = value; }
 
         public Client()
@@ -23,13 +23,18 @@ namespace SocialManager_Client
 
             // Set timer to send alives every 5 seconds.
             // Timer will be enabled afer logging
+            // Timer will execute alive inf packet sender
+            // Timer will execute profile updater for keep contacts status
             aliveTimer = new Timer();
             aliveTimer.Interval = 5000;
             aliveTimer.Elapsed += (sender, e) => KeepAlive();
+            string aux = "";
+            aliveTimer.Elapsed += (sender, e) => UpdateProfile(profile, out aux);
+
             aliveTimer.Enabled = false;
         }
 
-        internal bool Register(Profile newProfile, out string message)
+        public bool Register(Profile newProfile, out string message)
         {
             try
             {
@@ -178,6 +183,51 @@ namespace SocialManager_Client
             }
         }
 
+        public bool UpdateProfile(Profile newProfile, out string message)
+        {
+            try
+            {
+                // Pack login request packet
+                Packets.ProfilePacket profilePacket = new Packets.ProfilePacket(
+                                                    Packets.PacketTypes.ProfileUpdateReq,
+                                                    alea,
+                                                    newProfile
+                                                );
+
+                // Send login request package
+                udp.SendMessage(profilePacket.Pack());
+
+                // Recieve the data
+                var data = udp.RecieveMessage();
+                // Unpack the data and check the type
+                Packets.Packet p = Packets.Packet.Unpack<Packets.Packet>(data);
+                switch ((Packets.PacketTypes)p.Type)
+                {
+                    case Packets.PacketTypes.ProfileUpdateAck:
+                        // Complete login
+                        Packets.ProfilePacket profileP = Packets.Packet.Unpack<Packets.ProfilePacket>(data);
+                        Profile.SetFromPacket(profileP);
+                        message = "Profile Updated";
+                        return true;
+                    case Packets.PacketTypes.Error:
+                        message = "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
+                        DebugInfo("Update Profile: " + message);
+                        break;
+                    default:
+                        DebugInfo("Update Profile: Unexpected type.");
+                        message = "Error, unexpected type.";
+                        break;
+                }
+                return false;
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                DebugInfo("Server is offline.");
+                message = "Server is offline.";
+                return false;
+            }
+        }
+
         public bool DeleteAccount(out string message)
         {
             try
@@ -250,7 +300,8 @@ namespace SocialManager_Client
                         Packets.ContactReqListPacket contactsRequests = 
                                                     Packets.Packet.Unpack<Packets.ContactReqListPacket>(data);
 
-                        profile.ContactRequests = contactsRequests.Requests;
+                        profile.RecievedContactRequests = contactsRequests.Recieved;
+                        profile.SentContactRequests = contactsRequests.Sent;
 
                         message = "Recieved list correctly";
                         return true;
@@ -260,6 +311,113 @@ namespace SocialManager_Client
                         break;
                     default:
                         DebugInfo("Contact request list: Unexpected type.");
+                        message = "Error, unexpected type.";
+                        break;
+                }
+                return false;
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                DebugInfo("Server is offline.");
+                message = "Server is offline.";
+                return false;
+            }
+        }
+
+        public bool SentContactRequest(string to, out string message)
+        {
+            try
+            {
+                // Prepare the packet to send
+                Packets.ContactReqPacket packet = new Packets.ContactReqPacket(
+                                                        Packets.PacketTypes.NewContactReq,
+                                                        alea,
+                                                        profile.Username,
+                                                        to
+                                                    );
+
+                // send the package
+                udp.SendMessage(packet.Pack());
+
+                // Recieve packet
+                byte[] data = udp.RecieveMessage();
+
+                // Unpack the data and check the type
+                Packets.Packet p = Packets.Packet.Unpack<Packets.Packet>(data);
+                switch ((Packets.PacketTypes)p.Type)
+                {
+                    case Packets.PacketTypes.ContactAck:
+                        DebugInfo("Send Contact request: Sent succesful to " + to);
+
+                        // Update the request list
+                        GetContactRequestList(out message);
+
+                        message = "Request sent correctly.";
+                        return true;
+                    case Packets.PacketTypes.Error:
+                        message = "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
+                        DebugInfo("Send Contact request: " + message);
+                        break;
+                    default:
+                        DebugInfo("Send Contact request: Unexpected type.");
+                        message = "Error, unexpected type.";
+                        break;
+                }
+                return false;
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                DebugInfo("Server is offline.");
+                message = "Server is offline.";
+                return false;
+            }
+        }
+
+        public bool AnswerContactRequest(ContactRequest req, bool ack, out string message)
+        {
+            try
+            {
+                // Prepare the packet to send
+                Packets.ContactReqPacket packet = new Packets.ContactReqPacket(
+                                                        (ack) ? Packets.PacketTypes.AcceptNewContact : Packets.PacketTypes.RegNewContact,
+                                                        alea,
+                                                        req.From.Username,
+                                                        profile.Username
+                                                    );
+
+                // send the package
+                udp.SendMessage(packet.Pack());
+
+                // Recieve packet
+                byte[] data = udp.RecieveMessage();
+
+                // Unpack the data and check the type
+                Packets.Packet p = Packets.Packet.Unpack<Packets.Packet>(data);
+                switch ((Packets.PacketTypes)p.Type)
+                {
+                    case Packets.PacketTypes.ContactAck:
+                        if (ack)
+                        {
+                            // Todo: Get Contacts info
+                            DebugInfo("Answer Contact Request: Accepted " + req.From.Username + " correctly.");
+                        }
+                        else
+                        {
+                            DebugInfo("Answer Contact Request: Refused " + req.From.Username + " correctly.");
+                        }
+
+                        // Update the request list
+                        GetContactRequestList(out message);
+
+                        message = "Answered correctly";
+                        return true;
+
+                    case Packets.PacketTypes.Error:
+                        message = "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
+                        DebugInfo("Answer Contact Request: " + message);
+                        break;
+                    default:
+                        DebugInfo("Answer Contact Request: Unexpected type.");
                         message = "Error, unexpected type.";
                         break;
                 }

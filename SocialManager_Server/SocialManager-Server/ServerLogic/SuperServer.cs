@@ -33,7 +33,7 @@ namespace SocialManager_Server.ServerLogic
             // When a user has't sent an AliveInf Packet in 12 seconds its status changes to disconnected.
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 3000;
-            timer.Elapsed += (sender, e) => UdpUtilities.CheckAlives((Server)this);
+            timer.Elapsed += (sender, e) => UdpUtilitiesAlive.CheckAlives((Server)this);
             timer.Enabled = true;
         }
 

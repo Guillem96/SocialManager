@@ -18,6 +18,7 @@ namespace SocialManager_Server.Packets
         , AcceptNewContact = 0x11
         , RegNewContact = 0x12
         , ListContactReq = 0x14
+        , ProfileUpdateReq = 0x15
         // Server side
         , RegisterAck = 0x01
         , LoginAck = 0x03
@@ -25,6 +26,7 @@ namespace SocialManager_Server.Packets
         , LogoutAck = 0x07
         , DeleteAccountAck = 0x09
         , ContactAck = 0x13
+        , ProfileUpdateAck = 0x16
         // Both
         , Error = 0x99
         ,

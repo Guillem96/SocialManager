@@ -52,11 +52,11 @@ namespace SocialManager_Server.Models
         [XmlElement]
         public string Password { get => password; set => password = value; }
 
-        [Column(CanBeNull = false)]
+        [Column]
         [XmlElement]
         public int Age { get => age; set => age = value; }
 
-        [Column(CanBeNull = false)]
+        [Column]
         [XmlElement]
         public string PhoneNumber { get => phoneNumber; set => phoneNumber = value; }
 
@@ -64,7 +64,7 @@ namespace SocialManager_Server.Models
         [XmlElement]
         internal Sex Genre { get => genre; set => genre = value; }
 
-        [Column(CanBeNull = false)]
+        [Column]
         [XmlElement]
         public string Email { get => email; set => email = value; }
 

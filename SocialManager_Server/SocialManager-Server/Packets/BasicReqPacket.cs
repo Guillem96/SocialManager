@@ -7,6 +7,9 @@ using System.Xml.Serialization;
 
 namespace SocialManager_Server.Packets
 {
+    /// <summary>
+    /// Basic petition always contains the username of the user who is making the requests
+    /// </summary>
     [Serializable]
     [XmlRoot(ElementName = "Packet")]
     public class BasicReqPacket : Packet

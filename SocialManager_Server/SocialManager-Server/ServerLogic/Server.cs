@@ -44,33 +44,53 @@ namespace SocialManager_Server.ServerLogic
             {
                 // Recieve a register request
                 case Packets.PacketTypes.RegisterReq:
-                    UdpUtilities.Register(data, tmp, this);     
+                    UdpUtilitiesAccounts.Register(data, tmp, this);     
                     break;
 
                 // Recieve Login request
                 case Packets.PacketTypes.LoginReq:
-                    UdpUtilities.Login(data, tmp, this);
-                    break;
-
-                // Recieve Alive Inf
-                case Packets.PacketTypes.AliveInf:
-                    UdpUtilities.Alive(data, tmp, this);
+                    UdpUtilitiesAccounts.Login(data, tmp, this);
                     break;
 
                 // Recieve Logout Request
                 case Packets.PacketTypes.LogoutReq:
-                    UdpUtilities.Logout(data, tmp, this);
-                    break;
-                // Delete account request
-                case Packets.PacketTypes.DeleteAccountReq:
-                    UdpUtilities.DeleteAccount(data, tmp, this);
-                    break;
-                
-                // Contact requests list requested
-                case Packets.PacketTypes.ListContactReq:
-                    UdpUtilities.SendContactRequests(data, this, tmp);
+                    UdpUtilitiesAccounts.Logout(data, tmp, this);
                     break;
 
+                // Profile update request
+                case Packets.PacketTypes.ProfileUpdateReq:
+                    UdpUtilitiesAccounts.ProfileUpdate(data, tmp, this);
+                    break;
+
+                // Delete account request
+                case Packets.PacketTypes.DeleteAccountReq:
+                    UdpUtilitiesAccounts.DeleteAccount(data, tmp, this);
+                    break;
+
+                // Recieve Alive Inf
+                case Packets.PacketTypes.AliveInf:
+                    UdpUtilitiesAlive.Alive(data, tmp, this);
+                    break;
+
+                // Create new contact request
+                case Packets.PacketTypes.NewContactReq:
+                    UdpUtilitiesContacts.NewContactRequest(data, this, tmp);
+                    break;
+
+                // Accept a contact request
+                case Packets.PacketTypes.AcceptNewContact:
+                    UdpUtilitiesContacts.AnswerContactRequest(data, this, tmp, true);
+                    break;
+
+                // Refuse a contact request
+                case Packets.PacketTypes.RegNewContact:
+                    UdpUtilitiesContacts.AnswerContactRequest(data, this, tmp, false);
+                    break;
+
+                // Contact requests list requested
+                case Packets.PacketTypes.ListContactReq:
+                    UdpUtilitiesContacts.SendContactRequests(data, this, tmp);
+                    break;
             }
         }
 

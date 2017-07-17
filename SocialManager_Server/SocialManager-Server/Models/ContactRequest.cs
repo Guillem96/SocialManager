@@ -9,6 +9,9 @@ using System.Xml.Serialization;
 
 namespace SocialManager_Server.Models
 {
+    /// <summary>
+    /// Pending contacts requests that are 
+    /// </summary>
     [Serializable]
     [XmlRoot("ContactRequest")]
     [Table(Name="ContactRequests")]
@@ -17,10 +20,10 @@ namespace SocialManager_Server.Models
         private int contactRequestID;
 
         [Column(Name ="From")]
-        private int fromID;
+        private int fromID;     //< FK refering to the client who send the request
 
         [Column(Name = "To")]
-        private int toID;
+        private int toID;       //< FK refering to the client who recieve the request
 
         private EntityRef<Client> from = new EntityRef<Client>();
         private EntityRef<Client> to = new EntityRef<Client>();
@@ -44,6 +47,7 @@ namespace SocialManager_Server.Models
                         ThisKey = "toID", 
                         OtherKey = "ClientID")]
         public Client To { get => to.Entity; set => to.Entity = value; }
+
 
         public ContactRequest() { }
 

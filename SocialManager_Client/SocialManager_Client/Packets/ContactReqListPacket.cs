@@ -11,18 +11,29 @@ namespace SocialManager_Client.Packets
     [XmlRoot("Packet")]
     public class ContactReqListPacket : Packet
     {
-        private List<ContactRequest> requests;
+        private List<ContactRequest> sent;      //< Waiting for other accept or declines
+        private List<ContactRequest> recieved;  //< Your requests
 
-        [XmlArray("ContactsRequests")]
+        [XmlArray("SentContactsRequests")]
         [XmlArrayItem("Request")]
-        public List<ContactRequest> Requests { get => requests; set => requests = value; }
+        public List<ContactRequest> Sent { get => sent; set => sent = value; }
 
-        internal ContactReqListPacket() : base() { }
+        [XmlArray("RecievedContactsRequests")]
+        [XmlArrayItem("Request")]
+        public List<ContactRequest> Recieved { get => recieved; set => recieved = value; }
 
-        public override string ToString()
+        internal ContactReqListPacket(PacketTypes type,
+                                        string alea,
+                                        List<ContactRequest> recieved,
+                                        List<ContactRequest> sent) : base(type, alea)
         {
-            return base.ToString() + 
-                                String.Join(" | ", Requests.Select( r => "From=" + r.From.Username + ", To=" + r.To.Username)) + "]";
+            Recieved = recieved;
+            Sent = sent;
+        }
+
+        internal ContactReqListPacket() : base()
+        {
+
         }
     }
 }

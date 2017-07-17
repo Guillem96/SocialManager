@@ -26,7 +26,9 @@ namespace SocialManager_Client
         private string password;
         private string email;
         private List<Contact> contacts;
-        private List<ContactRequest> contactRequests;
+        private List<ContactRequest> recieved;
+        private List<ContactRequest> sent;
+
 
         [XmlElement("FirstName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -47,7 +49,9 @@ namespace SocialManager_Client
         [XmlIgnore]
         public List<Contact> Contacts { get => contacts; set => contacts = value; }
         [XmlIgnore]
-        public List<ContactRequest> ContactRequests { get => contactRequests; set => contactRequests = value; }
+        public List<ContactRequest> RecievedContactRequests { get => recieved; set => recieved = value; }
+        [XmlIgnore]
+        public List<ContactRequest> SentContactRequests { get => sent; set => sent = value; }
 
 
         public Profile() { }
@@ -72,7 +76,8 @@ namespace SocialManager_Client
             Password = password;
             Email = email;
             Contacts = contacts;
-            contactRequests = new List<ContactRequest>();
+            recieved = new List<ContactRequest>();
+            sent = new List<ContactRequest>();
         }
 
         public void SetFromPacket(Packets.ProfilePacket p)
@@ -86,7 +91,8 @@ namespace SocialManager_Client
             Email = p.Email;
             Genre = p.Genre;
             Contacts = p.Contacts;
-            contactRequests = new List<ContactRequest>();
+            recieved = new List<ContactRequest>();
+            sent = new List<ContactRequest>();
 
         }
 
@@ -99,7 +105,7 @@ namespace SocialManager_Client
                     "Username: " + Username + Environment.NewLine +
                     "Email: " + Email + Environment.NewLine +
                     "Genre: " + Genre.ToString() + Environment.NewLine +
-                    "Contacts: " + String.Join(Environment.NewLine + "\t", Contacts.Select(c=> c.Profile.Username));
+                    "Contacts: " + String.Join(Environment.NewLine + "\t", Contacts.Select(c=> c.Profile.Username + " - " + c.Stat.ToString()));
         }
     }
 }

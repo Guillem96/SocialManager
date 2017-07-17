@@ -50,6 +50,7 @@
     <Compile Include="Packets\AckErrorPacket.cs" />
     <Compile Include="Packets\BasicReqPacket.cs" />
     <Compile Include="Packets\ContactReqListPacket.cs" />
+    <Compile Include="Packets\ContactReqPacket.cs" />
     <Compile Include="Packets\LoginReqPacket.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Profile.cs" />

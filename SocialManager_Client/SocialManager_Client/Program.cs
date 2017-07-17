@@ -55,7 +55,9 @@ namespace SocialManager_Client
             {
                 int op = int.Parse(Ask("1. Exit" + Environment.NewLine +
                                         "2. Show Contacts Requests" + Environment.NewLine +
-                                        "3. New Contact Requests (Not implemented)" + Environment.NewLine +
+                                        "3. New Contact Requests " + Environment.NewLine +
+                                        "4. Accept Contact Requests " + Environment.NewLine +
+                                        "5. Decline Contact Request" + Environment.NewLine + 
                                         "Option: "));
 
                 switch (op)
@@ -65,11 +67,36 @@ namespace SocialManager_Client
                         return;
                     case 2:
                         c.GetContactRequestList(out message);
-                        Console.WriteLine(String.Join(Environment.NewLine + "- ", c.Profile.ContactRequests.Select(r => r.From.Username).ToList()));
+                        Console.WriteLine("Recieved -----------" + Environment.NewLine + "- " 
+                                            + String.Join(Environment.NewLine + "- ", 
+                                                            c.Profile.RecievedContactRequests
+                                                            .Select(r => r.From.Username)
+                                                            .ToList())
+                                        );
+
+                        c.GetContactRequestList(out message);
+                        Console.WriteLine("Sent -----------" + Environment.NewLine + "- "
+                                            + String.Join(Environment.NewLine + "- ",
+                                                            c.Profile.SentContactRequests
+                                                            .Select(r => r.To.Username)
+                                                            .ToList())
+                                        );
                         break;
                     case 3:
+                        string usernameTo = Ask("Send Request to? ");
+                        c.SentContactRequest(usernameTo, out message);
                         break;
-                    
+
+                    case 4:
+                        string usernameFrom = Ask("Accept from? ");
+                        c.AnswerContactRequest(c.Profile.RecievedContactRequests.Single(r => r.From.Username == usernameFrom), true, out message);
+                        break;
+
+                    case 5:
+                        usernameFrom = Ask("Decline from? ");
+                        c.AnswerContactRequest(c.Profile.RecievedContactRequests.Single(r => r.From.Username == usernameFrom), false, out message);
+                        break;
+
                     default:
                         Console.WriteLine("Unexpected option.");
                         break;
@@ -80,6 +107,7 @@ namespace SocialManager_Client
         static void Alive(Client c)
         {
             string message = "";
+
             // Until Logout
             while (true)
             {
@@ -95,6 +123,7 @@ namespace SocialManager_Client
                     case 1:
                         if(c.Logout(out message))
                         {
+                            Console.WriteLine("------------------------------");
                             return;
                         }
                         else

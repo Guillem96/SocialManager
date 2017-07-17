@@ -8,15 +8,20 @@ using System.Threading.Tasks;
 
 namespace SocialManager_Server.Models
 {
+    /// <summary>
+    /// All client contacts. 
+    /// </summary>
     [Table(Name = "Contacts")]
     class Contact
     {
+        // Foreing keys to clients
         private int contactID;
         [Column(Name ="Client1")]
         private int client1ID;
         [Column(Name = "Client2")]
         private int client2ID;
 
+        // References to clients information
         private EntityRef<Client> client1 = new EntityRef<Client>();
         private EntityRef<Client> client2 = new EntityRef<Client>();
 

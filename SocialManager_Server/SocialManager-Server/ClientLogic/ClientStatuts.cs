@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace SocialManager_Server.ClientLogic
 {
     /// <summary>
-    /// Client status. Contains his alea and his current status
+    /// Client status. Contains his alea and his current state
     /// </summary>
     [Serializable]
     [XmlRoot(ElementName = "Contact")]
@@ -16,10 +16,10 @@ namespace SocialManager_Server.ClientLogic
     {
         public enum Status { Disconnected, Logged }
 
-        private Models.Client client;
-        private Status stat;
-        private string alea;
-        private DateTime lastAlive;
+        private Models.Client client;   //< Reference to client information
+        private Status stat;            //< Client state (online or disconnected)      
+        private string alea;            //< Alea number
+        private DateTime lastAlive;     //< Last alive recieved
 
         [XmlElement("Profile")]
         public Models.Client Client { get => client; set => client = value; }

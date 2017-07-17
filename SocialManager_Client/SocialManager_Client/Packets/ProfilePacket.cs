@@ -51,6 +51,19 @@ namespace SocialManager_Client.Packets
 
         }
 
+        internal ProfilePacket(PacketTypes type,string alea, Profile p) : base(type, alea)
+        {
+            FirstName = p.FirstName;
+            LastName = p.LastName;
+            Age = p.Age;
+            PhoneNumber = p.PhoneNumber;
+            Genre = p.Genre;
+            Username = p.Username;
+            Password = p.Password;
+            Email = p.Email;
+            Contacts = p.Contacts;
+        }
+
         internal ProfilePacket(PacketTypes type,
                                     string alea,
                                     string firstName, 
@@ -62,13 +75,13 @@ namespace SocialManager_Client.Packets
                                     string password,
                                     string email) : base(type, alea)
         {
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.Age = age;
-            this.PhoneNumber = phoneNumber;
-            this.Genre = genre;
-            this.Username = username;
-            this.Password = password;
+            FirstName = firstName;
+            LastName = lastName;
+            Age = age;
+            PhoneNumber = phoneNumber;
+            Genre = genre;
+            Username = username;
+            Password = password;
             Email = email;
         }
 
