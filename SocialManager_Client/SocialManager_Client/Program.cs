@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SocialManager_Client
 {
@@ -153,33 +155,38 @@ namespace SocialManager_Client
             }
         }
 
+        [STAThread]
         static void Main(string[] args)
         {
+            // Start user interface
+            Window w = new UI.LoginWindow();
 
-            Client c = new Client();
+            w.ShowDialog();
+            //Client c = new Client();
 
-            while (true)
-            {
-                int op = int.Parse(Ask("1. Register" + Environment.NewLine +
-                                        "2. Login" + Environment.NewLine +
-                                        "3. Exit" + Environment.NewLine +
-                                        "Option: "));
+            //while (true)
+            //{
+            //    int op = int.Parse(Ask("1. Register" + Environment.NewLine +
+            //                            "2. Login" + Environment.NewLine +
+            //                            "3. Exit" + Environment.NewLine +
+            //                            "Option: "));
 
-                switch (op)
-                {
-                    case 1:
-                        Register(c);
-                        break;
-                    case 2:
-                        if (Login(c))
-                        {
-                            Alive(c);
-                        }
-                        break;
-                    case 3:
-                        return;
-                }
-            }
+            //    switch (op)
+            //    {
+            //        case 1:
+            //            Register(c);
+            //            break;
+            //        case 2:
+            //            if (Login(c))
+            //            {
+            //                Alive(c);
+            //            }
+            //            break;
+            //        case 3:
+            //            return;
+            //    }
+            //}
+            
         }
     }
 }

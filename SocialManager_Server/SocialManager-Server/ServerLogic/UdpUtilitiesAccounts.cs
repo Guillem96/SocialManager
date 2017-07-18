@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using SocialManager_Server.Packets;
 using SocialManager_Server.ClientLogic;
-using System.Text;
 
 namespace SocialManager_Server.ServerLogic
 {

@@ -1,0 +1,9 @@
+﻿<Application x:Class="SocialManager_Client.UI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SocialManager_Client.UI"
+             StartupUri="SocialManager_Client.UI.LoginWindow.xaml">
+    <Application.Resources>
+
+    </Application.Resources>
+</Application>

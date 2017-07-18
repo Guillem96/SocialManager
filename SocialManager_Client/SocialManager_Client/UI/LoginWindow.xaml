@@ -1,0 +1,19 @@
+﻿<Window x:Class="SocialManager_Client.UI.LoginWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SocialManager_Client.UI"
+             mc:Ignorable="d" Title="Social Manager - Login" Height="435.333" ResizeMode="NoResize" Width="357.667">
+    <Grid x:Name="grid">
+        <Button x:Name="LoginButton" Content="Login" HorizontalAlignment="Left" Margin="145,310,0,0" VerticalAlignment="Top" Width="75" Click="LoginButton_Click"/>
+        <TextBox x:Name="Username" HorizontalAlignment="Left" Height="23" Margin="115,204,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+        <TextBox x:Name="Password" HorizontalAlignment="Left" Height="23" Margin="115,267,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+        <Image x:Name="logoImg" HorizontalAlignment="Left" Height="226" Margin="60,10,0,0"  VerticalAlignment="Top" Width="230"/>
+        <Label Content="Username:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="32,200,0,0"/>
+        <Label Content="Password:" HorizontalAlignment="Left" Margin="32,263,0,0" VerticalAlignment="Top" Cursor=""/>
+        <Label Content="Welcome to" HorizontalAlignment="Left" Margin="32,23,0,0" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" FontStyle="Italic"/>
+        <Label Content="Don't you have an account yet?" HorizontalAlignment="Left" Margin="32,351,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="SignUpButton" Content="Sign Up" HorizontalAlignment="Left" Margin="240,354,0,0" VerticalAlignment="Top" Width="75" Click="SignUpButton_Click" />
+
+    </Grid>
+</Window>

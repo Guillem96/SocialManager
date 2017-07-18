@@ -1,0 +1,32 @@
+﻿<Window x:Name="MainWindow" x:Class="SocialManager_Client.UI.SocialManagerMain"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SocialManager_Client.UI"
+             mc:Ignorable="d" Height="595.139" Width="912.476">
+    <Grid Name="MainGrid">
+        <Grid x:Name="ToolBarGrid" HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="906" Background="#FFD1F9D4">
+            <Image x:Name="logoImage" HorizontalAlignment="Left" Height="136" Margin="0,-10,0,-40" VerticalAlignment="Top" Width="132"/>
+
+            <Button x:Name="EditProfileButton" Margin="333,0,483,6" BorderBrush="{x:Null}" Background="{x:Null}" Width="90">
+                <Button.Content>
+                    <Image Name="EditProfileImage" Width="70" Height="70" />
+                </Button.Content>
+            </Button>
+            <Button x:Name="LogoutButton" Margin="819,16,27,10" BorderBrush="{x:Null}" Width="60" Height="60" Background="{x:Null}">
+                <Button.Content>
+                    <Image Name="LogoutImage" Height ="40" Width="40" Stretch="Fill"/>
+                </Button.Content>
+            </Button>
+        </Grid>
+
+        <StackPanel HorizontalAlignment="Left" Height="342" Margin="718,86,0,0" VerticalAlignment="Top" Width="188">
+            <Button Content="Button" Height="80" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFFFAEAE"/>
+            <Button Content="Button" Height="80" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFAEE4FF"/>
+            <Button Content="Button" Height="80" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFAEFFB5"/>
+            <Button Content="Button" Height="80" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFFAFFAE"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
