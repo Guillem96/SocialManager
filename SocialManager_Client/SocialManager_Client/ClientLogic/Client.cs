@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Timers;
@@ -47,7 +48,7 @@ namespace SocialManager_Client
                                 newProfile.LastName,
                                 newProfile.Age,
                                 newProfile.PhoneNumber,
-                                newProfile.Genre,
+                                newProfile.Gender,
                                 newProfile.Username,
                                 newProfile.Password,
                                 newProfile.Email
@@ -274,6 +275,57 @@ namespace SocialManager_Client
 
         }
 
+        public bool ClientsQuery(string query, out string message, ref List<string> usernames)
+        {
+            try
+            {
+                // Prepare the packet to send
+                Packets.ClientQueryPacket packet = new Packets.ClientQueryPacket(
+                                                        Packets.PacketTypes.ClientsQueryReq,
+                                                        alea,
+                                                        profile.Username,
+                                                        query
+                                                    );
+
+                // send the package
+                udp.SendMessage(packet.Pack());
+
+                // Recieve packet
+                byte[] data = udp.RecieveMessage();
+
+                // Unpack the data and check the type
+                Packets.Packet p = Packets.Packet.Unpack<Packets.Packet>(data);
+                switch ((Packets.PacketTypes)p.Type)
+                {
+                    case Packets.PacketTypes.ClientsQueryAck:
+                        // Update contact requests list
+                        Packets.ClientQueryPacket queryResult =
+                                                    Packets.Packet.Unpack<Packets.ClientQueryPacket>(data);
+
+
+                        usernames = queryResult.Usernames;
+
+                        message = "Recieved list correctly";
+                        return true;
+                    case Packets.PacketTypes.Error:
+                        message = "Error: " + Packets.Packet.Unpack<Packets.AckErrorPacket>(data).Message;
+                        DebugInfo("Client query list: " + message);
+                        break;
+                    default:
+                        DebugInfo("Client query list: Unexpected type.");
+                        message = "Error, unexpected type.";
+                        break;
+                }
+                return false;
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
+                DebugInfo("Server is offline.");
+                message = "Server is offline.";
+                return false;
+            }
+        }
+
         public bool GetContactRequestList(out string message)
         {
             try
@@ -324,7 +376,7 @@ namespace SocialManager_Client
             }
         }
 
-        public bool SentContactRequest(string to, out string message)
+        public bool SendContactRequest(string to, out string message)
         {
             try
             {

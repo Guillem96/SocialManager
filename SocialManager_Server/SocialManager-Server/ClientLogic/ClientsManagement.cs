@@ -200,6 +200,45 @@ namespace SocialManager_Server.ClientLogic
 
         }
 
+        // Get clients query result
+        public static bool GetClientsQueryResult(Packets.ClientQueryPacket packet,
+                                                ClientStatus current,
+                                                ref List<string> result,
+                                                string query,
+                                                out string message)
+        {
+            try
+            {
+                if (CheckBasics(current, ClientStatus.Status.Disconnected, packet.Alea, out message))
+                {
+                    var db = new Models.ServerDatabase();
+
+                    // Fill the lists with the requests 
+                    result = db.Clients
+                                .Where(r => r.Username.Contains(query) ||
+                                            r.FirstName.Contains(query) ||
+                                            r.LastName.Contains(query))
+                                .Select(r => r.Username)
+                                .ToList();
+                                
+
+                    message = "Cool!";
+                    return true;
+                }
+                else
+                {
+                    message = "Client query List Error: " + message;
+                    return false;
+                }
+            }
+            catch (SqlException)
+            {
+                message = "Client query List Error: Database error.";
+                return false;
+            }
+
+        }
+
         public static bool NewContactRequest(Packets.ContactReqPacket packet,
                                              ClientStatus current,
                                              out string message)

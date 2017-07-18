@@ -21,7 +21,7 @@ namespace SocialManager_Client
         private string lastName;
         private int age;
         private string phoneNumber;
-        private Sex genre;
+        private Sex gender;
         private string username;
         private string password;
         private string email;
@@ -38,8 +38,8 @@ namespace SocialManager_Client
         public int Age { get => age; set => age = value; }
         [XmlElement("PhoneNumber")]
         public string PhoneNumber { get => phoneNumber; set => phoneNumber = value; }
-        [XmlElement("Genre")]
-        internal Sex Genre { get => genre; set => genre = value; }
+        [XmlElement("Gender")]
+        internal Sex Gender { get => gender; set => gender = value; }
         [XmlElement("Username")]
         public string Username { get => username; set => username = value; }
         [XmlElement("Password")]
@@ -71,7 +71,7 @@ namespace SocialManager_Client
             LastName = lastName;
             Age = age;
             PhoneNumber = phoneNumber;
-            Genre = genre;
+            Gender = genre;
             Username = username;
             Password = password;
             Email = email;
@@ -89,7 +89,7 @@ namespace SocialManager_Client
             Username = p.Username;
             Password = p.Password;
             Email = p.Email;
-            Genre = p.Genre;
+            Gender = p.Genre;
             Contacts = p.Contacts;
             recieved = new List<ContactRequest>();
             sent = new List<ContactRequest>();
@@ -101,10 +101,10 @@ namespace SocialManager_Client
             return "First Name: " + FirstName + Environment.NewLine +
                     "Last Name: " + LastName + Environment.NewLine +
                     "Age: " + Age + Environment.NewLine +
-                    "Phone Number: " + PhoneNumber + Environment.NewLine +
+                    //"Phone Number: " + PhoneNumber + Environment.NewLine +
                     "Username: " + Username + Environment.NewLine +
-                    "Email: " + Email + Environment.NewLine +
-                    "Genre: " + Genre.ToString() + Environment.NewLine +
+                    //"Email: " + Email + Environment.NewLine +
+                    "Gender: " + Gender.ToString() + Environment.NewLine +
                     "Contacts: " + String.Join(Environment.NewLine + "\t", Contacts.Select(c=> c.Profile.Username + " - " + c.Stat.ToString()));
         }
     }

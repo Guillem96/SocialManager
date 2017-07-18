@@ -77,6 +77,9 @@ namespace SocialManager_Server.ServerLogic
                     UdpUtilitiesContacts.NewContactRequest(data, this, tmp);
                     break;
 
+                case Packets.PacketTypes.ClientsQueryReq:
+                    UdpUtilitiesContacts.ClientsQuery(data, this, tmp);
+                    break;
                 // Accept a contact request
                 case Packets.PacketTypes.AcceptNewContact:
                     UdpUtilitiesContacts.AnswerContactRequest(data, this, tmp, true);

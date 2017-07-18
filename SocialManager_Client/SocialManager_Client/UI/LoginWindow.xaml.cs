@@ -59,8 +59,8 @@ namespace SocialManager_Client.UI
             }
             else
             {
-                new SocialManagerMain().ShowDialog();
                 this.Close();
+                new SocialManagerMain().ShowDialog();
             }
 
 

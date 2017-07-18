@@ -8,7 +8,7 @@ namespace SocialManager_Client
         public static BitmapImage GetImageSource(string imageName)
         {
             return new BitmapImage(
-                            new Uri(Environment.CurrentDirectory + @"\Images\" + imageName, 
+                            new Uri(Environment.CurrentDirectory + @"\..\..\..\Images\" + imageName, 
                                     UriKind.Absolute));
         }
     }

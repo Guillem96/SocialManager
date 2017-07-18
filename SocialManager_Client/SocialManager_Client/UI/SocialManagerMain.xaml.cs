@@ -28,5 +28,22 @@ namespace SocialManager_Client.UI
             EditProfileImage.Source= PathUtilities.GetImageSource("EditProfile.png");
             MainWindow.Title = "Social Manager - " + ClientController.client.Profile.Username; 
         }
+
+        private void ContactsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new ContactsUI());
+        }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            string message = "";
+            if (!ClientController.client.Logout(out message))
+                MessageBox.Show(message);
+            else
+            {
+                this.Close();
+                new LoginWindow().ShowDialog();
+            }
+        }
     }
 }

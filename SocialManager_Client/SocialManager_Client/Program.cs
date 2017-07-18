@@ -25,7 +25,7 @@ namespace SocialManager_Client
             p.FirstName = Ask("First name: ");
             p.LastName = Ask("Last name: ");
             p.Age = int.Parse(Ask("Age: "));
-            p.Genre = Ask("Genre (M o F): ").Equals("M") ? Profile.Sex.Male : Profile.Sex.Female;
+            p.Gender = Ask("Gender (M o F): ").Equals("M") ? Profile.Sex.Male : Profile.Sex.Female;
             p.Email = Ask("Email: ");
             p.PhoneNumber = Ask("Phone number: ");
             p.Username = Ask("Usrname: ");
@@ -86,7 +86,7 @@ namespace SocialManager_Client
                         break;
                     case 3:
                         string usernameTo = Ask("Send Request to? ");
-                        c.SentContactRequest(usernameTo, out message);
+                        c.SendContactRequest(usernameTo, out message);
                         break;
 
                     case 4:

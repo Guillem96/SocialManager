@@ -9,6 +9,37 @@ namespace SocialManager_Server.ServerLogic
 {
     static class UdpUtilitiesContacts
     {
+        public static void ClientsQuery(byte[] data, Server server, IPEndPoint ip)
+        {
+            string message = "";
+
+            // Unpack the petition
+            Packets.ClientQueryPacket cPacket = Packet.Unpack<ClientQueryPacket>(data);
+
+            List<string> queryResult = null;
+
+            server.DebugInfo("Client query  list requested by " + cPacket.Username);
+            server.DebugInfo(cPacket.ToString());
+
+            if (ClientsManagement.GetClientsQueryResult(cPacket, server.GetClient(cPacket.Username),
+                                                        ref queryResult, cPacket.Query, out message))
+            {
+
+                // List filled correctly
+                server.Udp.SendMessage(new ClientQueryPacket(PacketTypes.ClientsQueryAck,
+                                                                        cPacket.Alea,
+                                                                        queryResult).Pack(),
+                                                                        ip);
+
+                server.DebugInfo("Client list query requests sended correctly to + " + cPacket.Username);
+            }
+            else
+            {
+                server.DebugInfo("Client list query requests error: " + message);
+                server.Udp.SendError(message, ip);
+            }
+        }
+
         public static void SendContactRequests(byte[] data, Server server, IPEndPoint ip)
         {
             string message = "";

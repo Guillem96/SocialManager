@@ -20,5 +20,20 @@ namespace SocialManager_Client
             return client.Login(username, password, out message);
         }
 
+        public static bool GetContactRequests(out string message)
+        {
+            return client.GetContactRequestList(out message);
+        }
+
+        public static bool ClientQuery(string query, ref List<string>usernames, out string message)
+        {
+            return client.ClientsQuery(query, out message, ref usernames);
+        }
+
+        public static bool SendContactRequest(string username, out string message)
+        {
+            return client.SendContactRequest(username, out message);
+        }
+
     }
 }

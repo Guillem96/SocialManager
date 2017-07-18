@@ -34,7 +34,7 @@ namespace SocialManager_Client.Packets
         public int Age { get => age; set => age = value; }
         [XmlElement(ElementName = "PhoneNumber")]
         public string PhoneNumber { get => phoneNumber; set => phoneNumber = value; }
-        [XmlElement(ElementName = "Genre")]
+        [XmlElement(ElementName = "Gender")]
         internal Profile.Sex Genre { get => genre; set => genre = value; }
         [XmlElement(ElementName = "Username")]
         public string Username { get => username; set => username = value; }
@@ -57,7 +57,7 @@ namespace SocialManager_Client.Packets
             LastName = p.LastName;
             Age = p.Age;
             PhoneNumber = p.PhoneNumber;
-            Genre = p.Genre;
+            Genre = p.Gender;
             Username = p.Username;
             Password = p.Password;
             Email = p.Email;
@@ -88,7 +88,7 @@ namespace SocialManager_Client.Packets
         public override string ToString()
         {
             return base.ToString() + String.Format(@", FirstName={0}, LastName={1}, Age={2}, PhoneNumber={3}
-                                       , Genre={4}, Email={5}, Username={6}, Password={7}]",
+                                       , Gender={4}, Email={5}, Username={6}, Password={7}]",
                                        FirstName, LastName, Age, PhoneNumber, Genre.ToString(), Email,
                                        Username, Password);
         }

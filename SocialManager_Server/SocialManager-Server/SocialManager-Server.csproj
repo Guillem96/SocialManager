@@ -114,6 +114,7 @@
     <Compile Include="Models\ServerDatabase.cs" />
     <Compile Include="Packets\AckErrorPacket.cs" />
     <Compile Include="Packets\BasicReqPacket.cs" />
+    <Compile Include="Packets\ClientQueryPacket.cs" />
     <Compile Include="Packets\ContactReqPacket.cs" />
     <Compile Include="Packets\LoginReqPacket.cs" />
     <Compile Include="Packets\ContactReqListPacket.cs" />
