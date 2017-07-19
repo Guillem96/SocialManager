@@ -28,7 +28,7 @@ namespace SocialManager_Client.UI
             if (FirstName.Text == "")
             {
                 FirstName.BorderBrush = System.Windows.Media.Brushes.Red;
-                MessageBox.Show("First name is mandatory.");
+                MessageBox.Show("El Nombre es obligatorio.");
                 return;
             }
             else
@@ -38,7 +38,7 @@ namespace SocialManager_Client.UI
             if (LastName.Text == "")
             {
                 LastName.BorderBrush = System.Windows.Media.Brushes.Red;
-                MessageBox.Show("Last name is mandatory.");
+                MessageBox.Show("Los apellidos son obligatorios.");
                 return;
             }
             else
@@ -47,7 +47,7 @@ namespace SocialManager_Client.UI
             if (Age.Text == "")
             {
                 Age.BorderBrush = System.Windows.Media.Brushes.Red;
-                MessageBox.Show("Last name is mandatory.");
+                MessageBox.Show("La edad es obligatoria");
                 return;
             }
             else
@@ -55,42 +55,42 @@ namespace SocialManager_Client.UI
 
             if (!Male.IsChecked.Value && !Female.IsChecked.Value)
             {
-                MessageBox.Show("Gender is mandatory.");
+                MessageBox.Show("El Sexo es obligatorio.");
                 return;
             }
 
             if (Username.Text == "")
             {
                 Username.BorderBrush = System.Windows.Media.Brushes.Red;
-                MessageBox.Show("Password is mandatory.");
+                MessageBox.Show("El usuario es obligatorio.");
                 return;
             }
             else
                 Username.BorderBrush = def;
 
-            if (Password.Text == "")
+            if (Password.Password == "")
             {
                 Password.BorderBrush = System.Windows.Media.Brushes.Red;
-                MessageBox.Show("Password is mandatory.");
+                MessageBox.Show("La contraseña es obligatoria.");
                 return;
             }
             else
                 Password.BorderBrush = def;
 
-            if (RPassword.Text == "")
+            if (RPassword.Password == "")
             {
                 RPassword.BorderBrush = System.Windows.Media.Brushes.Red;
-                MessageBox.Show("Repeat Password is mandatory.");
+                MessageBox.Show("Es necesario repetir la contraseña.");
                 return;
             }
             else
                 RPassword.BorderBrush = def;
 
-            if (!RPassword.Text.Equals(Password.Text))
+            if (!RPassword.Password.Equals(Password.Password))
             {
                 RPassword.BorderBrush = System.Windows.Media.Brushes.Red;
                 Password.BorderBrush = System.Windows.Media.Brushes.Red;
-                MessageBox.Show("Password incorrect.");
+                MessageBox.Show("Contraseña incorrecta.");
                 return;
             }
             else
@@ -107,18 +107,18 @@ namespace SocialManager_Client.UI
             catch (FormatException)
             {
                 Age.BorderBrush = System.Windows.Media.Brushes.Red;
-                MessageBox.Show("Age must be an integer.");
+                MessageBox.Show("La edad tiene que ser un entero.");
                 return;
             }
-            
-            // All correct, register client
+
+            //// All correct, register client
             Profile p = new Profile(FirstName.Text, LastName.Text, age, PhoneNumber.Text,
                                     (Male.IsChecked.Value ? Profile.Sex.Male : Profile.Sex.Female),
-                                    Username.Text, Password.Text, Email.Text, new List<Contact>());
+                                    Username.Text, Password.Password, Email.Text, new List<Contact>());
 
             ClientController.client = new Client();
             string message = "";
-            if(!ClientController.Register(p, out message))
+            if (!ClientController.Register(p, out message))
             {
                 MessageBox.Show(message);
             }

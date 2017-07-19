@@ -16,7 +16,7 @@ namespace SocialManager_Server.ServerLogic
             // Unpack the petition
             Packets.ClientQueryPacket cPacket = Packet.Unpack<ClientQueryPacket>(data);
 
-            List<string> queryResult = null;
+            List<Models.Client> queryResult = null;
 
             server.DebugInfo("Client query  list requested by " + cPacket.Username);
             server.DebugInfo(cPacket.ToString());

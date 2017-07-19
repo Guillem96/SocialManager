@@ -13,6 +13,11 @@ namespace SocialManager_Server
     {
         private static void Main(String[] args)
         {
+            using (var db = new Models.ServerDatabase())
+            {
+                db.DeleteDatabase();
+                db.CreateDatabase();
+            }
             // Start server
             ServerLogic.Server server = new ServerLogic.Server("Social Manager server");
             server.MainLoop();

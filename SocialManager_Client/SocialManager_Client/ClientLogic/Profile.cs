@@ -15,7 +15,7 @@ namespace SocialManager_Client
     [XmlRoot("Profile")]
     public class Profile
     {
-        internal enum Sex { Male, Female }
+        public enum Sex { Male, Female }
 
         private string firstName;
         private string lastName;
@@ -39,7 +39,7 @@ namespace SocialManager_Client
         [XmlElement("PhoneNumber")]
         public string PhoneNumber { get => phoneNumber; set => phoneNumber = value; }
         [XmlElement("Gender")]
-        internal Sex Gender { get => gender; set => gender = value; }
+        public Sex Gender { get => gender; set => gender = value; }
         [XmlElement("Username")]
         public string Username { get => username; set => username = value; }
         [XmlElement("Password")]
@@ -89,7 +89,7 @@ namespace SocialManager_Client
             Username = p.Username;
             Password = p.Password;
             Email = p.Email;
-            Gender = p.Genre;
+            Gender = p.Gender;
             Contacts = p.Contacts;
             recieved = new List<ContactRequest>();
             sent = new List<ContactRequest>();

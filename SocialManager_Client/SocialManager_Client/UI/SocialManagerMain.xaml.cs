@@ -45,5 +45,10 @@ namespace SocialManager_Client.UI
                 new LoginWindow().ShowDialog();
             }
         }
+
+        private void EditProfileButton_Click(object sender, RoutedEventArgs e)
+        {
+            new EditProfileWindow().ShowDialog();
+        }
     }
 }

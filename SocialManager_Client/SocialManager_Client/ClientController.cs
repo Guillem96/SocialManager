@@ -25,7 +25,7 @@ namespace SocialManager_Client
             return client.GetContactRequestList(out message);
         }
 
-        public static bool ClientQuery(string query, ref List<string>usernames, out string message)
+        public static bool ClientQuery(string query, ref List<Profile>usernames, out string message)
         {
             return client.ClientsQuery(query, out message, ref usernames);
         }
@@ -33,6 +33,24 @@ namespace SocialManager_Client
         public static bool SendContactRequest(string username, out string message)
         {
             return client.SendContactRequest(username, out message);
+        }
+
+        public static bool AcceptRequest(string username, out string message)
+        {
+            return client.AnswerContactRequest(
+                                client.Profile.RecievedContactRequests
+                                            .Single(c => c.From.Username == username),
+                                true,
+                                out message);
+        }
+
+        public static bool DenyRequest(string username, out string message)
+        {
+            return client.AnswerContactRequest(
+                                client.Profile.RecievedContactRequests
+                                            .Single(c => c.From.Username == username),
+                                false,
+                                out message);
         }
 
     }

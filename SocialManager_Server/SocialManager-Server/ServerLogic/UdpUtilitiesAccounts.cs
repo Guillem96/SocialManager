@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using SocialManager_Server.Packets;
 using SocialManager_Server.ClientLogic;
+using System.Text;
 
 namespace SocialManager_Server.ServerLogic
 {
@@ -61,24 +62,28 @@ namespace SocialManager_Server.ServerLogic
 
                 using (var db = new Models.ServerDatabase())
                 {
+                    // GEt the contacts of user
                     List<string> contactsUsername =
                                     db.Contacts
                                         .Where(c => c.Client1.Username == current.Username || c.Client2.Username == current.Username)
                                         .Select(c => c.Client1.Username == current.Username ? c.Client2.Username : c.Client1.Username).ToList();
 
-                    List<ClientStatus> contacts = contactsUsername.Select(c => server.GetClient(c)).ToList();
+                    // Get contacts status
+                    List<ClientStatus> contacts = 
+                                    contactsUsername.Select(c => server.GetClient(c)).ToList();
 
                     // Return user profile with the ack
-                    server.Udp.SendMessage(new Packets.ProfilePacket(
-                                                Packets.PacketTypes.LoginAck,
+                    server.Udp.SendMessage(new ProfilePacket(
+                                                PacketTypes.LoginAck,
                                                 alea, // New alea generated
                                                 current.FirstName,
                                                 current.LastName,
                                                 current.Age,
                                                 current.PhoneNumber,
-                                                current.Genre,
+                                                current.Gender,
                                                 current.Username,
                                                 current.Password,
+                                                current.Email,
                                                 contacts
                                             ).Pack(), ip);
                 }
@@ -126,6 +131,7 @@ namespace SocialManager_Server.ServerLogic
 
             ProfilePacket pPacket = Packet.Unpack<ProfilePacket>(data);
 
+            Console.WriteLine(Encoding.ASCII.GetString(data));
             server.DebugInfo("Update profile recieved.");
             server.DebugInfo("Update profile Packet: " + pPacket.ToString());
 
@@ -154,9 +160,10 @@ namespace SocialManager_Server.ServerLogic
                                                 current.Client.LastName,
                                                 current.Client.Age,
                                                 current.Client.PhoneNumber,
-                                                current.Client.Genre,
+                                                current.Client.Gender,
                                                 current.Client.Username,
                                                 current.Client.Password,
+                                                current.Client.Email,
                                                 contacts
                                             ).Pack(), ip);
                 }

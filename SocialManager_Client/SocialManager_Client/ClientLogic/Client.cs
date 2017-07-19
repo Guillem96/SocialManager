@@ -48,7 +48,7 @@ namespace SocialManager_Client
                                 newProfile.LastName,
                                 newProfile.Age,
                                 newProfile.PhoneNumber,
-                                newProfile.Gender,
+                                (Profile.Sex)newProfile.Gender,
                                 newProfile.Username,
                                 newProfile.Password,
                                 newProfile.Email
@@ -206,7 +206,8 @@ namespace SocialManager_Client
                 {
                     case Packets.PacketTypes.ProfileUpdateAck:
                         // Complete login
-                        Packets.ProfilePacket profileP = Packets.Packet.Unpack<Packets.ProfilePacket>(data);
+                        Packets.ProfilePacket profileP = 
+                            Packets.Packet.Unpack<Packets.ProfilePacket>(data);
                         Profile.SetFromPacket(profileP);
                         message = "Profile Updated";
                         return true;
@@ -221,10 +222,10 @@ namespace SocialManager_Client
                 }
                 return false;
             }
-            catch (System.Net.Sockets.SocketException)
+            catch (System.Net.Sockets.SocketException e)
             {
                 DebugInfo("Server is offline.");
-                message = "Server is offline.";
+                message = e.ToString() ;
                 return false;
             }
         }
@@ -275,7 +276,7 @@ namespace SocialManager_Client
 
         }
 
-        public bool ClientsQuery(string query, out string message, ref List<string> usernames)
+        public bool ClientsQuery(string query, out string message, ref List<Profile> profiles)
         {
             try
             {
@@ -303,7 +304,7 @@ namespace SocialManager_Client
                                                     Packets.Packet.Unpack<Packets.ClientQueryPacket>(data);
 
 
-                        usernames = queryResult.Usernames;
+                        profiles = queryResult.Profiles;
 
                         message = "Recieved list correctly";
                         return true;

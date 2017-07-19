@@ -6,33 +6,33 @@
              xmlns:local="clr-namespace:SocialManager_Client.UI"
              mc:Ignorable="d" Height="462.272" Width="674.947">
     <Grid Background="White" x:Name="ContentGrid" HorizontalAlignment="Left" Width="675">
-        <DataGrid x:Name="InboxRequests" HorizontalAlignment = "Left" Height="96" Margin="24,78,0,0" VerticalAlignment="Top" Width="135" SelectionChanged="InboxRequests_SelectionChanged"/>
-        <Label Content = "Inbox Contact Requests&#xA;" HorizontalAlignment="Left" Margin="24,36,0,0" VerticalAlignment="Top"/>
-        <Label Content = "Your Contacts" HorizontalAlignment="Left" Margin="404,36,0,0" VerticalAlignment="Top"/>
-        <GroupBox Header = "Add new contact" HorizontalAlignment="Left" Height="181" Margin="115,263,0,0" VerticalAlignment="Top" Width="470" Grid.RowSpan="2" BorderBrush="#FF9FA6AA">
+        <Label Content = "Solicitudes de amistad&#xA;" HorizontalAlignment="Left" Margin="64,33,0,0" VerticalAlignment="Top"/>
+        <Label Content = "Tus amigos" HorizontalAlignment="Left" Margin="444,33,0,0" VerticalAlignment="Top"/>
+        <GroupBox Header = "Agregar amigos" HorizontalAlignment="Left" Height="181" Margin="115,263,0,0" VerticalAlignment="Top" Width="470" Grid.RowSpan="2" BorderBrush="#FF9FA6AA">
             <Grid HorizontalAlignment = "Left" Height="142" Margin="10,10,0,0" VerticalAlignment="Top" Width="427">
-                <Button x:Name="SearchButton" Content = "Search" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="SearchButton_Click"/>
-                <TextBox x:Name="Query" HorizontalAlignment = "Left" Height="23" Margin="76,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" />
+                <Button x:Name="SearchButton" Content = "Buscar amigo" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Click="SearchButton_Click"/>
+                <TextBox x:Name="Query" HorizontalAlignment = "Left" Height="23" Margin="112,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" />
                 <Button Name = "SendContactRequestButton" Content="Send Contact &#xD;&#xA;Request" HorizontalAlignment="Left" Margin="332,100,0,0" VerticalAlignment="Top" Width="85" Height="36" IsEnabled="False" Click="SendContactRequestButton_Click"/>
-                <ListView x:Name="PossibleRequests" HorizontalAlignment="Left" Height="80" Margin="10,52,0,0" VerticalAlignment="Top" Width="299" RenderTransformOrigin="0.471,0.278" SelectionChanged="PossibleRequests_SelectionChanged_1">
-                    
-                </ListView>
+                <DataGrid x:Name="PossibleRequests" HorizontalAlignment="Left" Margin="10,41,0,10" Width="305" SelectionChanged="PossibleRequests_SelectionChanged"/>
             </Grid>
         </GroupBox>
-        <DataGrid x:Name = "SentRequests" HorizontalAlignment = "Left" Height="96" Margin="213,78,0,0" VerticalAlignment="Top" Width="135" IsEnabled="False"/>
-        <Label Content = "Pending Contact Requests&#xA;" HorizontalAlignment="Left" Margin="213,36,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="AcceptButton"  HorizontalAlignment="Left" Margin="40,192,0,0" VerticalAlignment="Top" Width="44" Height="41" Background="{x:Null}" BorderBrush="{x:Null}" IsEnabled="False">
+        <Label Content = "Solicitudes de amistad &#xD;&#xA;enviadas&#xD;&#xA;&#xA;" HorizontalAlignment="Left" Margin="253,33,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="AcceptButton"  HorizontalAlignment="Left" Margin="130,189,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="{x:Null}" BorderBrush="{x:Null}" IsEnabled="False" Click="AcceptButton_Click">
             <Button.Content>
                 <Image x:Name="AcceptImage"></Image>
             </Button.Content>
         </Button>
-        <Button  x:Name="DenyButton" HorizontalAlignment="Left" Margin="105,192,0,0" VerticalAlignment="Top" Width="44" Height="41" Background="{x:Null}" BorderBrush="{x:Null}" IsEnabled="False">
+        <Button  x:Name="DenyButton" HorizontalAlignment="Left" Margin="177,189,0,0" VerticalAlignment="Top" Width="30" Height="30" Background="{x:Null}" BorderBrush="{x:Null}" IsEnabled="False" Click="DenyButton_Click">
             <Button.Content>
                 <Image x:Name="DenyImage"></Image>
             </Button.Content>
         </Button>
-        <ListView x:Name="ContactsItems" HorizontalAlignment="Left" Height="100" Margin="404,78,0,0" VerticalAlignment="Top" Width="229">
+        <ListView x:Name="ContactsItems" HorizontalAlignment="Left" Height="100" Margin="444,75,0,0" VerticalAlignment="Top" Width="166" SelectionChanged="ContactsItems_SelectionChanged">
 
         </ListView>
+        <Button x:Name="ViewProfileButtonContact" Content="Ver perfil" HorizontalAlignment="Left" Margin="444,200,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="ViewProfileButtonContact_Click"/>
+        <Button x:Name="ViewProfileButtonRequest" Content="Ver perfil" HorizontalAlignment="Left" Margin="39,199,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="ViewProfileButtonRequest_Click"/>
+        <DataGrid x:Name="InboxRequests" HorizontalAlignment="Left" Height="96" Margin="60,75,0,0" VerticalAlignment="Top" Width="159" SelectionChanged="InboxRequests_SelectionChanged"/>
+        <DataGrid x:Name="SentRequests" HorizontalAlignment="Left" Height="96" Margin="253,75,0,0" VerticalAlignment="Top" Width="167" />
     </Grid>
 </UserControl>

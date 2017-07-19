@@ -36,11 +36,11 @@ namespace SocialManager_Server.ClientLogic
                     LastName = packet.LastName,
                     Age = packet.Age,
                     PhoneNumber = packet.PhoneNumber,
-                    Genre = packet.Genre,
+                    Gender = packet.Gender,
                     Username = packet.Username,
                     Password = packet.Password,
                     Email = packet.Email,
-                    Ip = ip.Address.GetAddressBytes()
+                    Ip = ip.Address.GetAddressBytes(),
                 };
 
                 // Open database and check if client already exists
@@ -128,9 +128,9 @@ namespace SocialManager_Server.ClientLogic
                             return false;
                         }
 
-                        if (c.Genre != packet.Genre)
+                        if (c.Gender != packet.Gender)
                         {
-                            message = "Update Profile Error: Genre can't be updated";
+                            message = "Update Profile Error: Gender can't be updated";
                             return false;
                         }
 
@@ -203,7 +203,7 @@ namespace SocialManager_Server.ClientLogic
         // Get clients query result
         public static bool GetClientsQueryResult(Packets.ClientQueryPacket packet,
                                                 ClientStatus current,
-                                                ref List<string> result,
+                                                ref List<Models.Client> result,
                                                 string query,
                                                 out string message)
         {
@@ -218,7 +218,6 @@ namespace SocialManager_Server.ClientLogic
                                 .Where(r => r.Username.Contains(query) ||
                                             r.FirstName.Contains(query) ||
                                             r.LastName.Contains(query))
-                                .Select(r => r.Username)
                                 .ToList();
                                 
 
@@ -245,6 +244,11 @@ namespace SocialManager_Server.ClientLogic
         {
             try
             {
+                if(packet.To == packet.From)
+                {
+                    message = "You can't add yourself as a friend....";
+                    return false;
+                }
                 if (CheckBasics(current, ClientStatus.Status.Disconnected, packet.Alea, out message))
                 {
                     using (var db = new Models.ServerDatabase())

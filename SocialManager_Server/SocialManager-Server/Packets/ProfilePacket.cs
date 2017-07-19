@@ -22,12 +22,11 @@ namespace SocialManager_Server.Packets
         private string lastName;
         private int age;
         private string phoneNumber;
-        private Models.Client.Sex genre;
+        private Client.Sex genre;
         private string username;
         private string password;
         private string email;
         private List<ClientLogic.ClientStatus> contacts;
-
 
         [XmlElement(ElementName = "FirsName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -37,8 +36,8 @@ namespace SocialManager_Server.Packets
         public int Age { get => age; set => age = value; }
         [XmlElement(ElementName = "PhoneNumber")]
         public string PhoneNumber { get => phoneNumber; set => phoneNumber = value; }
-        [XmlElement(ElementName = "Genre")]
-        internal Client.Sex Genre { get => genre; set => genre = value; }
+        [XmlElement(ElementName = "Gender")]
+        public Client.Sex Gender { get => genre; set => genre = value; }
         [XmlElement(ElementName = "Username")]
         public string Username { get => username; set => username = value; }
         [XmlElement(ElementName = "Password")]
@@ -60,6 +59,7 @@ namespace SocialManager_Server.Packets
                                     Client.Sex genre,
                                     string username,
                                     string password,
+                                    string email,
                                     List<ClientLogic.ClientStatus> contacts
                                     ) : base(type, alea)
         {
@@ -67,17 +67,18 @@ namespace SocialManager_Server.Packets
             LastName = lastName;
             Age = age;
             PhoneNumber = phoneNumber;
-            Genre = genre;
+            Gender = genre;
             Username = username;
             Password = password;
             Contacts = contacts;
+            Email = email;
         }
 
         public override string ToString()
         {
             return base.ToString() + String.Format(@", FirstName={0}, LastName={1}, Age={2}, PhoneNumber={3}
-                                       , Genre={4}, Email={5}, Username={6}, Password={7}]",
-                                       FirstName, LastName, Age, PhoneNumber, Genre.ToString(), Email,
+                                       , Gender={4}, Email={5}, Username={6}, Password={7}]",
+                                       FirstName, LastName, Age, PhoneNumber, Gender.ToString(), Email,
                                        Username, Password);
         }
     }

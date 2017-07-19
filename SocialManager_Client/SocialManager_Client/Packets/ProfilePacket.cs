@@ -20,7 +20,7 @@ namespace SocialManager_Client.Packets
         private string lastName;
         private int age;
         private string phoneNumber;
-        private Profile.Sex genre;
+        private Profile.Sex gender;
         private string username;
         private string password;
         private string email;
@@ -35,7 +35,7 @@ namespace SocialManager_Client.Packets
         [XmlElement(ElementName = "PhoneNumber")]
         public string PhoneNumber { get => phoneNumber; set => phoneNumber = value; }
         [XmlElement(ElementName = "Gender")]
-        internal Profile.Sex Genre { get => genre; set => genre = value; }
+        public Profile.Sex Gender { get => gender; set => gender = value; }
         [XmlElement(ElementName = "Username")]
         public string Username { get => username; set => username = value; }
         [XmlElement(ElementName = "Password")]
@@ -45,7 +45,7 @@ namespace SocialManager_Client.Packets
         [XmlArray("Contacts")]
         [XmlArrayItem("ContactsItem")]
         public List<Contact> Contacts { get => contacts; set => contacts = value; }
-
+        
         public ProfilePacket() : base()
         {
 
@@ -57,7 +57,7 @@ namespace SocialManager_Client.Packets
             LastName = p.LastName;
             Age = p.Age;
             PhoneNumber = p.PhoneNumber;
-            Genre = p.Gender;
+            Gender = p.Gender;
             Username = p.Username;
             Password = p.Password;
             Email = p.Email;
@@ -70,7 +70,7 @@ namespace SocialManager_Client.Packets
                                     string lastName,
                                     int age,
                                     string phoneNumber,
-                                    Profile.Sex genre,
+                                    Profile.Sex gender,
                                     string username,
                                     string password,
                                     string email) : base(type, alea)
@@ -79,7 +79,7 @@ namespace SocialManager_Client.Packets
             LastName = lastName;
             Age = age;
             PhoneNumber = phoneNumber;
-            Genre = genre;
+            Gender = gender;
             Username = username;
             Password = password;
             Email = email;
@@ -89,7 +89,7 @@ namespace SocialManager_Client.Packets
         {
             return base.ToString() + String.Format(@", FirstName={0}, LastName={1}, Age={2}, PhoneNumber={3}
                                        , Gender={4}, Email={5}, Username={6}, Password={7}]",
-                                       FirstName, LastName, Age, PhoneNumber, Genre.ToString(), Email,
+                                       FirstName, LastName, Age, PhoneNumber, Gender.ToString(), Email,
                                        Username, Password);
         }
     }

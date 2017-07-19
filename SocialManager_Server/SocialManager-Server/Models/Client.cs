@@ -18,7 +18,7 @@ namespace SocialManager_Server.Models
     [XmlRoot("Client")]
     public class Client
     {
-        internal enum Sex { Male, Female }
+        public enum Sex { Male, Female }
 
         private int clientID;
         private string firstName;
@@ -62,7 +62,7 @@ namespace SocialManager_Server.Models
 
         [Column(CanBeNull = false)]
         [XmlElement]
-        internal Sex Genre { get => genre; set => genre = value; }
+        public Sex Gender { get => genre; set => genre = value; }
 
         [Column]
         [XmlElement]

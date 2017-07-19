@@ -40,7 +40,7 @@ namespace SocialManager_Client.UI
             else
                 Username.BorderBrush = def;
 
-            if (Password.Text == "")
+            if (Password.Password == "")
             {
                 Password.BorderBrush = Brushes.Red;
                 return;
@@ -52,7 +52,7 @@ namespace SocialManager_Client.UI
             string message = "";
             ClientController.client = new Client();
 
-            if (!ClientController.Login(Username.Text, Password.Text, out message))
+            if (!ClientController.Login(Username.Text, Password.Password, out message))
             {
                 MessageBox.Show(message);
                 return;

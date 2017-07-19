@@ -13,7 +13,7 @@ namespace SocialManager_Server.Packets
     {
         private string username;
         private string query;
-        private List<string> usernames;
+        private List<Models.Client> profiles;
 
         [XmlElement]
         public string Username { get => username; set => username = value; }
@@ -23,16 +23,16 @@ namespace SocialManager_Server.Packets
 
         [XmlArray("QueryResult")]
         [XmlArrayItem("User")]
-        public List<string> Usernames { get => usernames; set => usernames = value; }
+        public List<Models.Client> Profiles { get => profiles; set => profiles = value; }
 
         internal ClientQueryPacket() : base()
         {
 
         }
 
-        internal ClientQueryPacket(PacketTypes type, string alea, List<string> q) : base(type, alea)
+        internal ClientQueryPacket(PacketTypes type, string alea, List<Models.Client> q) : base(type, alea)
         {
-            Usernames = q;
+            Profiles = q;
         }
 
         
