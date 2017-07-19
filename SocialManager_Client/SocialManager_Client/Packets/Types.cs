@@ -20,6 +20,7 @@ namespace SocialManager_Client.Packets
        , ListContactReq = 0x14
        , ProfileUpdateReq = 0x15
        , ClientsQueryReq = 0x17
+       , SendMessageReq = 0x19
        // Server side
        , RegisterAck = 0x01
        , LoginAck = 0x03
@@ -29,6 +30,7 @@ namespace SocialManager_Client.Packets
        , ContactAck = 0x13
        , ProfileUpdateAck = 0x16
        , ClientsQueryAck = 0x18
+       , SendMessageAck = 0x20
        // Both
        , Error = 0x99
        ,

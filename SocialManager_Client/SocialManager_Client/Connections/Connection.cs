@@ -12,6 +12,10 @@ namespace SocialManager_Client.Connections
     /// </summary>
     abstract class Connection
     {
+        public string ServerIP = "127.0.0.1";
+        public int PortUDP = 11000;
+        public int PortTCP = 5000;
+
         public abstract void SendMessage(byte[] msg);
         public abstract byte[] RecieveMessage();
     }

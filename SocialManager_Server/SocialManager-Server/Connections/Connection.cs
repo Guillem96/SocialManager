@@ -12,8 +12,12 @@ namespace SocialManager_Server.Connections
     /// </summary>
     abstract class Connection
     {
-        public abstract void SendMessage(byte[] msg, IPEndPoint address);
-        public abstract byte[] RecieveMessage(ref IPEndPoint address);
-        public abstract void SendError(string message, IPEndPoint addresss);
+        public string ServerIP = "127.0.0.1";
+        public int PortUDP = 11000;
+        public int PortTCP = 5000;
+
+        public virtual void SendMessage(byte[] msg, IPEndPoint address) { }
+        public virtual byte[] RecieveMessage(ref IPEndPoint address) { return null; }
+        public virtual void SendError(string message, IPEndPoint addresss) { }
     }
 }

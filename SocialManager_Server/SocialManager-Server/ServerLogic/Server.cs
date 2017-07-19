@@ -24,7 +24,7 @@ namespace SocialManager_Server.ServerLogic
             while (true)
             {
                 // Recieve the packet; TODO: Read the port from file
-                IPEndPoint tmp = new IPEndPoint(IPAddress.Any, 11000);
+                IPEndPoint tmp = new IPEndPoint(IPAddress.Any, Udp.PortUDP);
                 var data = Udp.RecieveMessage(ref tmp);
 
                 // New request
@@ -99,7 +99,26 @@ namespace SocialManager_Server.ServerLogic
 
         protected override void TCP()
         {
-            return;
+            DebugInfo("TCP process started.");
+            Tcp = new Connections.TCPConnection();
+
+            while (true)
+            {
+                // Recieve the message
+                TcpClient client = null;
+                var data = Tcp.RecieveMessage(ref client);
+
+                // New request
+                DebugInfo("Crearting new thread to attend the Tcp request.");
+                Thread t = new Thread(() => TcpRequests(data, client));
+                t.Start();
+            }
+        }
+
+        private void TcpRequests(byte[] data, TcpClient client)
+        {
+            // Read the type of the packet
+            var packet = Packets.Packet.Unpack<Packets.Packet>(data);
         }
     }
 }

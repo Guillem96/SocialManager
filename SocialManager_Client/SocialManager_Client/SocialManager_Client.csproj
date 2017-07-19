@@ -35,6 +35,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -52,15 +53,18 @@
   <ItemGroup>
     <Compile Include="ClientController.cs" />
     <Compile Include="ClientLogic\Client.cs" />
+    <Compile Include="ClientLogic\Message.cs" />
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="ClientLogic\Contact.cs" />
     <Compile Include="ClientLogic\ContactRequest.cs" />
+    <Compile Include="Connections\TCPConnection.cs" />
     <Compile Include="Packets\AckErrorPacket.cs" />
     <Compile Include="Packets\BasicReqPacket.cs" />
     <Compile Include="Packets\ClientQueryPacket.cs" />
     <Compile Include="Packets\ContactReqListPacket.cs" />
     <Compile Include="Packets\ContactReqPacket.cs" />
     <Compile Include="Packets\LoginReqPacket.cs" />
+    <Compile Include="Packets\MessagePacket.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="PathUtilities.cs" />
     <Compile Include="ClientLogic\Profile.cs" />
@@ -69,6 +73,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Connections\UDPConnection.cs" />
+    <Compile Include="UdpUtilities\Account.cs" />
+    <Compile Include="UdpUtilities\Alive.cs" />
+    <Compile Include="UdpUtilities\Contact.cs" />
     <Compile Include="UI\App.xaml.cs" />
     <Compile Include="UI\ContactsUI.xaml.cs">
       <DependentUpon>ContactsUI.xaml</DependentUpon>

@@ -30,7 +30,6 @@ namespace SocialManager_Server.Models
         private string username;
         private string password;
         private byte[] ip;
-        private EntitySet<Client> contacts = new EntitySet<Client>();
 
         // Define columns
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]

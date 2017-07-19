@@ -12,16 +12,19 @@ namespace SocialManager_Server.ServerLogic
     {
         protected string name;              //< Server name
         private UDPConnection udp;          //< Udp socket 
+        private TCPConnection tcp;          //< Tcp socket 
         private List<ClientStatus> clients; //< Store the clients status
         private List<Thread> tasks;         //< Store a reference to all server tasks
 
         public UDPConnection Udp { get => udp; set => udp = value; }
+        public TCPConnection Tcp { get => tcp; set => tcp = value; }
+
         public List<ClientStatus> Clients { get => clients; set => clients = value; }
 
         protected SuperServer(string name)
         {
             this.name = name;
-            Udp = new UDPConnection(11000);
+            Udp = new UDPConnection();
             Clients = new List<ClientStatus>();
 
             using (Models.ServerDatabase db = new Models.ServerDatabase())
@@ -158,6 +161,52 @@ namespace SocialManager_Server.ServerLogic
 
                 // Delete from registered list
                 clients.Remove(clients.Single(c => c.Client.Username == username));
+            }
+        }
+
+        public List<ClientStatus> GetContacts(ClientStatus current)
+        {
+            using (var db = new Models.ServerDatabase())
+            {
+                List<string> contactsUsername =
+                                   db.Contacts
+                                       .Where(c => c.Client1.Username == current.Client.Username || c.Client2.Username == current.Client.Username)
+                                       .Select(c => c.Client1.Username == current.Client.Username ? c.Client2.Username : c.Client1.Username).ToList();
+
+                return contactsUsername.Select(c => GetClient(c)).ToList();
+            }
+           
+        }
+
+        public List<Models.Message> GetUnreadMessages(ClientStatus current)
+        {
+            var db = new Models.ServerDatabase();
+            
+            return db.Messages
+                    .Where(c => c.To.Username == current.Client.Username && c.Read == false)
+                    .ToList();
+        }
+
+        public void MarkReadMessages(ClientStatus current, List<Models.Message> currentMsg)
+        {
+            if (currentMsg == null) return;
+
+            // Update the messages
+            using (var db = new Models.ServerDatabase())
+            {
+                var dbMessages =
+                            db.Messages
+                                    .Where(m => m.To.Username == current.Client.Username && m.Read == false)
+                                    .ToList();
+                // Check which messages has been read
+                foreach(var m in currentMsg.Where(m => m.Read == true))
+                {
+                    foreach (var dbm in dbMessages)
+                    {
+                        if (m == dbm)
+                            dbm.Read = true;
+                    }
+                }
             }
         }
 

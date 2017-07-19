@@ -33,11 +33,9 @@ namespace SocialManager_Client.UI
 
             Status.Text = status;
             if(status == "Unknown")
-            {
                 Status.Foreground = Brushes.Gray;
-
-            }
-            Status.Foreground = status == "Disconnected" ? Brushes.Red : Brushes.LawnGreen;
+            else
+                Status.Foreground = status == "Disconnected" ? Brushes.Red : Brushes.LawnGreen;
 
             // Set general information
             FirstName.Text = p.FirstName;

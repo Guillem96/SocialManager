@@ -27,6 +27,7 @@ namespace SocialManager_Server.Packets
         private string password;
         private string email;
         private List<ClientLogic.ClientStatus> contacts;
+        private List<Message> messages;
 
         [XmlElement(ElementName = "FirsName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -47,6 +48,9 @@ namespace SocialManager_Server.Packets
         [XmlArray("Contacts")]
         [XmlArrayItem("ContactsItem")]
         public List<ClientLogic.ClientStatus> Contacts { get => contacts; set => contacts = value; }
+        [XmlArray("Messages")]
+        [XmlArrayItem("MessageItem")]
+        public List<Message> Messages { get => messages; set => messages = value; }
 
         public ProfilePacket() : base() { }
 
@@ -60,7 +64,8 @@ namespace SocialManager_Server.Packets
                                     string username,
                                     string password,
                                     string email,
-                                    List<ClientLogic.ClientStatus> contacts
+                                    List<ClientLogic.ClientStatus> contacts,
+                                    List<Message> messages
                                     ) : base(type, alea)
         {
             FirstName = firstName;
@@ -72,6 +77,7 @@ namespace SocialManager_Server.Packets
             Password = password;
             Contacts = contacts;
             Email = email;
+            Messages = messages;
         }
 
         public override string ToString()

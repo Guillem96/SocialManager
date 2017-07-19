@@ -17,9 +17,9 @@ namespace SocialManager_Server.Connections
         public UdpClient Socket { get => socket; set => socket = value; }
 
 
-        public UDPConnection(int port)
+        public UDPConnection()
         {
-            socket = new UdpClient(port);
+            socket = new UdpClient(PortUDP);
         }
 
         /// <summary>

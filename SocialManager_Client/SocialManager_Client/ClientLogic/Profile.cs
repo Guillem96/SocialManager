@@ -28,6 +28,7 @@ namespace SocialManager_Client
         private List<Contact> contacts;
         private List<ContactRequest> recieved;
         private List<ContactRequest> sent;
+        private List<Message> messages;
 
 
         [XmlElement("FirstName")]
@@ -52,7 +53,8 @@ namespace SocialManager_Client
         public List<ContactRequest> RecievedContactRequests { get => recieved; set => recieved = value; }
         [XmlIgnore]
         public List<ContactRequest> SentContactRequests { get => sent; set => sent = value; }
-
+        [XmlIgnore]
+        public List<Message> Messages { get => messages; set => messages = value; }
 
         public Profile() { }
 
@@ -64,7 +66,8 @@ namespace SocialManager_Client
                         string username, 
                         string password,
                         string email,
-                        List<Contact> contacts
+                        List<Contact> contacts,
+                        List<Message> messages
                         )
         {
             FirstName = firstName;
@@ -78,6 +81,7 @@ namespace SocialManager_Client
             Contacts = contacts;
             recieved = new List<ContactRequest>();
             sent = new List<ContactRequest>();
+            Messages = messages;
         }
 
         public void SetFromPacket(Packets.ProfilePacket p)
@@ -93,6 +97,7 @@ namespace SocialManager_Client
             Contacts = p.Contacts;
             recieved = new List<ContactRequest>();
             sent = new List<ContactRequest>();
+            Messages = p.Messages;
 
         }
 

@@ -16,6 +16,7 @@ namespace SocialManager_Server.Models
         public Table<Client> Clients;
         public Table<Contact> Contacts;
         public Table<ContactRequest> ContactRequests;
+        public Table<Message> Messages;
 
 
         public ServerDatabase() : base(@"Data Source=.\SQLEXPRESS;

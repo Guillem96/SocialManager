@@ -139,6 +139,7 @@ namespace SocialManager_Server.ClientLogic
                         c.PhoneNumber = packet.PhoneNumber;
                         c.Email = packet.Email;
 
+
                         // Set new reference to current
                         current.Client = c;
 

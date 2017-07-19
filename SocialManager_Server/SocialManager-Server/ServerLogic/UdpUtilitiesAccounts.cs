@@ -59,35 +59,22 @@ namespace SocialManager_Server.ServerLogic
                 server.ChangeStatus(logPacket.Username, ClientStatus.Status.Logged, alea, DateTime.Now);
                 // Send the profile info of the database to client
                 server.DebugInfo("Sending profile info to " + logPacket.Username + ".");
-
-                using (var db = new Models.ServerDatabase())
-                {
-                    // GEt the contacts of user
-                    List<string> contactsUsername =
-                                    db.Contacts
-                                        .Where(c => c.Client1.Username == current.Username || c.Client2.Username == current.Username)
-                                        .Select(c => c.Client1.Username == current.Username ? c.Client2.Username : c.Client1.Username).ToList();
-
-                    // Get contacts status
-                    List<ClientStatus> contacts = 
-                                    contactsUsername.Select(c => server.GetClient(c)).ToList();
-
-                    // Return user profile with the ack
-                    server.Udp.SendMessage(new ProfilePacket(
-                                                PacketTypes.LoginAck,
-                                                alea, // New alea generated
-                                                current.FirstName,
-                                                current.LastName,
-                                                current.Age,
-                                                current.PhoneNumber,
-                                                current.Gender,
-                                                current.Username,
-                                                current.Password,
-                                                current.Email,
-                                                contacts
-                                            ).Pack(), ip);
-                }
-
+   
+                // Return user profile with the ack
+                server.Udp.SendMessage(new ProfilePacket(
+                                            PacketTypes.LoginAck,
+                                            alea, // New alea generated
+                                            current.FirstName,
+                                            current.LastName,
+                                            current.Age,
+                                            current.PhoneNumber,
+                                            current.Gender,
+                                            current.Username,
+                                            current.Password,
+                                            current.Email,
+                                            server.GetContacts(server.GetClient(current.Username)),
+                                            server.GetUnreadMessages(server.GetClient(current.Username))
+                                        ).Pack(), ip);
             }
             else
             {
@@ -132,6 +119,7 @@ namespace SocialManager_Server.ServerLogic
             ProfilePacket pPacket = Packet.Unpack<ProfilePacket>(data);
 
             Console.WriteLine(Encoding.ASCII.GetString(data));
+
             server.DebugInfo("Update profile recieved.");
             server.DebugInfo("Update profile Packet: " + pPacket.ToString());
 
@@ -142,31 +130,24 @@ namespace SocialManager_Server.ServerLogic
                 // Profile updated
                 server.DebugInfo("Update Profile: " + pPacket.Username + "'s profile updated.");
 
-                // Send Ack
-                using (var db = new Models.ServerDatabase())
-                {
-                    List<string> contactsUsername =
-                                    db.Contacts
-                                        .Where(c => c.Client1.Username == current.Client.Username || c.Client2.Username == current.Client.Username)
-                                        .Select(c => c.Client1.Username == current.Client.Username ? c.Client2.Username : c.Client1.Username).ToList();
+                // Mark readed messages
+                server.MarkReadMessages(current, pPacket.Messages);
 
-                    List<ClientStatus> contacts = contactsUsername.Select(c => server.GetClient(c)).ToList();
-
-                    // Return user profile with the ack
-                    server.Udp.SendMessage(new ProfilePacket(
-                                                PacketTypes.ProfileUpdateAck,
-                                                current.Alea, // New alea generated
-                                                current.Client.FirstName,
-                                                current.Client.LastName,
-                                                current.Client.Age,
-                                                current.Client.PhoneNumber,
-                                                current.Client.Gender,
-                                                current.Client.Username,
-                                                current.Client.Password,
-                                                current.Client.Email,
-                                                contacts
-                                            ).Pack(), ip);
-                }
+                // Return user profile with the ack
+                server.Udp.SendMessage(new ProfilePacket(
+                                            PacketTypes.ProfileUpdateAck,
+                                            current.Alea, // New alea generated
+                                            current.Client.FirstName,
+                                            current.Client.LastName,
+                                            current.Client.Age,
+                                            current.Client.PhoneNumber,
+                                            current.Client.Gender,
+                                            current.Client.Username,
+                                            current.Client.Password,
+                                            current.Client.Email,
+                                            server.GetContacts(current),
+                                            server.GetUnreadMessages(current)
+                                        ).Pack(), ip);
             }
             else
             {

@@ -176,7 +176,8 @@ namespace SocialManager_Client.UI
 
         private void ViewProfileButtonRequest_Click(object sender, RoutedEventArgs e)
         {
-            new ProfileView(((RequestsView)InboxRequests.SelectedItem).GetProfile(), "Unknown").ShowDialog();
+            Profile p = ((RequestsView)InboxRequests.SelectedItem).GetProfile();
+            new ProfileView(p, "Unknown").ShowDialog();
         }
 
         private void ViewProfileButtonContact_Click(object sender, RoutedEventArgs e)
@@ -191,7 +192,7 @@ namespace SocialManager_Client.UI
                 }
             }
             Contact p = ClientController.client.Profile.Contacts.Single(c => c.Profile.Username == contactUsername);
-            new ProfileView(p.Profile, "Unknown").ShowDialog();
+            new ProfileView(p.Profile, p.Stat.ToString()).ShowDialog();
         }
 
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
