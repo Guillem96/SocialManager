@@ -51,8 +51,17 @@ namespace SocialManager_Server.ServerLogic
             server.DebugInfo("Login request recieved.");
             server.DebugInfo("LoginReq Packet: " + logPacket.ToString());
 
+            
             if (ClientsManagement.LoginClient(logPacket, ref current, out message))
             {
+                if (server.GetClient(current.Username).Stat == ClientStatus.Status.Logged)
+                {
+                    server.DebugInfo("Login: User is already logged");
+                    message = "USer is already logged";
+                    server.Udp.SendError(message, ip);
+                    return;
+                }
+
                 // Client login 
                 server.DebugInfo("Client " + current.ToString() + " is now logged in.");
                 string alea = Server.GenerateAlea();
@@ -102,6 +111,8 @@ namespace SocialManager_Server.ServerLogic
             {
                 server.DebugInfo("Logout: Correct logut from " + logoutPacket.Username);
                 server.DebugInfo(logoutPacket.Username + " now is disconnected.");
+                if (server.ClientsOnChat.Any(d => d.Key == current.Client.Username))
+                    server.ClientsOnChat.Remove(current.Client.Username);
                 current.Disconnect();
 
                 // Return ack

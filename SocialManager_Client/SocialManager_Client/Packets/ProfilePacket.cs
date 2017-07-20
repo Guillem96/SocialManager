@@ -48,7 +48,7 @@ namespace SocialManager_Client.Packets
         [XmlArrayItem("ContactsItem")]
         public List<Contact> Contacts { get => contacts; set => contacts = value; }
         [XmlArray("Messages")]
-        [XmlArrayItem("Message")]
+        [XmlArrayItem("MessageItem")]
         public List<Message> Messages { get => messages; set => messages = value; }
 
         public ProfilePacket() : base()

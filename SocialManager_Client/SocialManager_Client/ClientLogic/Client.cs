@@ -129,7 +129,8 @@ namespace SocialManager_Client
                         switch ((Packets.PacketTypes)p.Type)
                         {
                             case Packets.PacketTypes.SendMessageAck:
-                                Packets.MessagePacket mPacket = Packets.Packet.Unpack<Packets.MessagePacket>(data);
+                                Packets.MessagePacket mPacket = 
+                                    Packets.Packet.Unpack<Packets.MessagePacket>(data);
 
                                 DebugInfo("MessageRecieved: " + mPacket.ToString());
 
@@ -160,6 +161,13 @@ namespace SocialManager_Client
             catch (SocketException)
             {
                 ChatAlive = false;
+                MessageBox.Show("Imposible chatear. Server offline.");
+                return;
+            }
+            catch (System.IO.IOException)
+            {
+                ChatAlive = false;
+                MessageBox.Show("Imposible chatear. Server offline.");
                 return;
             }
         }
