@@ -5,20 +5,39 @@ Desktop application that allows you to organize socialsocial networks and chat w
 
 Para correr correctamente la aplicación es necessario perimero arrancar el servidor y cuando este este listo entonces abrir el cliente.
 
+## Details
+
+* Aplicación modelo cliente-servidor.
+* Para la parte de administración de cuenta se utiliza protocólo UDP.
+* Para la parte de chat se utilitza TCP/IP.
+* El servidor es concurrente, crea un proceso para atender cada petición de los
+clientes.
+* El servidor almazena en una base de datos todos los datos de los clientes.
+ Si estos quieren sus datos deben realizar una petición.
+* Los clientes podrán manejar sus contactos(agregar, eliminar ...), los datos de su perfil(modificarlos) y sus redes sociales(Leer las últimas publicaciones, añadir nuevas publicaciones...).
+
+### Requests Types and ACKs
+
+* *RegisterReq* : Petición de registro.
+* *LoginReq* : Petición de loguearse.
+* *AliveInf* : Petición de mantenerse activo.
+* *LogoutReq* : Petición de logout.
+* *DeleteAccountReq* : Petición de eliminar la cuenta.
+* *NewContactReq* : Enviar una nueva petición de amistad.
+* *AcceptNewContact* : Acceptar una petición de amistad.
+* *RegNewContact* : Descartar una petición de amistad.
+* *ListContactReq* : Petición de la lista de tus contactos.
+* *ProfileUpdateReq* : Petición de actualizar el perfil.
+* *ClientsQueryReq* : Pedir lista de usuarios registrados apartir de una query.
+* *SendMessageReq* : Petición de enviar mensaje.
+* *ReadyChatReq* : Petición de loguearse en el chat.
 
 ### Prerequisites
 
 Nuget packages.
 
 ```
-Autofac                             {3.5.2}                                  SocialManager-Server                        
-EntityFramework                     {6.1.3}                                  SocialManager-Server                        
-Microsoft.Bcl                       {1.1.10}                                 SocialManager-Server                        
-Microsoft.Bcl.Async                 {1.0.168}                                SocialManager-Server                        
-Microsoft.Bcl.Build                 {1.0.21}                                 SocialManager-Server                        
-Microsoft.Net.Http                  {2.2.29}                                 SocialManager-Server                        
-Newtonsoft.Json                     {9.0.1}                                  SocialManager-Server                        
-TweetinviAPI                        {1.2.0.1}                                SocialManager-Server  
+
 ```
 
 ## Built With
