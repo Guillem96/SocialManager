@@ -32,6 +32,10 @@ namespace SocialManager_Client.UdpUtilities
                         // Complete profile update
                         Packets.ProfilePacket profileP =
                             Packets.Packet.Unpack<Packets.ProfilePacket>(data);
+                        
+                        // No set new messages when alive
+                        profileP.Messages = client.Profile.Messages;
+
                         client.Profile.SetFromPacket(profileP);
                         message = "Profile Updated";
                         return true;

@@ -5,27 +5,30 @@ using System.Security.Permissions;
 using SocialManager_Server.ClientLogic;
 using System.Threading;
 using SocialManager_Server.Connections;
+using System.Net.Sockets;
 
 namespace SocialManager_Server.ServerLogic
 {
     abstract class SuperServer
     {
-        protected string name;              //< Server name
-        private UDPConnection udp;          //< Udp socket 
-        private TCPConnection tcp;          //< Tcp socket 
-        private List<ClientStatus> clients; //< Store the clients status
-        private List<Thread> tasks;         //< Store a reference to all server tasks
+        protected string name;                                      //< Server name
+        private UDPConnection udp;                                  //< Udp connection 
+        private TCPConnection tcp;                                  //< Tcp connection 
+        private List<ClientStatus> clients;                         //< Store the clients status
+        private Dictionary<string, TcpClient> clientsOnChat;  //< Clients ready for chat
+        private List<Thread> tasks;                                 //< Store a reference to all server tasks
 
         public UDPConnection Udp { get => udp; set => udp = value; }
         public TCPConnection Tcp { get => tcp; set => tcp = value; }
-
         public List<ClientStatus> Clients { get => clients; set => clients = value; }
+        public Dictionary<string, TcpClient> ClientsOnChat { get => clientsOnChat; set => clientsOnChat = value; }
 
         protected SuperServer(string name)
         {
             this.name = name;
             Udp = new UDPConnection();
             Clients = new List<ClientStatus>();
+            ClientsOnChat = new Dictionary<string, TcpClient>();
 
             using (Models.ServerDatabase db = new Models.ServerDatabase())
             {
@@ -49,11 +52,13 @@ namespace SocialManager_Server.ServerLogic
         public void MainLoop()
         {
             DebugInfo("Server is running...");
-            tasks = new List<Thread>();
-            tasks.Add(new Thread(() => UDP()));
-            tasks.Add(new Thread(() => TCP()));
-            tasks.Add(new Thread(() => Commands()));
-
+            tasks = new List<Thread>
+            {
+                new Thread(() => UDP()),
+                new Thread(() => TCP()),
+                new Thread(() => Commands())
+            };
+            // Start all tasks
             foreach (Thread t in tasks)
                 t.Start();
         }
@@ -73,6 +78,7 @@ namespace SocialManager_Server.ServerLogic
                     case "Help":
                         DebugInfo("Available commands:" + Environment.NewLine +
                                     "\t- List: List status of all clients in database." + Environment.NewLine +
+                                    "\t- ListChat: List clients on chat." + Environment.NewLine +
                                     "\t- Exit: End all server tasks." + Environment.NewLine +
                                     "\t- Help: Show this text.");
                         break;
@@ -82,7 +88,13 @@ namespace SocialManager_Server.ServerLogic
                     case "LIST":
                         ListClientStatus();
                         break;
+                    case "ListChat":
+                    case "listchat":
+                    case "LISTCHAT":
+                        ListClientChat();
+                        break;
                     case "exit":
+                        // TODO: End all tasks
                         return;
                     default:
                         DebugInfo("This command does not exist. Type help to know more about commands.");
@@ -98,9 +110,24 @@ namespace SocialManager_Server.ServerLogic
         /// </summary>
         private void ListClientStatus()
         {
-            foreach(ClientStatus cs in Clients)
+            // List all clients at the moment
+            Console.WriteLine(String.Format("|{0,15}|{1,15}|{2,15}|", "Username", "Alea", "State"));
+            foreach (ClientStatus cs in Clients)
             {
                 Console.WriteLine(cs.ToString());
+            }
+        }
+
+        /// <summary>
+        /// List all clients on chat.
+        /// </summary>
+        private void ListClientChat()
+        {
+            // List all clients at the moment
+            Console.WriteLine(String.Format("|{0,15}|", "Username"));
+            foreach (string username in ClientsOnChat.Keys)
+            {
+                Console.WriteLine(String.Format("|{0,15}|", username));
             }
         }
 
@@ -118,7 +145,7 @@ namespace SocialManager_Server.ServerLogic
         /// <summary>
         /// Modifies the status of a client.
         /// </summary>
-        public void ChangeStatus(string username, ClientStatus.Status status, string alea, DateTime lastAlive)
+        public void SetStatus(string username, ClientStatus.Status status, string alea, DateTime lastAlive)
         {
             ClientStatus cs = GetClient(username);
             cs.Stat = status;
@@ -142,6 +169,9 @@ namespace SocialManager_Server.ServerLogic
             return alea;
         }
 
+        /// <summary>
+        /// Removes the client with username "username" from database
+        /// </summary>
         public void DeleteCLientFromDataBase(string username)
         {
             using (var db = new Models.ServerDatabase())
@@ -164,6 +194,9 @@ namespace SocialManager_Server.ServerLogic
             }
         }
 
+        /// <summary>
+        /// Returns the contacts of a user
+        /// </summary>
         public List<ClientStatus> GetContacts(ClientStatus current)
         {
             using (var db = new Models.ServerDatabase())
@@ -174,10 +207,12 @@ namespace SocialManager_Server.ServerLogic
                                        .Select(c => c.Client1.Username == current.Client.Username ? c.Client2.Username : c.Client1.Username).ToList();
 
                 return contactsUsername.Select(c => GetClient(c)).ToList();
-            }
-           
+            }   
         }
 
+        /// <summary>
+        /// Return a list of non read messages of a user
+        /// </summary>
         public List<Models.Message> GetUnreadMessages(ClientStatus current)
         {
             var db = new Models.ServerDatabase();
@@ -187,26 +222,25 @@ namespace SocialManager_Server.ServerLogic
                     .ToList();
         }
 
-        public void MarkReadMessages(ClientStatus current, List<Models.Message> currentMsg)
+        /// <summary>
+        /// Change unread messages to read if they had been read by the indicated user
+        /// </summary>
+        public void MarkReadMessages(ClientStatus current)
         {
-            if (currentMsg == null) return;
-
             // Update the messages
             using (var db = new Models.ServerDatabase())
             {
                 var dbMessages =
-                            db.Messages
-                                    .Where(m => m.To.Username == current.Client.Username && m.Read == false)
-                                    .ToList();
-                // Check which messages has been read
-                foreach(var m in currentMsg.Where(m => m.Read == true))
+                        db.Messages
+                                .Where(m => m.To.Username == current.Client.Username && m.Read == false)
+                                .ToList();
+
+                foreach(var message in dbMessages)
                 {
-                    foreach (var dbm in dbMessages)
-                    {
-                        if (m == dbm)
-                            dbm.Read = true;
-                    }
+                    message.Read = true;
                 }
+
+                db.SubmitChanges();
             }
         }
 

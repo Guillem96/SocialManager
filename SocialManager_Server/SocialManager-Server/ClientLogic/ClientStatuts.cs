@@ -48,7 +48,7 @@ namespace SocialManager_Server.ClientLogic
 
         public override string ToString()
         {
-            return Client.Username + " - " + Client.Email + " - " + stat.ToString() + " - " + alea;
+            return String.Format("|{0,15}|{1,15}|{2,15}|", Client.Username, Alea, Stat.ToString());
         }
     }
 }

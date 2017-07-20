@@ -18,7 +18,6 @@ namespace SocialManager_Server.Models
         public Table<ContactRequest> ContactRequests;
         public Table<Message> Messages;
 
-
         public ServerDatabase() : base(@"Data Source=.\SQLEXPRESS;
                                         AttachDbFilename=
                                         C:\Users\Guillem\Desktop\Curs C# ESPAI\SocialManager\SocialManager_Server\ServerDB.MDF;

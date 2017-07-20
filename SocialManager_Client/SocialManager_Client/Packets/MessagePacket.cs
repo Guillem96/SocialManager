@@ -36,17 +36,18 @@ namespace SocialManager_Client.Packets
 
         internal MessagePacket() : base () { }
 
-        internal MessagePacket(PacketTypes type, string alea, Profile from, Profile to, bool read) : base(type, alea)
+        internal MessagePacket(PacketTypes type, string alea, Profile from, Profile to,string content, bool read) : base(type, alea)
         {
             From = from;
             To = to;
             Read = read;
             Date = DateTime.Now;
+            Content = content;
         }
 
         public override string ToString()
         {
-            return base.ToString() + ", From=" + from.Username + " ,To=" + to.Username + ", Content=" + content + "]";
+            return base.ToString() + ", From=" + from.Username + " ,To=" + to.Username + ", Content=" + content + ", Date=" + DateString + "]";
         }
     }
 }

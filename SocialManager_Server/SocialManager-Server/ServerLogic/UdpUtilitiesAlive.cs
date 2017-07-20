@@ -31,6 +31,9 @@ namespace SocialManager_Server.ServerLogic
             {
                 server.DebugInfo("Alive: Incorrect alive from " + aPacket.Username);
                 server.DebugInfo(aPacket.Username + " now is disconnected.");
+
+                if(server.ClientsOnChat.Any(d => d.Key == current.Client.Username))
+                    server.ClientsOnChat.Remove(current.Client.Username);
                 // Disconnect the client
                 current.Disconnect();
                 // Send error
@@ -46,6 +49,8 @@ namespace SocialManager_Server.ServerLogic
                 TimeSpan since = DateTime.Now - cs.LastAlive;
                 if (since.Seconds > 12)
                 {
+                    if (server.ClientsOnChat.Any(d => d.Key == cs.Client.Username))
+                        server.ClientsOnChat.Remove(cs.Client.Username);
                     cs.Disconnect();
                     server.DebugInfo(cs.Client.Username + " now is disconnected because he is inactive.");
                 }

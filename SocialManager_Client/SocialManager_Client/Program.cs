@@ -91,6 +91,7 @@ namespace SocialManager_Client
 
                     case 4:
                         string usernameFrom = Ask("Accept from? ");
+                        c.GetContactRequestList(out message);
                         c.AnswerContactRequest(c.Profile.RecievedContactRequests.Single(r => r.From.Username == usernameFrom), true, out message);
                         break;
 
@@ -116,7 +117,7 @@ namespace SocialManager_Client
                 int op = int.Parse(Ask("1. Logout" + Environment.NewLine +
                                         "2. Show Profile" + Environment.NewLine +
                                         "3. Add Contact" + Environment.NewLine +
-                                        "4. Send Message (Not implemented)" + Environment.NewLine +
+                                        "4. Send Message " + Environment.NewLine +
                                         "5. Remove acount." + Environment.NewLine +
                                         "Option: "));
 
@@ -141,6 +142,12 @@ namespace SocialManager_Client
                         AddContactMenu(c);
                         break;
                     case 4:
+                        string to = Ask("Message to? ");
+                        string content = Ask("Content? ");
+                        if(!c.SendChatMessage(to, content, out message))
+                        {
+                            Console.WriteLine(message);
+                        }
                         break;
                     case 5:
                         if(c.DeleteAccount(out message))
@@ -159,34 +166,34 @@ namespace SocialManager_Client
         static void Main(string[] args)
         {
             // Start user interface
-            Window w = new UI.LoginWindow();
+            //Window w = new UI.LoginWindow();
 
-            w.ShowDialog();
-            //Client c = new Client();
+            //w.ShowDialog();
+            Client c = new Client();
 
-            //while (true)
-            //{
-            //    int op = int.Parse(Ask("1. Register" + Environment.NewLine +
-            //                            "2. Login" + Environment.NewLine +
-            //                            "3. Exit" + Environment.NewLine +
-            //                            "Option: "));
+            while (true)
+            {
+                int op = int.Parse(Ask("1. Register" + Environment.NewLine +
+                                        "2. Login" + Environment.NewLine +
+                                        "3. Exit" + Environment.NewLine +
+                                        "Option: "));
 
-            //    switch (op)
-            //    {
-            //        case 1:
-            //            Register(c);
-            //            break;
-            //        case 2:
-            //            if (Login(c))
-            //            {
-            //                Alive(c);
-            //            }
-            //            break;
-            //        case 3:
-            //            return;
-            //    }
-            //}
-            
+                switch (op)
+                {
+                    case 1:
+                        Register(c);
+                        break;
+                    case 2:
+                        if (Login(c))
+                        {
+                            Alive(c);
+                        }
+                        break;
+                    case 3:
+                        return;
+                }
+            }
+
         }
     }
 }

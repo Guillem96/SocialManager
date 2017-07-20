@@ -13,7 +13,6 @@ namespace SocialManager_Server.Connections
         private TcpListener listener;
         public TcpListener Listener { get => listener; set => listener = value; }
 
-
         public TCPConnection()
         {
             listener = new TcpListener(IPAddress.Parse(ServerIP), PortTCP);
@@ -45,10 +44,10 @@ namespace SocialManager_Server.Connections
             ns.Write(msg, 0, msg.Length);
         }
 
-        public override void SendError(string message, IPEndPoint address)
+        public void SendError(string message, TcpClient client)
         {
             byte[] packet = new Packets.AckErrorPacket(Packets.PacketTypes.Error, message).Pack();
-            SendMessage(packet, address);
+            SendMessage(packet, client);
         }
     }
 }

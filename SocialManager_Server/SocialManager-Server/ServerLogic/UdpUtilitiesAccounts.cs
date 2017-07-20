@@ -56,10 +56,11 @@ namespace SocialManager_Server.ServerLogic
                 // Client login 
                 server.DebugInfo("Client " + current.ToString() + " is now logged in.");
                 string alea = Server.GenerateAlea();
-                server.ChangeStatus(logPacket.Username, ClientStatus.Status.Logged, alea, DateTime.Now);
+                server.SetStatus(logPacket.Username, ClientStatus.Status.Logged, alea, DateTime.Now);
+                
                 // Send the profile info of the database to client
                 server.DebugInfo("Sending profile info to " + logPacket.Username + ".");
-   
+
                 // Return user profile with the ack
                 server.Udp.SendMessage(new ProfilePacket(
                                             PacketTypes.LoginAck,
@@ -75,6 +76,9 @@ namespace SocialManager_Server.ServerLogic
                                             server.GetContacts(server.GetClient(current.Username)),
                                             server.GetUnreadMessages(server.GetClient(current.Username))
                                         ).Pack(), ip);
+
+                // Mark messages as read
+                server.MarkReadMessages(server.GetClient(current.Username));
             }
             else
             {
@@ -118,8 +122,6 @@ namespace SocialManager_Server.ServerLogic
 
             ProfilePacket pPacket = Packet.Unpack<ProfilePacket>(data);
 
-            Console.WriteLine(Encoding.ASCII.GetString(data));
-
             server.DebugInfo("Update profile recieved.");
             server.DebugInfo("Update profile Packet: " + pPacket.ToString());
 
@@ -129,9 +131,6 @@ namespace SocialManager_Server.ServerLogic
             {
                 // Profile updated
                 server.DebugInfo("Update Profile: " + pPacket.Username + "'s profile updated.");
-
-                // Mark readed messages
-                server.MarkReadMessages(current, pPacket.Messages);
 
                 // Return user profile with the ack
                 server.Udp.SendMessage(new ProfilePacket(
@@ -146,8 +145,8 @@ namespace SocialManager_Server.ServerLogic
                                             current.Client.Password,
                                             current.Client.Email,
                                             server.GetContacts(current),
-                                            server.GetUnreadMessages(current)
-                                        ).Pack(), ip);
+                                            new List<Models.Message>()
+                                            ).Pack(), ip);
             }
             else
             {

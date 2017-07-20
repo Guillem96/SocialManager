@@ -95,10 +95,7 @@ namespace SocialManager_Client
             Email = p.Email;
             Gender = p.Gender;
             Contacts = p.Contacts;
-            recieved = new List<ContactRequest>();
-            sent = new List<ContactRequest>();
             Messages = p.Messages;
-
         }
 
         public override string ToString()

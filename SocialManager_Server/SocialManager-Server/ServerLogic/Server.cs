@@ -99,13 +99,13 @@ namespace SocialManager_Server.ServerLogic
 
         protected override void TCP()
         {
-            DebugInfo("TCP process started.");
             Tcp = new Connections.TCPConnection();
 
             while (true)
             {
                 // Recieve the message
                 TcpClient client = null;
+                DebugInfo("Waiting for TCP requests.");
                 var data = Tcp.RecieveMessage(ref client);
 
                 // New request
@@ -119,6 +119,17 @@ namespace SocialManager_Server.ServerLogic
         {
             // Read the type of the packet
             var packet = Packets.Packet.Unpack<Packets.Packet>(data);
+
+            Console.WriteLine("-------------------------------------------------------------------");
+            switch ((Packets.PacketTypes)packet.type)
+            {
+                case Packets.PacketTypes.ReadyChatReq:
+                    TcpUtilities.ReadyChatClient(data, client, this);
+                    break;
+                case Packets.PacketTypes.SendMessageReq:
+                    TcpUtilities.SendMessage(data, client, this);
+                    break;
+            }
         }
     }
 }

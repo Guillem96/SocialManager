@@ -129,6 +129,7 @@
     <Compile Include="ServerLogic\Server.cs" />
     <Compile Include="Connections\UDPConnection.cs" />
     <Compile Include="ServerLogic\SuperServer.cs" />
+    <Compile Include="ServerLogic\TcpUtilities.cs" />
     <Compile Include="ServerLogic\UdpUtilitiesAccounts.cs" />
     <Compile Include="ServerLogic\UdpUtilitiesAlive.cs" />
     <Compile Include="ServerLogic\UdpUtilitiesContacts.cs" />

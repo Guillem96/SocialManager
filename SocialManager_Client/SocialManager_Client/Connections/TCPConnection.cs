@@ -11,12 +11,15 @@ namespace SocialManager_Client.Connections
     class TCPConnection : Connection
     {
         private TcpClient client;
+        private NetworkStream ns;
+
         public TcpClient Client { get => client; set => client = value; }
 
 
         public TCPConnection()
         {
             Client = new TcpClient(ServerIP, PortTCP);
+            ns = Client.GetStream();
         }
 
         /// <summary>
@@ -25,9 +28,9 @@ namespace SocialManager_Client.Connections
         /// <returns></returns>
         public override byte[] RecieveMessage()
         {
-            NetworkStream ns = client.GetStream();
             byte[] bytesToRead = new byte[client.ReceiveBufferSize];
             int bytesRead = ns.Read(bytesToRead, 0, client.ReceiveBufferSize);
+            ns.Flush();
             return bytesToRead;
         }
 
@@ -37,8 +40,8 @@ namespace SocialManager_Client.Connections
         /// <param name="msg">Bytes to send.</param>
         public override void SendMessage(byte[] msg)
         {
-            NetworkStream ns = client.GetStream();
             ns.Write(msg, 0, msg.Length);
+            ns.Flush();
         }
     }
 }

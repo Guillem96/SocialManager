@@ -36,12 +36,13 @@ namespace SocialManager_Server.Packets
 
         internal MessagePacket() : base () { }
 
-        internal MessagePacket(PacketTypes type, string alea, Models.Client from, Models.Client to, bool read) : base(type, alea)
+        internal MessagePacket(PacketTypes type, string alea, Models.Client from, Models.Client to,string content, bool read, DateTime date) : base(type, alea)
         {
             From = from;
             To = to;
             Read = read;
-            Date = DateTime.Now;
+            Date = date;
+            Content = content;
         }
 
         public override string ToString()

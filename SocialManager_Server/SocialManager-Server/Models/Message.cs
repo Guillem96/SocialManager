@@ -55,12 +55,14 @@ namespace SocialManager_Server.Models
         public string DateString { get => Date.ToString("yyyy-MM-dd HH:mm:ss"); set => Date = DateTime.Parse(value); }
 
         [Column]
-        [XmlElement("Content")]
+        [XmlElement]
         public string Content { get => content; set => content = value; }
 
         [XmlElement]
         [Column(Name = "Readed")]
         public bool Read { get => read; set => read = value; }
+
+        public Message() { }
 
         public static bool operator==(Message l, Message r)
         {
