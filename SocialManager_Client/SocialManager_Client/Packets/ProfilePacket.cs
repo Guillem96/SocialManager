@@ -26,6 +26,7 @@ namespace SocialManager_Client.Packets
         private string email;
         private List<Contact> contacts;
         private List<Message> messages;
+        private List<AgendaEvent> agendaEvents;
 
 
         [XmlElement(ElementName = "FirsName")]
@@ -50,6 +51,9 @@ namespace SocialManager_Client.Packets
         [XmlArray("Messages")]
         [XmlArrayItem("MessageItem")]
         public List<Message> Messages { get => messages; set => messages = value; }
+        [XmlArray("Agenda")]
+        [XmlArrayItem("Event")]
+        public List<AgendaEvent> AgendaEvents { get => agendaEvents; set => agendaEvents = value; }
 
         public ProfilePacket() : base()
         {
@@ -68,6 +72,7 @@ namespace SocialManager_Client.Packets
             Email = p.Email;
             Contacts = p.Contacts;
             Messages = p.Messages;
+            AgendaEvents = p.AgendaEvents;
         }
 
         internal ProfilePacket(PacketTypes type,
@@ -93,8 +98,8 @@ namespace SocialManager_Client.Packets
 
         public override string ToString()
         {
-            return base.ToString() + String.Format(@", FirstName={0}, LastName={1}, Age={2}, PhoneNumber={3}
-                                       , Gender={4}, Email={5}, Username={6}, Password={7}]",
+            return base.ToString() + String.Format(", FirstName={0}, LastName={1}, Age={2}, PhoneNumber={3}" + 
+                                       ", Gender={4}, Email={5}, Username={6}, Password={7}]",
                                        FirstName, LastName, Age, PhoneNumber, Gender.ToString(), Email,
                                        Username, Password);
         }

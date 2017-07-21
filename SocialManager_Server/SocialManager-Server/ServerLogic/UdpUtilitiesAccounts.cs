@@ -83,7 +83,8 @@ namespace SocialManager_Server.ServerLogic
                                             current.Password,
                                             current.Email,
                                             server.GetContacts(server.GetClient(current.Username)),
-                                            server.GetUnreadMessages(server.GetClient(current.Username))
+                                            server.GetUnreadMessages(server.GetClient(current.Username)),
+                                            server.GetAgendaEvents(current.Username)
                                         ).Pack(), ip);
 
                 // Mark messages as read
@@ -156,7 +157,8 @@ namespace SocialManager_Server.ServerLogic
                                             current.Client.Password,
                                             current.Client.Email,
                                             server.GetContacts(current),
-                                            new List<Models.Message>()
+                                            new List<Models.Message>(),
+                                            server.GetAgendaEvents(current.Client.Username)
                                             ).Pack(), ip);
             }
             else

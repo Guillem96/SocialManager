@@ -28,6 +28,7 @@ namespace SocialManager_Server.Packets
         private string email;
         private List<ClientLogic.ClientStatus> contacts;
         private List<Message> messages;
+        private List<AgendaEvent> agendaEvents;
 
         [XmlElement(ElementName = "FirsName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -51,6 +52,9 @@ namespace SocialManager_Server.Packets
         [XmlArray("Messages")]
         [XmlArrayItem("MessageItem")]
         public List<Message> Messages { get => messages; set => messages = value; }
+        [XmlArray("Agenda")]
+        [XmlArrayItem("Event")]
+        public List<AgendaEvent> AgendaEvents { get => agendaEvents; set => agendaEvents = value; }
 
         public ProfilePacket() : base() { }
 
@@ -65,7 +69,8 @@ namespace SocialManager_Server.Packets
                                     string password,
                                     string email,
                                     List<ClientLogic.ClientStatus> contacts,
-                                    List<Message> messages
+                                    List<Message> messages,
+                                    List<AgendaEvent> agendaEvents
                                     ) : base(type, alea)
         {
             FirstName = firstName;
@@ -78,12 +83,13 @@ namespace SocialManager_Server.Packets
             Contacts = contacts;
             Email = email;
             Messages = messages;
+            AgendaEvents = agendaEvents;
         }
 
         public override string ToString()
         {
-            return base.ToString() + String.Format(@", FirstName={0}, LastName={1}, Age={2}, PhoneNumber={3}
-                                       , Gender={4}, Email={5}, Username={6}, Password={7}]",
+            return base.ToString() + String.Format(", FirstName={0}, LastName={1}, Age={2}, PhoneNumber={3}" + 
+                                       ", Gender={4}, Email={5}, Username={6}, Password={7}]",
                                        FirstName, LastName, Age, PhoneNumber, Gender.ToString(), Email,
                                        Username, Password);
         }

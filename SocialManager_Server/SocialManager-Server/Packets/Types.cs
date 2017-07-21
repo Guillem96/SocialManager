@@ -22,6 +22,8 @@ namespace SocialManager_Server.Packets
        , ClientsQueryReq = 0x17
        , SendMessageReq = 0x19
        , ReadyChatReq = 0x21
+       , NewAgendaEventReq = 0x23
+       , DeleteAgendaEventReq = 0x24
        // Server side
        , RegisterAck = 0x01
        , LoginAck = 0x03
@@ -33,6 +35,8 @@ namespace SocialManager_Server.Packets
        , ClientsQueryAck = 0x18
        , SendMessageAck = 0x20
        , ReadyChatAck = 0x22
+       , NewAgendaEventAck = 0x25
+       , DeleteAgendaEventAck = 0x26
        // Both
        , Error = 0x99
        ,

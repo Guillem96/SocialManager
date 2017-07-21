@@ -114,7 +114,7 @@ namespace SocialManager_Client.UI
             //// All correct, register client
             Profile p = new Profile(FirstName.Text, LastName.Text, age, PhoneNumber.Text,
                                     (Male.IsChecked.Value ? Profile.Sex.Male : Profile.Sex.Female),
-                                    Username.Text, Password.Password, Email.Text, new List<Contact>(), new List<Message>());
+                                    Username.Text, Password.Password, Email.Text, new List<Contact>(), new List<Message>(), new List<AgendaEvent>());
 
             ClientController.client = new Client();
             string message = "";

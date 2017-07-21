@@ -53,5 +53,10 @@ namespace SocialManager_Client
                                 out message);
         }
 
+        public static bool AnyMessageFrom(string username)
+        {
+            return client.Profile.Messages.Any(m => m.From.Username == username);
+        }
+
     }
 }

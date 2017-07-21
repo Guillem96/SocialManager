@@ -244,6 +244,15 @@ namespace SocialManager_Server.ServerLogic
             }
         }
 
+        public List<Models.AgendaEvent> GetAgendaEvents(string username)
+        {
+            var db = new Models.ServerDatabase();
+
+            return db.AgendaEvents
+                    .Where(c => c.Client.Username == username)
+                    .ToList();
+        }
+
         /// <summary>
         /// Shows info from stdout
         /// </summary>

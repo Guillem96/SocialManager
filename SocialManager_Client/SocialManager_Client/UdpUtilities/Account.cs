@@ -177,7 +177,7 @@ namespace SocialManager_Client.UdpUtilities
                         // Complete login
                         Packets.ProfilePacket profileP = Packets.Packet.Unpack<Packets.ProfilePacket>(data);
                         client.Profile.SetFromPacket(profileP);
-
+                        Console.WriteLine(Encoding.ASCII.GetString(data));
                         client.Alea = p.Alea;
                         client.DebugInfo("Login: Done.");
                         client.DebugInfo("Login: Alive timer is enabled.");

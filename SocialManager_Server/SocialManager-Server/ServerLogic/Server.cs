@@ -94,6 +94,16 @@ namespace SocialManager_Server.ServerLogic
                 case Packets.PacketTypes.ListContactReq:
                     UdpUtilitiesContacts.SendContactRequests(data, this, tmp);
                     break;
+
+                // New agenda event
+                case Packets.PacketTypes.NewAgendaEventReq:
+                    UdpUtilitiesAgendaEvents.AgendaEvent(data, this, false, tmp);
+                    break;
+
+                // Delete agenda event
+                case Packets.PacketTypes.DeleteAgendaEventReq:
+                    UdpUtilitiesAgendaEvents.AgendaEvent(data, this, true, tmp);
+                    break;
             }
         }
 

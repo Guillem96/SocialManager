@@ -108,6 +108,7 @@
     <Compile Include="ClientLogic\ClientsManagement.cs" />
     <Compile Include="ClientLogic\ClientStatuts.cs" />
     <Compile Include="Connections\TCPConnection.cs" />
+    <Compile Include="Models\AgendaEvent.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="Models\Contact.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\ServerDatabase.cs" />
     <Compile Include="Packets\AckErrorPacket.cs" />
+    <Compile Include="Packets\AgendaEventPacket.cs" />
     <Compile Include="Packets\BasicReqPacket.cs" />
     <Compile Include="Packets\ClientQueryPacket.cs" />
     <Compile Include="Packets\ContactReqPacket.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="ServerLogic\SuperServer.cs" />
     <Compile Include="ServerLogic\TcpUtilities.cs" />
     <Compile Include="ServerLogic\UdpUtilitiesAccounts.cs" />
+    <Compile Include="ServerLogic\UdpUtilitiesAgendaEvents.cs" />
     <Compile Include="ServerLogic\UdpUtilitiesAlive.cs" />
     <Compile Include="ServerLogic\UdpUtilitiesContacts.cs" />
     <Compile Include="XmlUtilities.cs" />

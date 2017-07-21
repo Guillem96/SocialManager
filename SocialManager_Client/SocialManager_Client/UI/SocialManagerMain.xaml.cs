@@ -22,14 +22,19 @@ namespace SocialManager_Client.UI
     public partial class SocialManagerMain : Window
     {
         private Timer checkFriends;
+        private Dictionary<string, Expander> instantiatedChats; //< Reference to chats, <username, chat>
 
         public SocialManagerMain()
         {
             InitializeComponent();
+            // Set images
             logoImage.Source = PathUtilities.GetImageSource("Logo.png");
             LogoutImage.Source = PathUtilities.GetImageSource("Logout.png");
             EditProfileImage.Source= PathUtilities.GetImageSource("EditProfile.png");
             MainWindow.Title = "Social Manager - " + ClientController.client.Profile.Username;
+
+            // References to instanciated chats
+            instantiatedChats = new Dictionary<string, Expander>();
 
             // Set timer to check which contacts are online
             checkFriends = new Timer()
@@ -68,6 +73,9 @@ namespace SocialManager_Client.UI
             {
                 // Fill the list view
                 ConnectedFriends.Items.Clear();
+
+                bool newMessages = false;
+
                 foreach (var f in ClientController.client.Profile.Contacts)
                 {
                     StackPanel sp = new StackPanel()
@@ -90,11 +98,34 @@ namespace SocialManager_Client.UI
                         Margin = new Thickness(5, 2, 5, 0)
                     });
 
+                    if (!newMessages)
+                        newMessages = ClientController.AnyMessageFrom(f.Profile.Username);
+
+                    int width;
+                    int height;
+                    string imageSource;
+
+                    if (ClientController.AnyMessageFrom(f.Profile.Username))
+                    {
+                        width = 35;
+                        height = 35;
+                        imageSource = "newChatNewMessages.png";
+                    }
+                    else
+                    {
+                        width = 25;
+                        height = 25;
+                        imageSource = "newChat.png";
+                    }
+
                     Button b = new Button()
                     {
-                        Content = new Image() { Source = PathUtilities.GetImageSource("newChat.png") },
-                        Width = 25,
-                        Height = 25,
+                        Content = new Image()
+                        {
+                            Source = PathUtilities.GetImageSource(imageSource),
+                        },
+                        Width = width,
+                        Height = height,
                         Background = Brushes.Transparent,
                         BorderBrush = Brushes.Transparent,
                         Margin = new Thickness(5, 2, 5, 0)
@@ -115,20 +146,52 @@ namespace SocialManager_Client.UI
 
                     ConnectedFriends.Items.Add(sp);
                 }
+                if (newMessages)
+                    NewMessagesImage.Source = PathUtilities.GetImageSource("new.png");
+                else
+                    NewMessagesImage.Source = null;
+
             }));
         }
 
         private void AddNewChat(Contact to)
         {
+            if(instantiatedChats.Count == 3)
+            {
+                MessageBox.Show("No puedes abrir más de 3 chats.");
+                return;
+            }
+
+            if (instantiatedChats.Keys.Contains(to.Profile.Username))
+            {
+                instantiatedChats[to.Profile.Username].IsExpanded = true;
+                return;
+            }
+
+            StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
+
+            Button b = new Button()
+            {
+                Content = new Image() { Source = PathUtilities.GetImageSource("deny.png") },
+                Width = 15,
+                Height = 15,
+                Background = Brushes.Transparent,
+                BorderBrush = Brushes.Transparent
+            };
+
+            sp.Children.Add(new Label() { Content = to.Profile.Username, Margin = new Thickness(5,0,5,0) });
+            sp.Children.Add(b);
+
             Expander e = new Expander()
             {
-                Header = to.Profile.Username,
+                Header = sp,
                 ExpandDirection = ExpandDirection.Up,
-                Width = 285,
-                Margin = new Thickness(-0,-350,0, 0),
+                Width = 205,
+                Margin = new Thickness(-0, -350, 0, 0),
+                IsExpanded = true,
                 Content = new Frame()
                 {
-                    Width = 280,
+                    Width = 200,
                     Height = 350,
                     NavigationUIVisibility = NavigationUIVisibility.Hidden
                 }
@@ -137,6 +200,19 @@ namespace SocialManager_Client.UI
             ((Frame)e.Content).Navigate(new Chat(to));
 
             ChatsStack.Children.Add(e);
+
+            b.Click += (o, s) =>
+                                {
+                                    ChatsStack.Children.Remove(e);
+                                    instantiatedChats.Remove(to.Profile.Username);
+                                };
+
+            instantiatedChats.Add(to.Profile.Username, e);
+        }
+
+        private void AgendaButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new AgendaUI());
         }
     }
 }

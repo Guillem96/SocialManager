@@ -13,11 +13,19 @@ namespace SocialManager_Server
     {
         private static void Main(String[] args)
         {
-            //using (var db = new Models.ServerDatabase())
-            //{
-            //    db.DeleteDatabase();
-            //    db.CreateDatabase();
-            //}
+            using (var db = new Models.ServerDatabase())
+            {
+                //db.DeleteDatabase();
+                //db.CreateDatabase();
+                //db.AgendaEvents.InsertOnSubmit(new Models.AgendaEvent()
+                //{
+                //    Client = db.Clients.Single(c => c.Username == "Guillem96"),
+                //    EventInfo = "Cena viernes noche",
+                //    Date = DateTime.Now,
+                //    EventName = "Tagliattela."
+                //});
+                //db.SubmitChanges();
+            }
             // Start server
             ServerLogic.Server server = new ServerLogic.Server("Social Manager server");
             server.MainLoop();

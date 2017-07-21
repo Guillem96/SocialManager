@@ -64,7 +64,8 @@ namespace SocialManager_Client.UI
                                         password,
                                         Email.Text,
                                         ClientController.client.Profile.Contacts,
-                                        ClientController.client.Profile.Messages);
+                                        ClientController.client.Profile.Messages,
+                                        ClientController.client.Profile.AgendaEvents);
 
             string message = "";
             if(!ClientController.client.UpdateProfile(p, out message))

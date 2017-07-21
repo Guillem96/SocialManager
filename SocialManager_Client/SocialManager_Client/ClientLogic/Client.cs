@@ -229,6 +229,16 @@ namespace SocialManager_Client
             }
         }
 
+        public bool AddNewAgendaEvent(string eventName, string eventInfo, DateTime date, out string message)
+        {
+            return UdpUtilities.Agenda.AgendaEvent(eventName, eventInfo, date, false, this, out message);
+        }
+
+        public bool AddNewAgendaEvent(AgendaEvent e, out string message)
+        {
+            return UdpUtilities.Agenda.AgendaEvent(e.EventName, e.EventInfo, e.Date, false, this, out message);
+        }
+
         public void DebugInfo(string message)
         {
             Console.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] " + message);
