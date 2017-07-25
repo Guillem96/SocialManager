@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
+using System.Linq;
 using System.Timers;
 using SocialManager_Client.Connections;
 using System.Windows;
@@ -12,8 +12,8 @@ namespace SocialManager_Client
 {
     public partial class Client
     {
-        private Connections.UDPConnection udp;
-        private Connections.TCPConnection tcp;
+        private UDPConnection udp;
+        private TCPConnection tcp;
 
         private Profile profile;
         private string alea;
@@ -54,59 +54,63 @@ namespace SocialManager_Client
 
         public bool Register(Profile newProfile, out string message)
         {
-            return UdpUtilities.Account.Register(newProfile, this, out message);
+            return UdpUtilities.Register(newProfile, this, out message);
         }
 
         public bool Login(string username, string password, out string message)
         {
-            bool b = UdpUtilities.Account.Login(username, password, this, out message);
+            bool b = UdpUtilities.Login(username, password, this, out message);
+            
             // Start tcp after login
-            DebugInfo("Tcp chat started.");
-            tcpTask = new Thread(() => TcpChat());
-            tcpTask.Start();
-
+            if (b)
+            {
+                DebugInfo("Tcp chat started.");
+                tcpTask = new Thread(() => TcpChat());
+                tcpTask.Start();
+            }
+            
             return b;
         }
 
         public bool Logout(out string message)
         {
             tcpTask.Abort();
-            return UdpUtilities.Account.Logout(this, out message);
+            return UdpUtilities.Logout(this, out message);
         }
 
         public bool DeleteAccount(out string message)
         {
-            return UdpUtilities.Account.DeleteAccount(this, out message);
+            return UdpUtilities.DeleteAccount(this, out message);
         }
 
         public bool UpdateProfile(Profile newProfile, out string message)
         {
-            return UdpUtilities.Alive.UpdateProfile(newProfile, this, out message);  
+            return UdpUtilities.UpdateProfile(newProfile, this, out message);  
         }
 
         public void KeepAlive()
         {
-            UdpUtilities.Alive.UpdateProfile(this);
+            UdpUtilities.UpdateProfile(this);
         }
 
         public bool ClientsQuery(string query, out string message, ref List<Profile> profiles)
         {
-            return UdpUtilities.Contact.ClientQuery(query, ref profiles, this, out message);
+            return UdpUtilities.ClientQuery(query, ref profiles, this, out message);
         }
 
         public bool GetContactRequestList(out string message)
         {
-            return UdpUtilities.Contact.GetContactRequests(this, out message);
+            return UdpUtilities.GetContactRequests(this, out message);
         }
 
         public bool SendContactRequest(string to, out string message)
         {
-            return UdpUtilities.Contact.SendContactRequest(to, this, out message);
+            return UdpUtilities.SendContactRequest(to, this, out message);
         }
 
         public bool AnswerContactRequest(ContactRequest req, bool ack, out string message)
         {
-            return UdpUtilities.Contact.AnswerContactRequest(req, ack, this, out message);
+            return UdpUtilities.AnswerContactRequest(req, ack, this, out message);
         }
 
         public void TcpChat()
@@ -158,16 +162,18 @@ namespace SocialManager_Client
             {
                 return;
             }
-            catch (SocketException)
+            catch (SocketException e)
             {
                 ChatAlive = false;
                 MessageBox.Show("Imposible chatear. Server offline.");
+                DebugInfo(e.ToString());
                 return;
             }
-            catch (System.IO.IOException)
+            catch (System.IO.IOException e )
             {
                 ChatAlive = false;
                 MessageBox.Show("Imposible chatear. Server offline.");
+                DebugInfo(e.ToString());
                 return;
             }
         }
@@ -229,14 +235,35 @@ namespace SocialManager_Client
             }
         }
 
-        public bool AddNewAgendaEvent(string eventName, string eventInfo, DateTime date, out string message)
+        public bool LinkNewSocialNetwork(SocialNetwork sn, out string message)
         {
-            return UdpUtilities.Agenda.AgendaEvent(eventName, eventInfo, date, false, this, out message);
+            return UdpUtilities.LinkSocialNetwork(sn, this, out message);
+        }
+
+        public bool DeleteLinkNewSocialNetwork(SocialNetwork sn, out string message)
+        {
+            return UdpUtilities.DeleteLinkSocialNetwork(sn, this, out message);
         }
 
         public bool AddNewAgendaEvent(AgendaEvent e, out string message)
         {
-            return UdpUtilities.Agenda.AgendaEvent(e.EventName, e.EventInfo, e.Date, false, this, out message);
+            return UdpUtilities.AgendaEvent(e.EventName, e.EventInfo, e.Date, false, this, out message);
+        }
+
+        public bool DeleteAgendaEvent(AgendaEvent e, out string message)
+        {
+            return UdpUtilities.AgendaEvent(e.EventName, e.EventInfo, e.Date, true, this, out message);
+        }
+
+        internal SocialNetworksLogic.Twitter TwitterLogin()
+        {
+            if (profile.SocialNets.Any(c => c.Name == "Twitter"))
+            {
+                SocialNetwork t = profile.SocialNets.Single(c => c.Name == "Twitter");
+                return new SocialNetworksLogic.Twitter(t.Username, t.Password);
+            }
+            else
+                return null;
         }
 
         public void DebugInfo(string message)

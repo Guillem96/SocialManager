@@ -24,7 +24,7 @@ namespace SocialManager_Client.UI
 
         private void Confimr_Click(object sender, RoutedEventArgs e)
         {
-
+            // Check that all mandatory fields are filled
             if (FirstName.Text == "")
             {
                 FirstName.BorderBrush = System.Windows.Media.Brushes.Red;
@@ -114,11 +114,16 @@ namespace SocialManager_Client.UI
             //// All correct, register client
             Profile p = new Profile(FirstName.Text, LastName.Text, age, PhoneNumber.Text,
                                     (Male.IsChecked.Value ? Profile.Sex.Male : Profile.Sex.Female),
-                                    Username.Text, Password.Password, Email.Text, new List<Contact>(), new List<Message>(), new List<AgendaEvent>());
+                                    Username.Text, 
+                                    Password.Password, 
+                                    Email.Text, 
+                                    new List<Contact>(), 
+                                    new List<Message>(), 
+                                    new List<AgendaEvent>(),
+                                    new List<SocialNetwork>());
 
             ClientController.client = new Client();
-            string message = "";
-            if (!ClientController.Register(p, out message))
+            if (!ClientController.Register(p, out string message))
             {
                 MessageBox.Show(message);
             }

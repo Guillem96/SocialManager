@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace SocialManager_Client.Packets
@@ -27,7 +22,7 @@ namespace SocialManager_Client.Packets
         private List<Contact> contacts;
         private List<Message> messages;
         private List<AgendaEvent> agendaEvents;
-
+        private List<SocialNetwork> socialNets;
 
         [XmlElement(ElementName = "FirsName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -54,6 +49,9 @@ namespace SocialManager_Client.Packets
         [XmlArray("Agenda")]
         [XmlArrayItem("Event")]
         public List<AgendaEvent> AgendaEvents { get => agendaEvents; set => agendaEvents = value; }
+        [XmlArray("SocialNets")]
+        [XmlArrayItem("Net")]
+        public List<SocialNetwork> SocialNets { get => socialNets; set => socialNets = value; }
 
         public ProfilePacket() : base()
         {
@@ -73,6 +71,7 @@ namespace SocialManager_Client.Packets
             Contacts = p.Contacts;
             Messages = p.Messages;
             AgendaEvents = p.AgendaEvents;
+            SocialNets = p.SocialNets;
         }
 
         internal ProfilePacket(PacketTypes type,

@@ -18,6 +18,9 @@ namespace SocialManager_Server.Models
         public Table<ContactRequest> ContactRequests;
         public Table<Message> Messages;
         public Table<AgendaEvent> AgendaEvents;
+        public Table<SocialNetwork> SocialNetworks;
+        public Table<LinkedSocialNetwork> LinkedSocialNetworks;
+
 
         public ServerDatabase() : base(@"Data Source=.\SQLEXPRESS;
                                         AttachDbFilename=

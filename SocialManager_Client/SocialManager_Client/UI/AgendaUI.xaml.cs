@@ -22,7 +22,8 @@ namespace SocialManager_Client.UI
     public partial class AgendaUI : UserControl
     {
         private Brush def;
-        
+        private Timer checkAgenda;
+
         public AgendaUI()
         {
             InitializeComponent();
@@ -30,7 +31,7 @@ namespace SocialManager_Client.UI
             def = EventName.BorderBrush;
 
             // Check events timer
-            Timer checkAgenda = new Timer()
+            checkAgenda = new Timer()
             {
                 Enabled = true,
                 Interval = 1000,
@@ -38,6 +39,12 @@ namespace SocialManager_Client.UI
             checkAgenda.Elapsed += (o, s) => CheckEvents();
         }
 
+        public void Close()
+        {
+            checkAgenda.Enabled = false;
+        }
+
+        // Add the new events to events container
         private void CheckEvents()
         {
             Dispatcher.BeginInvoke(new Action(() =>
@@ -48,6 +55,7 @@ namespace SocialManager_Client.UI
                 {
                     StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
 
+                    // Prettify image
                     Image eventImg = new Image()
                     {
                         Source = PathUtilities.GetImageSource("event.png"),
@@ -59,6 +67,7 @@ namespace SocialManager_Client.UI
 
                     sp.Children.Add(eventImg);
 
+                    // Event name
                     sp.Children.Add(new Label()
                     {
                         Content = e.EventName,
@@ -68,16 +77,20 @@ namespace SocialManager_Client.UI
                         VerticalAlignment = VerticalAlignment.Center
                     });
 
+                    // Event description
                     sp.Children.Add(new TextBox()
                     {
                         Text = e.EventInfo,
                         TextWrapping = TextWrapping.Wrap,
+                        VerticalContentAlignment = VerticalAlignment.Center,
                         Width = 200,
                         Height = 60,
                         IsReadOnly = true,
-                        Margin = new Thickness(10, 5, 10, 5)
+                        Margin = new Thickness(10, 5, 10, 5),
+                        BorderBrush = Brushes.Transparent
                     });
 
+                    // Event date
                     sp.Children.Add(new Label()
                     {
                         Content = e.Date.ToShortDateString(),
@@ -87,13 +100,32 @@ namespace SocialManager_Client.UI
                         VerticalAlignment = VerticalAlignment.Center
                     });
 
+                    // Delete event button
+                    Button b = new Button()
+                    {
+                        Width = 30,
+                        Height = 30,
+                        BorderBrush = Brushes.Transparent,
+                        Background = Brushes.Transparent,
+                        Content = new Image()
+                        {
+                            Source = PathUtilities.GetImageSource("deny.png")
+                        }
+                    };
+
+                    sp.Children.Add(b);
+
+                    b.Click += (s , ev) => DeleteEvent(e);
+
                     EventsContainer.Items.Add(sp);
                 }
             }));
         }
-
+       
+        // Create new events
         private void AddEventButton_Click(object sender, RoutedEventArgs e)
         {
+            // Check if all fields are filled
             if(EventName.Text == "")
             {
                 MessageBox.Show("Todos los campos son obligatorios.");
@@ -131,14 +163,31 @@ namespace SocialManager_Client.UI
 
             if (!ClientController.client.AddNewAgendaEvent(aEvent, out string message))
             {
+                // Error
                 MessageBox.Show(message);
                 return;
             }
             else
             {
+                // Nice
                 MessageBox.Show("Evento añadido correctamente.");
             }
 
         }
+
+        private void DeleteEvent(AgendaEvent agendaEvent)
+        {
+            if(!ClientController.client.DeleteAgendaEvent(agendaEvent, out string message))
+            {
+                MessageBox.Show(message);
+                return;
+            }
+            else
+            {
+                MessageBox.Show("Evento eliminado correctamente.");
+            }
+        }
     }
+
+    
 }

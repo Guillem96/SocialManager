@@ -113,13 +113,16 @@
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\ContactRequest.cs" />
+    <Compile Include="Models\LinkedSocialNetwork.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\ServerDatabase.cs" />
+    <Compile Include="Models\SocialNetwork.cs" />
     <Compile Include="Packets\AckErrorPacket.cs" />
     <Compile Include="Packets\AgendaEventPacket.cs" />
     <Compile Include="Packets\BasicReqPacket.cs" />
     <Compile Include="Packets\ClientQueryPacket.cs" />
     <Compile Include="Packets\ContactReqPacket.cs" />
+    <Compile Include="Packets\LinkSocialNetworkPacket.cs" />
     <Compile Include="Packets\LoginReqPacket.cs" />
     <Compile Include="Packets\ContactReqListPacket.cs" />
     <Compile Include="Packets\MessagePacket.cs" />
@@ -132,10 +135,11 @@
     <Compile Include="Connections\UDPConnection.cs" />
     <Compile Include="ServerLogic\SuperServer.cs" />
     <Compile Include="ServerLogic\TcpUtilities.cs" />
-    <Compile Include="ServerLogic\UdpUtilitiesAccounts.cs" />
-    <Compile Include="ServerLogic\UdpUtilitiesAgendaEvents.cs" />
-    <Compile Include="ServerLogic\UdpUtilitiesAlive.cs" />
-    <Compile Include="ServerLogic\UdpUtilitiesContacts.cs" />
+    <Compile Include="ServerLogic\UdpUtilities.SocialNetwork.cs" />
+    <Compile Include="ServerLogic\UdpUtilities.Accounts.cs" />
+    <Compile Include="ServerLogic\UdpUtilities.AgendaEvents.cs" />
+    <Compile Include="ServerLogic\UdpUtilities.Alive.cs" />
+    <Compile Include="ServerLogic\UdpUtilities.Contacts.cs" />
     <Compile Include="XmlUtilities.cs" />
   </ItemGroup>
   <ItemGroup>

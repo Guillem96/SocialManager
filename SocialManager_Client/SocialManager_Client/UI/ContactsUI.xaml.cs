@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -47,6 +48,8 @@ namespace SocialManager_Client.UI
             }
         }
 
+        public Timer setContacts;
+
         public ContactsUI()
         {
             InitializeComponent();
@@ -61,43 +64,88 @@ namespace SocialManager_Client.UI
             DenyImage.Source = PathUtilities.GetImageSource("deny.png");
 
             // Set contacts 
-            SetContacts();
+            setContacts = new Timer()
+            {
+                Interval = 1000, // Every 5 seconds
+                Enabled = true
+            };
+            setContacts.Elapsed += (o, ev) => SetContacts();
+        }
+
+        public void Close()
+        {
+            setContacts.Enabled = false;
+            setContacts.Dispose();
         }
 
         private void SetContacts()
         {
-            string message = "";
-
-            if (!ClientController.GetContactRequests(out message))
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                MessageBox.Show(message);
-            }
-            else
-            {
-                
-                foreach (var contact in ClientController.client.Profile.Contacts)
+                // Set contacts
+                if (!ClientController.client.GetContactRequestList( out string message))
                 {
-                    Image con = new Image() { Source = PathUtilities.GetImageSource("connected.png"), Width = 10, Height = 10, Margin = new Thickness(10, 2, 0, 0) };
-                    Image dis = new Image() { Source = PathUtilities.GetImageSource("disconnected.png"), Width = 10, Height = 10, Margin = new Thickness(10, 2, 0, 0) };
-                    Image noImageProfile = new Image() { Source = PathUtilities.GetImageSource("Profile.png"), Width = 20, Height = 20, Margin = new Thickness(5, 2, 0, 0) };
+                    MessageBox.Show(message);
+                }
+                else
+                {
+                    ContactsItems.Items.Clear();
+                    // For each acontact create an entry to the list view
+                    foreach (var contact in ClientController.client.Profile.Contacts)
+                    {
+                        // Image that represents the state of contact(online, offline)
+                        Image con = new Image()
+                        {
+                            Source = PathUtilities.GetImageSource("connected.png"),
+                            Width = 10,
+                            Height = 10,
+                            Margin = new Thickness(10, 2, 0, 0)
+                        };
 
-                    StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
-                    sp.Children.Add(noImageProfile);
+                        Image dis = new Image()
+                        {
+                            Source = PathUtilities.GetImageSource("disconnected.png"),
+                            Width = 10,
+                            Height = 10,
+                            Margin = new Thickness(10, 2, 0, 0)
+                        };
 
-                    sp.Children.Add(new Label() { Content = contact.Profile.Username, Margin = new Thickness(10, 2, 0, 0) });
-                    sp.Children.Add(contact.Stat != Contact.Status.Disconnected ? con : dis);
-                    ContactsItems.Items.Add(sp);
+                        // Prettify image
+                        Image contactImage = new Image()
+                        {
+                            Source = PathUtilities.GetImageSource("Profile.png"),
+                            Width = 20,
+                            Height = 20,
+                            Margin = new Thickness(5, 2, 0, 0)
+                        };
+
+                        StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
+                        sp.Children.Add(contactImage);
+
+                        // Contact username
+                        sp.Children.Add(new Label()
+                        {
+                            Content = contact.Profile.Username,
+                            Margin = new Thickness(10, 2, 0, 0)
+                        });
+
+                        sp.Children.Add(contact.Stat != Contact.Status.Disconnected ? con : dis);
+
+                        ContactsItems.Items.Add(sp);
+                    }
                 }
 
-                InboxRequests.ItemsSource = 
+                // Set the friend requests
+                InboxRequests.ItemsSource =
                     ClientController.client.Profile.RecievedContactRequests
                                             .Select(c => new RequestsView(c.From));
-                SentRequests.ItemsSource = 
+                SentRequests.ItemsSource =
                     ClientController.client.Profile.SentContactRequests
                                             .Select(c => new RequestsView(c.To));
-            }
+            }));
         }
 
+        // Enable and disable some buttons
         private void InboxRequests_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (InboxRequests.SelectedItem == null)
@@ -113,19 +161,24 @@ namespace SocialManager_Client.UI
             ViewProfileButtonRequest.IsEnabled = true;
         }
 
+        // Make a client query and get the result
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
+            // No quary, then nothing
             if (Query.Text == "")
                 return;
+
+            // Check that query is a unique word (else server problems)
             if(Query.Text.Split(new char[] { ' ' }).Length > 1)
             {
                 MessageBox.Show("Search query must be a unique word.");
                 return;
             }
-            string message = "";
+
+            // Get the result
             List<Profile> profiles = null;
 
-            if(!ClientController.ClientQuery(Query.Text, ref profiles, out message))
+            if (!ClientController.ClientQuery(Query.Text, ref profiles, out string message))
             {
                 MessageBox.Show(message);
                 return;
@@ -135,22 +188,22 @@ namespace SocialManager_Client.UI
             PossibleRequests.ItemsSource = profiles.Select( c => new RequestsView(c));
         }
 
+        // Send a friend request
         private void SendContactRequestButton_Click(object sender, RoutedEventArgs e)
         {
             // Send the contact request
-            string message = "";
-            if(!ClientController.SendContactRequest(((RequestsView)PossibleRequests.SelectedItem).Username, out message))
+            if (!ClientController.SendContactRequest(((RequestsView)PossibleRequests.SelectedItem).Username, out string message))
             {
                 MessageBox.Show(message);
             }
             else
             {
                 MessageBox.Show("Contact request sended correctly to " + ((RequestsView)PossibleRequests.SelectedItem).Username);
-                SetContacts();
             }
 
         }
 
+        // Enable and disable some buttons 
         private void PossibleRequests_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (PossibleRequests.SelectedItem == null)
@@ -163,6 +216,7 @@ namespace SocialManager_Client.UI
             SendContactRequestButton.IsEnabled = true;
         }
 
+        // Enable and disable some buttons
         private void ContactsItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ContactsItems.SelectedItem == null)
@@ -174,12 +228,14 @@ namespace SocialManager_Client.UI
             ViewProfileButtonContact.IsEnabled = true;
         }
 
+        // Open profile window
         private void ViewProfileButtonRequest_Click(object sender, RoutedEventArgs e)
         {
             Profile p = ((RequestsView)InboxRequests.SelectedItem).GetProfile();
             new ProfileView(p, "Unknown").ShowDialog();
         }
 
+        // Open profile of a friend
         private void ViewProfileButtonContact_Click(object sender, RoutedEventArgs e)
         {
             string contactUsername = "";
@@ -195,33 +251,31 @@ namespace SocialManager_Client.UI
             new ProfileView(p.Profile, p.Stat.ToString()).ShowDialog();
         }
 
+        // Accept the request
         private void AcceptButton_Click(object sender, RoutedEventArgs e)
         {
-            string message = "";
-            if(!ClientController.AcceptRequest(
-                        ((RequestsView)InboxRequests.SelectedItem).Username, out message))
+            if (!ClientController.AcceptRequest(
+            ((RequestsView)InboxRequests.SelectedItem).Username, out string message))
             {
                 MessageBox.Show(message);
             }
             else
             {
                 MessageBox.Show("Has agregado a " + ((RequestsView)InboxRequests.SelectedItem).Username + "!");
-                SetContacts();
             }
         }
 
+        // Deny the request
         private void DenyButton_Click(object sender, RoutedEventArgs e)
         {
-            string message = "";
             if (!ClientController.DenyRequest(
-                        ((RequestsView)InboxRequests.SelectedItem).Username, out message))
+            ((RequestsView)InboxRequests.SelectedItem).Username, out string message))
             {
                 MessageBox.Show(message);
             }
             else
             {
                 MessageBox.Show("Has rechazado a " + ((RequestsView)InboxRequests.SelectedItem).Username + "!");
-                SetContacts();
             }
         }
     }

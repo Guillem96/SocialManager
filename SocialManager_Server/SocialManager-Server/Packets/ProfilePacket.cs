@@ -29,6 +29,7 @@ namespace SocialManager_Server.Packets
         private List<ClientLogic.ClientStatus> contacts;
         private List<Message> messages;
         private List<AgendaEvent> agendaEvents;
+        private List<LinkedSocialNetwork> socialNets;
 
         [XmlElement(ElementName = "FirsName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -55,6 +56,9 @@ namespace SocialManager_Server.Packets
         [XmlArray("Agenda")]
         [XmlArrayItem("Event")]
         public List<AgendaEvent> AgendaEvents { get => agendaEvents; set => agendaEvents = value; }
+        [XmlArray("SocialNets")]
+        [XmlArrayItem("Net")]
+        public List<LinkedSocialNetwork> SocialNets { get => socialNets; set => socialNets = value; }
 
         public ProfilePacket() : base() { }
 
@@ -70,7 +74,8 @@ namespace SocialManager_Server.Packets
                                     string email,
                                     List<ClientLogic.ClientStatus> contacts,
                                     List<Message> messages,
-                                    List<AgendaEvent> agendaEvents
+                                    List<AgendaEvent> agendaEvents,
+                                    List<LinkedSocialNetwork> socialNets
                                     ) : base(type, alea)
         {
             FirstName = firstName;
@@ -84,6 +89,7 @@ namespace SocialManager_Server.Packets
             Email = email;
             Messages = messages;
             AgendaEvents = agendaEvents;
+            SocialNets = socialNets;
         }
 
         public override string ToString()

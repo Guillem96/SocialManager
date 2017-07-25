@@ -30,6 +30,7 @@ namespace SocialManager_Client
         private List<ContactRequest> sent;
         private List<Message> messages;
         private List<AgendaEvent> agendaEvents;
+        private List<SocialNetwork> socialNets;
 
         [XmlElement("FirstName")]
         public string FirstName { get => firstName; set => firstName = value; }
@@ -57,6 +58,9 @@ namespace SocialManager_Client
         public List<Message> Messages { get => messages; set => messages = value; }
         [XmlIgnore]
         public List<AgendaEvent> AgendaEvents { get => agendaEvents; set => agendaEvents = value; }
+        [XmlIgnore]
+        public List<SocialNetwork> SocialNets { get => socialNets; set => socialNets = value; }
+
 
         public Profile() { }
 
@@ -70,7 +74,8 @@ namespace SocialManager_Client
                         string email,
                         List<Contact> contacts,
                         List<Message> messages,
-                        List<AgendaEvent> events
+                        List<AgendaEvent> events,
+                        List<SocialNetwork> socialNets
                         )
         {
             FirstName = firstName;
@@ -86,6 +91,7 @@ namespace SocialManager_Client
             sent = new List<ContactRequest>();
             Messages = messages;
             AgendaEvents = events;
+            SocialNets = socialNets;
         }
 
         public void SetFromPacket(Packets.ProfilePacket p)
@@ -101,7 +107,7 @@ namespace SocialManager_Client
             Contacts = p.Contacts;
             Messages = p.Messages;
             AgendaEvents = p.AgendaEvents;
-
+            SocialNets = p.SocialNets;
         }
 
         public override string ToString()

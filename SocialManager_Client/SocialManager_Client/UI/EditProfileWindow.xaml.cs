@@ -44,8 +44,10 @@ namespace SocialManager_Client.UI
 
         }
 
+        // Accept the changes
         private void Accept_Click(object sender, RoutedEventArgs e)
         {
+            // Check if password has been changed correctly
             bool changePassword = CurrentPassword.Password != "" && NewPassword.Password != "";
             string password;
             if (changePassword &&
@@ -55,6 +57,7 @@ namespace SocialManager_Client.UI
                 password = ClientController.client.Profile.Password;
 
 
+            // Send the new profile
             Profile p = new Profile(FirstName.Text,
                                         LastName.Text,
                                         int.Parse(Age.Text),
@@ -65,10 +68,10 @@ namespace SocialManager_Client.UI
                                         Email.Text,
                                         ClientController.client.Profile.Contacts,
                                         ClientController.client.Profile.Messages,
-                                        ClientController.client.Profile.AgendaEvents);
+                                        ClientController.client.Profile.AgendaEvents,
+                                        ClientController.client.Profile.SocialNets);
 
-            string message = "";
-            if(!ClientController.client.UpdateProfile(p, out message))
+            if (!ClientController.client.UpdateProfile(p, out string message))
             {
                 MessageBox.Show(message);
             }
@@ -77,10 +80,9 @@ namespace SocialManager_Client.UI
                 MessageBox.Show("Perfil actualizado correctamente.");
                 this.Close();
             }
-
-
         }
 
+        // Cancel the changes
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

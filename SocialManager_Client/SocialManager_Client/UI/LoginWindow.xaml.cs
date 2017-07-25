@@ -32,6 +32,7 @@ namespace SocialManager_Client.UI
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
+            // Check that all fields are correct
             if(Username.Text == "")
             {
                 Username.BorderBrush = Brushes.Red;
@@ -49,10 +50,9 @@ namespace SocialManager_Client.UI
                 Password.BorderBrush = def;
 
             // If all correct do login
-            string message = "";
             ClientController.client = new Client();
 
-            if (!ClientController.Login(Username.Text, Password.Password, out message))
+            if (!ClientController.Login(Username.Text, Password.Password, out string message))
             {
                 MessageBox.Show(message);
                 return;
@@ -62,10 +62,9 @@ namespace SocialManager_Client.UI
                 this.Close();
                 new SocialManagerMain().ShowDialog();
             }
-
-
         }
 
+        // Open register window
         private void SignUpButton_Click(object sender, RoutedEventArgs e)
         {
             Window w = new SignUpWindow();

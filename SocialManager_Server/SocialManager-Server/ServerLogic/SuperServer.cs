@@ -39,7 +39,7 @@ namespace SocialManager_Server.ServerLogic
             // When a user has't sent an AliveInf Packet in 12 seconds its status changes to disconnected.
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 3000;
-            timer.Elapsed += (sender, e) => UdpUtilitiesAlive.CheckAlives((Server)this);
+            timer.Elapsed += (sender, e) => UdpUtilities.CheckAlives((Server)this);
             timer.Enabled = true;
         }
 
@@ -56,11 +56,13 @@ namespace SocialManager_Server.ServerLogic
             {
                 new Thread(() => UDP()),
                 new Thread(() => TCP()),
-                new Thread(() => Commands())
             };
+            
             // Start all tasks
             foreach (Thread t in tasks)
                 t.Start();
+
+            Commands();
         }
 
         /// <summary>
@@ -94,7 +96,8 @@ namespace SocialManager_Server.ServerLogic
                         ListClientChat();
                         break;
                     case "exit":
-                        // TODO: End all tasks
+                        foreach (var t in tasks)
+                            t.Abort();
                         return;
                     default:
                         DebugInfo("This command does not exist. Type help to know more about commands.");
@@ -244,13 +247,17 @@ namespace SocialManager_Server.ServerLogic
             }
         }
 
+        /// <summary>
+        /// Return the list of eventsof user with username "username"
+        /// </summary>
         public List<Models.AgendaEvent> GetAgendaEvents(string username)
         {
-            var db = new Models.ServerDatabase();
+            using (var db = new Models.ServerDatabase())
 
-            return db.AgendaEvents
-                    .Where(c => c.Client.Username == username)
-                    .ToList();
+                return db.AgendaEvents
+                        .Where(c => c.Client.Username == username)
+                        .ToList();
+        
         }
 
         /// <summary>
@@ -260,5 +267,16 @@ namespace SocialManager_Server.ServerLogic
         {
             Console.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] " + message);
         }
+
+        /// <summary>
+        /// Return the list of linked social nets of user with username "username"
+        /// </summary>
+        public List<Models.LinkedSocialNetwork> GetSocialNetworks(string username)
+        {
+            var db = new Models.ServerDatabase();
+
+            return db.LinkedSocialNetworks.Where(l => l.Client.Username.Equals(username)).ToList();
+        }
+
     }
 }

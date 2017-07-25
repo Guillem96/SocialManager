@@ -20,17 +20,24 @@ namespace SocialManager_Server.ServerLogic
         /// </summary>
         protected override void UDP()
         {
-            DebugInfo("UDP process started.");
-            while (true)
+            try
             {
-                // Recieve the packet; TODO: Read the port from file
-                IPEndPoint tmp = new IPEndPoint(IPAddress.Any, Udp.PortUDP);
-                var data = Udp.RecieveMessage(ref tmp);
+                DebugInfo("UDP process started.");
+                while (true)
+                {
+                    // Recieve the packet; TODO: Read the port from file
+                    IPEndPoint tmp = new IPEndPoint(IPAddress.Any, Udp.PortUDP);
+                    var data = Udp.RecieveMessage(ref tmp);
 
-                // New request
-                DebugInfo("Crearting new thread to attend the Udp request.");
-                Thread t = new Thread(() => UdpRequests(data, tmp));
-                t.Start();
+                    // New request
+                    DebugInfo("Crearting new thread to attend the Udp request.");
+                    Thread t = new Thread(() => UdpRequests(data, tmp));
+                    t.Start();
+                }
+            }
+            catch(ThreadAbortException)
+            {
+                return;
             }
         }
 
@@ -44,84 +51,100 @@ namespace SocialManager_Server.ServerLogic
             {
                 // Recieve a register request
                 case Packets.PacketTypes.RegisterReq:
-                    UdpUtilitiesAccounts.Register(data, tmp, this);     
+                    UdpUtilities.Register(data, tmp, this);     
                     break;
 
                 // Recieve Login request
                 case Packets.PacketTypes.LoginReq:
-                    UdpUtilitiesAccounts.Login(data, tmp, this);
+                    UdpUtilities.Login(data, tmp, this);
                     break;
 
                 // Recieve Logout Request
                 case Packets.PacketTypes.LogoutReq:
-                    UdpUtilitiesAccounts.Logout(data, tmp, this);
+                    UdpUtilities.Logout(data, tmp, this);
                     break;
 
                 // Profile update request
                 case Packets.PacketTypes.ProfileUpdateReq:
-                    UdpUtilitiesAccounts.ProfileUpdate(data, tmp, this);
+                    UdpUtilities.ProfileUpdate(data, tmp, this);
                     break;
 
                 // Delete account request
                 case Packets.PacketTypes.DeleteAccountReq:
-                    UdpUtilitiesAccounts.DeleteAccount(data, tmp, this);
+                    UdpUtilities.DeleteAccount(data, tmp, this);
                     break;
 
                 // Recieve Alive Inf
                 case Packets.PacketTypes.AliveInf:
-                    UdpUtilitiesAlive.Alive(data, tmp, this);
+                    UdpUtilities.Alive(data, tmp, this);
                     break;
 
                 // Create new contact request
                 case Packets.PacketTypes.NewContactReq:
-                    UdpUtilitiesContacts.NewContactRequest(data, this, tmp);
+                    UdpUtilities.NewContactRequest(data, this, tmp);
                     break;
 
                 case Packets.PacketTypes.ClientsQueryReq:
-                    UdpUtilitiesContacts.ClientsQuery(data, this, tmp);
+                    UdpUtilities.ClientsQuery(data, this, tmp);
                     break;
                 // Accept a contact request
                 case Packets.PacketTypes.AcceptNewContact:
-                    UdpUtilitiesContacts.AnswerContactRequest(data, this, tmp, true);
+                    UdpUtilities.AnswerContactRequest(data, this, tmp, true);
                     break;
 
                 // Refuse a contact request
                 case Packets.PacketTypes.RegNewContact:
-                    UdpUtilitiesContacts.AnswerContactRequest(data, this, tmp, false);
+                    UdpUtilities.AnswerContactRequest(data, this, tmp, false);
                     break;
 
                 // Contact requests list requested
                 case Packets.PacketTypes.ListContactReq:
-                    UdpUtilitiesContacts.SendContactRequests(data, this, tmp);
+                    UdpUtilities.SendContactRequests(data, this, tmp);
                     break;
 
                 // New agenda event
                 case Packets.PacketTypes.NewAgendaEventReq:
-                    UdpUtilitiesAgendaEvents.AgendaEvent(data, this, false, tmp);
+                    UdpUtilities.AgendaEvent(data, this, false, tmp);
                     break;
 
                 // Delete agenda event
                 case Packets.PacketTypes.DeleteAgendaEventReq:
-                    UdpUtilitiesAgendaEvents.AgendaEvent(data, this, true, tmp);
+                    UdpUtilities.AgendaEvent(data, this, true, tmp);
+                    break;
+
+                // Link social network
+                case Packets.PacketTypes.LinkSocialNetworkReq:
+                    UdpUtilities.LinkSocialNet(data, tmp, this);
+                    break;
+
+                // Delete Link social network
+                case Packets.PacketTypes.DeleteLinkSocialNetReq:
+                    UdpUtilities.DeleteLinkSocialNet(data, tmp, this);
                     break;
             }
         }
 
         protected override void TCP()
         {
-            Tcp = new Connections.TCPConnection();
-
-            while (true)
+            try
             {
-                // Recieve the message
-                TcpClient client = null;
-                DebugInfo("Waiting for TCP requests.");
-                var data = Tcp.RecieveMessage(ref client);
+                Tcp = new Connections.TCPConnection();
 
-                // New request
-                DebugInfo("Crearting new thread to attend the Tcp request.");
-                Thread t = new Thread(() => TcpRequests(data, client));
-                t.Start();
+                while (true)
+                {
+                    // Recieve the message
+                    TcpClient client = null;
+                    DebugInfo("Waiting for TCP requests.");
+                    var data = Tcp.RecieveMessage(ref client);
+
+                    // New request
+                    DebugInfo("Crearting new thread to attend the Tcp request.");
+                    Thread t = new Thread(() => TcpRequests(data, client));
+                    t.Start();
+                }
+            } catch (ThreadAbortException)
+            {
+                return;
             }
         }
 
@@ -130,7 +153,6 @@ namespace SocialManager_Server.ServerLogic
             // Read the type of the packet
             var packet = Packets.Packet.Unpack<Packets.Packet>(data);
 
-            Console.WriteLine("-------------------------------------------------------------------");
             switch ((Packets.PacketTypes)packet.type)
             {
                 case Packets.PacketTypes.ReadyChatReq:

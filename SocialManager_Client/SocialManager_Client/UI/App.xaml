@@ -6,4 +6,7 @@
     <Application.Resources>
 
     </Application.Resources>
+    <Application.MainWindow>
+        <NavigationWindow Source="SocialManagerMain.xaml" Visibility="Visible"></NavigationWindow>
+    </Application.MainWindow>
 </Application>

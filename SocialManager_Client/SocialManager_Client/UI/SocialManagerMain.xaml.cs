@@ -23,10 +23,12 @@ namespace SocialManager_Client.UI
     {
         private Timer checkFriends;
         private Dictionary<string, Expander> instantiatedChats; //< Reference to chats, <username, chat>
+        private UserControl openedFrame; //< Reference to opened user control
 
         public SocialManagerMain()
         {
             InitializeComponent();
+
             // Set images
             logoImage.Source = PathUtilities.GetImageSource("Logo.png");
             LogoutImage.Source = PathUtilities.GetImageSource("Logout.png");
@@ -45,18 +47,66 @@ namespace SocialManager_Client.UI
             checkFriends.Elapsed += (s, e) => CheckFriends();
         }
 
-        private void ContactsButton_Click(object sender, RoutedEventArgs e)
+        private void SetOpenFrame(UserControl newUserControl)
         {
-            ContentFrame.Navigate(new ContactsUI());
+            if(openedFrame == null)
+            {
+                openedFrame = newUserControl;
+            }
+            else
+            {
+                // Dispose the frame and variables
+                switch (openedFrame.GetType().ToString())
+                {
+                    case "SocialManager_Client.UI.ContactsUI":
+                        ((ContactsUI)openedFrame).Close();
+                        break;
+                    case "SocialManager_Client.UI.AgendaUI":
+                        ((AgendaUI)openedFrame).Close();
+                        break;
+                }
+                openedFrame = newUserControl;
+            }
         }
 
+        // Right navbar
+        private void ContactsButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserControl nUserControl = new ContactsUI();
+            SetOpenFrame(nUserControl);
+            ContentFrame.Navigate(nUserControl);
+        }
+
+        private void AgendaButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserControl nUserControl = new AgendaUI();
+            SetOpenFrame(nUserControl);
+            ContentFrame.Navigate(nUserControl);
+        }
+
+        private void SNSetUp_Click(object sender, RoutedEventArgs e)
+        {
+            UserControl nUserControl = new SetUpSocialNetworkUI();
+            SetOpenFrame(nUserControl);
+            ContentFrame.Navigate(nUserControl);
+        }
+
+        private void TwitterButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserControl nUserControl = new TwitterUI(ClientController.client.TwitterLogin());
+            SetOpenFrame(nUserControl);
+            ContentFrame.Navigate(nUserControl);
+        }
+
+
+        // Upper right buttons actions
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            string message = "";
-            if (!ClientController.client.Logout(out message))
+            if (!ClientController.client.Logout(out string message))
                 MessageBox.Show(message);
             else
             {
+                SetOpenFrame(null);
                 this.Close();
                 new LoginWindow().ShowDialog();
             }
@@ -67,6 +117,8 @@ namespace SocialManager_Client.UI
             new EditProfileWindow().ShowDialog();
         }
 
+
+        // Messages related functions
         private void CheckFriends()
         {
             Dispatcher.BeginInvoke(new Action(() =>
@@ -209,10 +261,6 @@ namespace SocialManager_Client.UI
 
             instantiatedChats.Add(to.Profile.Username, e);
         }
-
-        private void AgendaButton_Click(object sender, RoutedEventArgs e)
-        {
-            ContentFrame.Navigate(new AgendaUI());
-        }
+        
     }
 }

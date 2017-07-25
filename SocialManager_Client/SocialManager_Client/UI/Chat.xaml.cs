@@ -30,52 +30,48 @@ namespace SocialManager_Client.UI
             // Grid color random
             Random gen = new Random();
             maingrid.Background = new SolidColorBrush(Color.FromRgb((byte)gen.Next(100, 255), (byte)gen.Next(100, 255), (byte)gen.Next(100, 255)));
+            
             // Set destination name
             this.to = to;
             Username.Text = to.Profile.Username;
+            Username.IsReadOnly = true;
+
+            // Offline message
             OfflineMessage.Text = to.Stat == Contact.Status.Disconnected ? to.Profile.Username + " is offline." : "";
             
             // Set image
             MessageImage.Source = PathUtilities.GetImageSource("newChat.png");
 
             // Get extern messages every second
-            Timer getMessages = new Timer();
-            getMessages.Enabled = true;
-            getMessages.Interval = 1000;
+            Timer getMessages = new Timer()
+            {
+                Enabled = true,
+                Interval = 1000
+            };
             getMessages.Elapsed += (o, e) => AddRecievedMessages();
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
+            // If no message introduced, then nothing
             if (MessageContent.Text == "") return;
 
-            string message = "";
-
-            if(!ClientController.client.SendChatMessage(to.Profile.Username, MessageContent.Text, out message))
+            // Send the message and check if all is correct
+            if (!ClientController.client.SendChatMessage(to.Profile.Username, MessageContent.Text, out string message))
             {
+                // Error
                 MessageBox.Show(message);
                 return;
             }
 
-            AddSentMessage();
+            // Add the message to chat box
+            AddMessage(ClientController.client.Profile.Username, MessageContent.Text);
 
+            // Empty the message
             MessageContent.Text = "";
         }
 
-        private void AddSentMessage()
-        {
-            TextBox tb = new TextBox()
-            {
-                TextWrapping = TextWrapping.Wrap,
-                Text = ClientController.client.Profile.Username + ": " + MessageContent.Text,
-                Width = 150,
-                Padding = new Thickness(10, 5, 5, 5)
-            };
-
-            MessagesContainer.Items.Add(tb);
-            tb.HorizontalAlignment = HorizontalAlignment.Right;
-        }
-
+        // Check new messages
         private void AddRecievedMessages()
         {
             Dispatcher.BeginInvoke(new Action(() =>
@@ -87,21 +83,25 @@ namespace SocialManager_Client.UI
 
                 // Add all messages
                 foreach (var message in messages)
-                {
-                    TextBox tb = new TextBox()
-                    {
-                        TextWrapping = TextWrapping.Wrap,
-                        Text = message.From.Username + ": " + message.Content,
-                        Width = 150,
-                        Padding = new Thickness(10, 5, 5, 5)
-                    };
-
-                    MessagesContainer.Items.Add(tb);
-                    tb.HorizontalAlignment = HorizontalAlignment.Left;
-                }
+                    AddMessage(message.From.Username, message.Content);
 
                 ClientController.client.Profile.Messages.RemoveAll(m => m.From.Username == to.Profile.Username);
             }));
         }
+
+        // Add new text box to message container
+        private void AddMessage(string who, string content)
+        {
+            TextBox tb = new TextBox()
+            {
+                TextWrapping = TextWrapping.Wrap,
+                Text = who + ": " + content,
+                Width = 150,
+                Padding = new Thickness(10, 5, 5, 5),
+                IsReadOnly = true
+            };
+
+            MessagesContainer.Items.Add(tb);
+        }  
     }
 }

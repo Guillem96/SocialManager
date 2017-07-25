@@ -11,5 +11,12 @@ namespace SocialManager_Client
                             new Uri(Environment.CurrentDirectory + @"\..\..\..\Images\" + imageName, 
                                     UriKind.Absolute));
         }
+
+        public static BitmapImage GetImageSourceFromUri(string uri)
+        {
+            return new BitmapImage(
+                            new Uri(uri,
+                                    UriKind.RelativeOrAbsolute));
+        }
     }
 }
