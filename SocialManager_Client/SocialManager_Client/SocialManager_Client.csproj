@@ -37,6 +37,7 @@
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.TeamFoundation.TestManagement.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -80,6 +81,9 @@
       <HintPath>..\packages\Selenium.WebDriver.3.4.0\lib\net40\WebDriver.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="WpfAnimatedGif, Version=1.4.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.1.4.14\lib\net\WpfAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientController.cs" />
@@ -91,6 +95,7 @@
     <Compile Include="ClientLogic\Contact.cs" />
     <Compile Include="ClientLogic\ContactRequest.cs" />
     <Compile Include="Connections\TCPConnection.cs" />
+    <Compile Include="Loading.cs" />
     <Compile Include="Packets\AckErrorPacket.cs" />
     <Compile Include="Packets\AgendaEventPacket.cs" />
     <Compile Include="Packets\BasicReqPacket.cs" />
@@ -146,6 +151,9 @@
     </Compile>
     <Compile Include="UI\TwitterUI_Tweets.xaml.cs">
       <DependentUpon>TwitterUI_Tweets.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\TwitterUI_Users.xaml.cs">
+      <DependentUpon>TwitterUI_Users.xaml</DependentUpon>
     </Compile>
     <Compile Include="XmlUtilities.cs" />
   </ItemGroup>
@@ -203,13 +211,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\TwitterUI_Users.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\PhantomJS.1.9.8\tools\phantomjs\phantomjs.exe">
       <Link>phantomjs.exe</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="phantomjs-license.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

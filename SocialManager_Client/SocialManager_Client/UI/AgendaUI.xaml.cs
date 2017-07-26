@@ -42,6 +42,7 @@ namespace SocialManager_Client.UI
         public void Close()
         {
             checkAgenda.Enabled = false;
+            checkAgenda.Dispose();
         }
 
         // Add the new events to events container

@@ -39,6 +39,10 @@ namespace SocialManager_Server.ServerLogic
             {
                 return;
             }
+            catch (Exception e)
+            {
+                DebugInfo("Unexpected error UDP: "+  e.ToString());
+            }
         }
 
         private void UdpRequests(byte[] data, IPEndPoint tmp)
@@ -145,6 +149,10 @@ namespace SocialManager_Server.ServerLogic
             } catch (ThreadAbortException)
             {
                 return;
+            }
+            catch (Exception e)
+            {
+                DebugInfo("Unexpected error TCP: " + e.ToString());
             }
         }
 

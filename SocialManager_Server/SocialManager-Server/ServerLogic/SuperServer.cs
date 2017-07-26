@@ -98,6 +98,7 @@ namespace SocialManager_Server.ServerLogic
                     case "exit":
                         foreach (var t in tasks)
                             t.Abort();
+                        Environment.Exit(0);
                         return;
                     default:
                         DebugInfo("This command does not exist. Type help to know more about commands.");

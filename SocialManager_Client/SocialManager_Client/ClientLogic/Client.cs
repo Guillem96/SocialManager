@@ -7,6 +7,7 @@ using SocialManager_Client.Connections;
 using System.Windows;
 using System.Threading;
 using System.Net.Sockets;
+using SocialManager_Client.SocialNetworksLogic;
 
 namespace SocialManager_Client
 {
@@ -21,6 +22,9 @@ namespace SocialManager_Client
         private bool chatAlive;
         private Thread tcpTask;
         private Packets.MessagePacket buffer;
+
+        private SocialNetworksLogic.Twitter twitter = null;
+        internal Twitter Twitter { get => twitter; set => twitter = value; }
 
         internal UDPConnection Udp { get => udp; set => udp = value; }
         internal TCPConnection Tcp { get => tcp; set => tcp = value; }
@@ -255,15 +259,17 @@ namespace SocialManager_Client
             return UdpUtilities.AgendaEvent(e.EventName, e.EventInfo, e.Date, true, this, out message);
         }
 
-        internal SocialNetworksLogic.Twitter TwitterLogin()
+        internal void TwitterLogin()
         {
+            if (Twitter != null) return;
+
             if (profile.SocialNets.Any(c => c.Name == "Twitter"))
             {
                 SocialNetwork t = profile.SocialNets.Single(c => c.Name == "Twitter");
-                return new SocialNetworksLogic.Twitter(t.Username, t.Password);
+                Twitter = new SocialNetworksLogic.Twitter(t.Username, t.Password);
             }
             else
-                return null;
+                Twitter = null;
         }
 
         public void DebugInfo(string message)

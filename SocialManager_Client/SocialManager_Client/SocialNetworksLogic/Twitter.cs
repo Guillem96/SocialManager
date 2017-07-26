@@ -17,9 +17,11 @@ namespace SocialManager_Client.SocialNetworksLogic
         // User information
         private string username;
         private string password;
+        private bool loggedIn;
 
         public string Username { get => username; set => username = value; }
         public string Password { get => password; set => password = value; }
+        public bool LoggedIn { get => loggedIn; set => loggedIn = value; }
 
 
         // App credentials
@@ -34,6 +36,7 @@ namespace SocialManager_Client.SocialNetworksLogic
             // User information
             this.Username = username;
             this.Password = password;
+            LoggedIn = false;
 
             // Set the app auth
             var credentials = new TwitterCredentials(consumerKey, consumerSecretKey);
@@ -42,6 +45,8 @@ namespace SocialManager_Client.SocialNetworksLogic
 
         public bool Login()
         {
+            if (LoggedIn) return true;
+
             string pin = GetPinCode();
 
             if (pin == "") return false;
@@ -52,6 +57,7 @@ namespace SocialManager_Client.SocialNetworksLogic
             // Use the user credentials in your application
             Auth.SetCredentials(userCredentials);
 
+            LoggedIn = true;
             return true;
         }
 
@@ -141,12 +147,16 @@ namespace SocialManager_Client.SocialNetworksLogic
 
         }
 
+
         public IEnumerable<ITweet> GetProfileTweets(int many)
         {
             return Timeline.GetUserTimeline(User.GetAuthenticatedUser().Id, many);
         }
 
-       
+        public IEnumerable<ITweet> GetHomeTweets(int many)
+        {
+            return Timeline.GetHomeTimeline(many);
+        }
         public string GetProfileImage()
         {
             return User.GetAuthenticatedUser().ProfileImageUrl400x400;
@@ -155,6 +165,31 @@ namespace SocialManager_Client.SocialNetworksLogic
         public string GetProfileImage(long userID)
         {
             return User.GetUserFromId(userID).ProfileImageUrl;
+        }
+
+        public IEnumerable<IUser> GetFollowers()
+        {
+            return User.GetFollowers(User.GetAuthenticatedUser().Id);
+        }
+
+        public IEnumerable<IUser> GetFriends()
+        {
+            return User.GetFriends(User.GetAuthenticatedUser().Id);
+        }
+
+        public IUser GetUserById(long id)
+        {
+            return User.GetUserFromId(id);
+        }
+
+        public bool Unfollow(IUser user)
+        {
+            return Friendship.FriendshipController.DestroyFriendshipWith(user.UserIdentifier);
+        }
+
+        public bool Follow(IUser user)
+        {
+            return Friendship.FriendshipController.CreateFriendshipWith(user.UserIdentifier);
         }
     }
 }

@@ -1,13 +1,16 @@
 ﻿
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Timers;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Media;
+using System.Windows.Input;
+
 using Tweetinvi.Models;
 
 namespace SocialManager_Client.UI
@@ -17,88 +20,123 @@ namespace SocialManager_Client.UI
     /// </summary>
     public partial class TwitterUI_Tweets : UserControl
     {
+        private class TweetView
+        {
+            public ITweet Tweet { get; set; }
+            public object UserImage { get; set; }
+            public string TweetText { get; set; }
+        }
+
         private SocialNetworksLogic.Twitter twitter;
+
+        private double gridHeight;
+        private double gridWidth;
+
+        private OpenFileDialog ofd;
+
+        private string mediaPath = "";
 
         internal TwitterUI_Tweets(SocialNetworksLogic.Twitter twitter)
         {
             InitializeComponent();
+
+            // Set up open file dialog
+            ofd = new OpenFileDialog();
+            ofd.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
+            ofd.FileOk += (o, e) => SetMediaPath();
+
             this.twitter = twitter;
 
-            FillTweets(OwnTimeLineContainer, twitter.GetProfileTweets(10).ToList());
+            // Set up the buttons
+            FavButton1.IsEnabled = false;
+            FavButton2.IsEnabled = false;
+            RetButton2.IsEnabled = false;
+            RetButton1.IsEnabled = false;
+            DeleteTweetButton.IsEnabled = false;
+
+            FavButton1.Content = new Image() { Source = PathUtilities.GetImageSource("heart.png") };
+            FavButton2.Content = new Image() { Source = PathUtilities.GetImageSource("heart.png") };
+            RetButton2.Content = new Image() { Source = PathUtilities.GetImageSource("retweet.png") };
+            RetButton1.Content = new Image() { Source = PathUtilities.GetImageSource("retweet.png") };
+            DeleteTweetButton.Content = new Image() { Source = PathUtilities.GetImageSource("delete.png") };
+
+            AddImageButton.Content = new Image() { Source = PathUtilities.GetImageSource("addImage.png") };
+            HomeTweets.Source = PathUtilities.GetImageSource("home.png");
+            UserTweets.Source = PathUtilities.GetImageSourceFromUri(twitter.GetProfileImage());
+
+            RefreshButton.Content = new Image() { Source = PathUtilities.GetImageSource("refresh.png") };
+
+            // Grid size
+            gridHeight = LoadingGrid1.Height;
+            gridWidth = LoadingGrid1.Width;
+
+            // Fill list views
+            new Thread(new ThreadStart(() => LoadTweets())).Start();
         }
 
-        private void FillTweets(ListView Container, List<ITweet> tweets)
+        private void LoadTweets()
         {
-            Dispatcher.Invoke(new Action(() =>
+            // Start loading images
+            Dispatcher.BeginInvoke(new Action(() => Loading.StartLoading(gridHeight, gridWidth, LoadingGrid1, "Cargando tweets",70,70)));
+            Dispatcher.BeginInvoke(new Action(() => Loading.StartLoading(gridHeight, gridWidth, LoadingGrid2, "Cargando tweets", 70, 70)));
+
+            // Fill both listviews
+            // If filled correctly end loading, else continue loading until the next refresh
+            if(FillTweets(OwnTimeLineContainer, true))
+                Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid1)));
+
+            if(FillTweets(HomeTweetsContainer, false))
+                Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid2)));
+
+        }
+
+        // Fill the containers
+        private bool FillTweets(ListView Container, bool own)
+        {
+            try
             {
+                List<TweetView> tweetList = new List<TweetView>();
 
-                Container.Items.Clear();
+                List<ITweet> tweets = null;
+                List<string> urls = new List<string>();
 
-                foreach (ITweet tweet in tweets)
+                if (own)
+                    tweets = twitter.GetProfileTweets(10).ToList();
+                else
+                    tweets = twitter.GetHomeTweets(15).ToList();
+
+                // Get the urls
+                foreach (var t in tweets)
                 {
-                    StackPanel sp = new StackPanel()
-                    {
-                        Orientation = Orientation.Horizontal,
-                        HorizontalAlignment = HorizontalAlignment.Stretch
-                    };
-
-                    Image i = new Image()
-                    {
-                        Width = 40,
-                        Height = 40,
-                        Source = PathUtilities.GetImageSourceFromUri(twitter.GetProfileImage(tweet.CreatedBy.Id)),
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-
-                    sp.Children.Add(i);
-
-                    sp.Children.Add(new TextBox()
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        BorderBrush = Brushes.Transparent,
-                        Width = 130,
-                        IsReadOnly = true,
-                        TextWrapping = TextWrapping.Wrap,
-                        Text = tweet.Text,
-                    });
-
-                    Button fav = new Button()
-                    {
-                        Width = 20,
-                        Height = 20,
-                        Content = new Image() { Source = PathUtilities.GetImageSource("heart.png"), Stretch = Stretch.Fill },
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Background = Brushes.Transparent,
-                        BorderBrush = Brushes.Transparent
-                    };
-
-                    Button ret = new Button()
-                    {
-                        Width = 20,
-                        Height = 20,
-                        Content = new Image() { Source = PathUtilities.GetImageSource("retweet.png"), Stretch = Stretch.Fill },
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Background = Brushes.Transparent,
-                        BorderBrush = Brushes.Transparent
-                    };
-
-                    sp.Children.Add(fav);
-                    sp.Children.Add(ret);
-                    Container.Items.Add(sp);
+                    urls.Add(twitter.GetProfileImage(t.CreatedBy.Id));
                 }
-            }),System.Windows.Threading.DispatcherPriority.Send);
+
+                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(delegate
+                {
+                    int SelectedIndex = Container.SelectedIndex;
+                    for (int i = 0; i < tweets.Count; i++)
+                    {
+                        tweetList.Add(new TweetView()
+                        {
+                            Tweet = tweets[i],
+                            TweetText = tweets[i].Text,
+                            UserImage = PathUtilities.GetImageSourceFromUri(urls[i])
+                        });
+                    }
+
+                    Container.ItemsSource = tweetList;
+                    Container.SelectedIndex = SelectedIndex;
+                }));
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        private void IsReply_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void PublishTweetButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+        // Enable or disable the buttons depending on the selected item
         private void HomeTweetsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(HomeTweetsContainer.SelectedItem == null && OwnTimeLineContainer.SelectedItem == null)
@@ -111,10 +149,17 @@ namespace SocialManager_Client.UI
                 OwnTimeLineContainer.SelectedIndex = -1;
                 OwnTimeLineContainer.SelectedItem = null;
                 IsReply.IsEnabled = true;
-
+                FavButton2.IsEnabled = true;
+                RetButton2.IsEnabled = true;
+                return;
             }
+            
+            FavButton2.IsEnabled = false;
+            RetButton2.IsEnabled = false;
+            
         }
 
+        // Enable or disable the buttons depending on the selected item
         private void OwnTimeLineContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (OwnTimeLineContainer.SelectedItem == null && HomeTweetsContainer.SelectedItem == null)
@@ -127,10 +172,18 @@ namespace SocialManager_Client.UI
                 HomeTweetsContainer.SelectedIndex = -1;
                 HomeTweetsContainer.SelectedItem = null;
                 IsReply.IsEnabled = true;
-
+                FavButton1.IsEnabled = true;
+                RetButton1.IsEnabled = true;
+                DeleteTweetButton.IsEnabled = true;
+                return;
             }
+            FavButton1.IsEnabled = false;
+            RetButton1.IsEnabled = false;
+            DeleteTweetButton.IsEnabled = false;
+
         }
 
+        // Get a label from an uri
         private Label LabelFromUri(string text, string uri)
         {
             // Link to account
@@ -151,6 +204,90 @@ namespace SocialManager_Client.UI
                 Content = link,
                 VerticalAlignment = VerticalAlignment.Center
             };
+        }
+
+        // Twitter user actions
+        private void FavoriteTweet(ITweet t)
+        {
+            twitter.FavoriteTweet(t.Id);
+            MessageBox.Show("Has añadido el tweet de " + t.CreatedBy.ScreenName + " a favoritos.");
+        }
+
+        private void Retweet(ITweet t)
+        {
+            twitter.Retweet(t.Id);
+            MessageBox.Show("Has retweeteado el tweet de " + t.CreatedBy.ScreenName + ".");
+        }
+
+        private void PublishTweetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TweetBody.Text == "") return;
+
+            if (IsReply.IsPressed)
+            {
+                var tweetToReply = HomeTweetsContainer.SelectedItem == null 
+                                        ? ((TweetView)OwnTimeLineContainer.SelectedItem).Tweet 
+                                        : ((TweetView)HomeTweetsContainer.SelectedItem).Tweet;
+                twitter.ReplyTweet(tweetToReply.Id, TweetBody.Text);
+            }
+            else
+            {
+                twitter.PublishTweet(TweetBody.Text, mediaPath);
+
+                // Reset media path for the next tweet
+                mediaPath = "";
+                ImageName.Content = "";
+
+                TweetBody.Text = "En que estás pensando...";
+            }
+            
+        }
+
+        // Following 4 functions fav or retweet any selected tweet
+        private void RetButton2_Click(object sender, RoutedEventArgs e)
+        {
+            Retweet(((TweetView)HomeTweetsContainer.SelectedItem).Tweet);
+        }
+
+        private void FavButton2_Click(object sender, RoutedEventArgs e)
+        {
+            FavoriteTweet(((TweetView)HomeTweetsContainer.SelectedItem).Tweet);
+        }
+
+        private void FavButton1_Click(object sender, RoutedEventArgs e)
+        {
+            FavoriteTweet(((TweetView)OwnTimeLineContainer.SelectedItem).Tweet);
+        }
+
+        private void RetButton1_Click(object sender, RoutedEventArgs e)
+        {
+            Retweet(((TweetView)OwnTimeLineContainer.SelectedItem).Tweet);
+        }
+
+        // Reload the tweets
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            new Thread(new ThreadStart(() => LoadTweets())).Start();
+        }
+
+        // Add an image to your tweet
+        private void AddImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            ofd.ShowDialog();
+        }
+
+        private void SetMediaPath()
+        {
+            mediaPath = ofd.FileName;
+            FileInfo fI = new FileInfo(mediaPath);
+            ImageName.Content = fI.Name;
+        }
+
+        private void DeleteTweetButton_Click(object sender, RoutedEventArgs e)
+        {
+            twitter.DeleteTweet(((TweetView)OwnTimeLineContainer.SelectedItem).Tweet.Id);
+            MessageBox.Show("Tweet eliminado correctamente.");
+            new Thread(new ThreadStart(() => LoadTweets())).Start();
         }
     }
 }

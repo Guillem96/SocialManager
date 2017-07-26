@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:SocialManager_Client.UI"
              mc:Ignorable="d" 
              d:DesignHeight="445" d:DesignWidth="718" Background="White">
-    <Grid>
+    <Grid x:Name="MainGrid">
         <GroupBox Name="TwitterBox" HorizontalAlignment="Left" Height="172" Margin="22,212,0,0" VerticalAlignment="Top" Width="322">
             <GroupBox.Header>
                 <Image Name="TwiterLogo" Width="60" Height="60" OpacityMask="{x:Null}"></Image>
@@ -32,11 +32,11 @@
             </Grid>
         </GroupBox>
         <Image x:Name="TwiterLogo1" OpacityMask="{x:Null}" Margin="175,39,483,346.333"/>
-        <StackPanel x:Name="TwitterLinkMessage" HorizontalAlignment="Left" Height="60" Margin="263,39,0,0" VerticalAlignment="Top" Width="325" Orientation="Horizontal"/>
+        <StackPanel x:Name="TwitterLinkMessage" HorizontalAlignment="Left" Height="60" Margin="263,39,0,0" VerticalAlignment="Top" Width="270" Orientation="Horizontal"/>
         <Image x:Name="InstagramLogo1" OpacityMask="{x:Null}" Margin="175,145,483,240.333"/>
         <StackPanel x:Name="InstagramLinkMessage" HorizontalAlignment="Left" Height="60" Margin="263,145,0,0" VerticalAlignment="Top" Width="325" Orientation="Horizontal"/>
-
-
-
+        <Ellipse x:Name="TwitterProfileImage" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="60" Margin="553,39,0,0" Stroke="Black" VerticalAlignment="Top" Width="60"/>
+        <Grid Name="LoadingGrid" HorizontalAlignment="Left" Height="446" Margin="0,-1,0,0" VerticalAlignment="Top" Width="718"/>
+        <Ellipse x:Name="InstagramProfileImage" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="60" Margin="553,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60"/>
     </Grid>
 </UserControl>

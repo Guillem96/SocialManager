@@ -7,28 +7,55 @@
              mc:Ignorable="d" 
              d:DesignHeight="320" d:DesignWidth="660" Background="White">
     <Grid>
-        <ListView x:Name="OwnTimeLineContainer" HorizontalAlignment="Left" Height="208" Margin="25,83,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="OwnTimeLineContainer_SelectionChanged">
-
+        <ListView x:Name="OwnTimeLineContainer" HorizontalAlignment="Left" Height="138" Margin="25,60,0,0" VerticalAlignment="Top" Width="283" SelectionChanged="OwnTimeLineContainer_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <Ellipse VerticalAlignment="Center" Width="40" Height="40" Margin="15">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding Path=UserImage}"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBox VerticalAlignment="Center" IsReadOnly="True" Width="180" BorderBrush="Transparent" TextWrapping="Wrap" Text="{Binding TweetText}"></TextBox>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
-        <ListView x:Name="HomeTweetsContainer" HorizontalAlignment="Left" Height="208" Margin="251,83,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="HomeTweetsContainer_SelectionChanged"/>
-        <GroupBox Header="Publicar tweet" HorizontalAlignment="Left" Height="208" Margin="467,83,0,0" VerticalAlignment="Top" Width="172">
-            <Grid Margin="0,0,-2,-3">
-                <CheckBox x:Name="IsReply" Content="Contestar a tweet &#xA;seleccionado" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="IsReply_Checked" IsEnabled="False"/>
-                <RichTextBox HorizontalAlignment="Left" Height="53" Margin="10,90,0,0" VerticalAlignment="Top" Width="130">
-                    <FlowDocument>
-                        <Paragraph>
-                            <Run Text="RichTextBox"/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <Label Content="Texto" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top"/>
-                <Button x:Name="AddImageButton" Content="Button" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top" Width="29" Height="27" BorderBrush="{x:Null}" Background="{x:Null}"/>
-                <Button Content="Twittear" HorizontalAlignment="Left" Margin="75,152,0,0" VerticalAlignment="Top" Width="65" Height="27" Click="PublishTweetButton_Click" Background="#FFCCE0F1" BorderBrush="{x:Null}"/>
+        <ListView x:Name="HomeTweetsContainer" HorizontalAlignment="Left" Height="138" Margin="326,60,0,0" VerticalAlignment="Top" Width="283" SelectionChanged="HomeTweetsContainer_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <Ellipse Margin="15" VerticalAlignment="Center" Width="40" Height="40" >
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding Path=UserImage}"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBox VerticalAlignment="Center" IsReadOnly="True" Width="180" BorderBrush="Transparent" TextWrapping="Wrap" Text="{Binding TweetText}"></TextBox>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <GroupBox Header="Publicar tweet" HorizontalAlignment="Left" Height="103" Margin="124,207,0,0" VerticalAlignment="Top" Width="403">
+            <Grid Margin="0,0,-12.667,-5.667">
+                <CheckBox x:Name="IsReply" Content="Contestar a &#xD;&#xA;tweet &#xA;seleccionado" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" IsEnabled="False" Width="93"/>
+                <Button x:Name="AddImageButton" Content="Button" HorizontalAlignment="Left" Margin="285,18,0,0" VerticalAlignment="Top" Width="29" Height="27" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" Click="AddImageButton_Click"/>
+                <Button Content="Twittear" HorizontalAlignment="Left" Margin="285,52,0,0" VerticalAlignment="Top" Width="65" Height="27" Click="PublishTweetButton_Click" Background="#FFCCE0F1" BorderBrush="{x:Null}"/>
+                <TextBox Name="TweetBody" HorizontalAlignment="Left" Height="59" Margin="114,18,0,0" TextWrapping="Wrap" Text="En que estás pensando..." VerticalAlignment="Top" Width="148"/>
+                <Label x:Name="ImageName" Content="Sin imagen." HorizontalAlignment="Left" Margin="314,18,0,0" VerticalAlignment="Top" Width="80" Foreground="#FF6C6C6C"/>
             </Grid>
         </GroupBox>
-        <Label Content="Tus tweets" HorizontalAlignment="Left" Margin="25,52,0,0" VerticalAlignment="Top"/>
-        <Label Content="Tweets de Inicio" HorizontalAlignment="Left" Margin="251,52,0,0" VerticalAlignment="Top"/>
-        <Label Content="TWEETS" HorizontalAlignment="Left" Margin="25,13,0,0" VerticalAlignment="Top" Width="148" FontSize="18" Background="{x:Null}" Foreground="#FF7698F1"/>
-
+        <Label Content="TWEETS" HorizontalAlignment="Left" Margin="25,13,0,0" VerticalAlignment="Top" Width="74" FontSize="18" Background="{x:Null}" Foreground="#FF7698F1"/>
+        <Button x:Name="FavButton1" Content="Button" HorizontalAlignment="Left" Margin="25,207,0,0" VerticalAlignment="Top" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="FavButton1_Click"/>
+        <Button x:Name="FavButton2" Content="Button" HorizontalAlignment="Left" Margin="584,207,0,0" VerticalAlignment="Top" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="FavButton2_Click"/>
+        <Button x:Name="RetButton1" Content="Button" HorizontalAlignment="Left" Margin="74,207,0,0" VerticalAlignment="Top" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="RetButton1_Click"/>
+        <Button x:Name="RetButton2" Content="Button" HorizontalAlignment="Left" Margin="544,207,0,0" VerticalAlignment="Top" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="RetButton2_Click"/>
+        <Grid x:Name="LoadingGrid1" HorizontalAlignment="Left" Height="138" Margin="25,60,0,0" VerticalAlignment="Top" Width="283"/>
+        <Grid x:Name="LoadingGrid2" HorizontalAlignment="Left" Height="138" Margin="326,60,0,0" VerticalAlignment="Top" Width="283"/>
+        <Label Content="Tus tweets" HorizontalAlignment="Left" Margin="242,30,0,0" VerticalAlignment="Top"/>
+        <Label Content="Tweets de Inicio" HorizontalAlignment="Left" Margin="515,30,0,0" VerticalAlignment="Top"/>
+        <Image x:Name="HomeTweets" HorizontalAlignment="Left" Height="26" Margin="484,30,0,0" VerticalAlignment="Top" Width="26"/>
+        <Image x:Name="UserTweets" HorizontalAlignment="Left" Height="26" Margin="211,29,0,0" VerticalAlignment="Top" Width="26"/>
+        <Button Foreground="Transparent" BorderBrush="Transparent" Background="Transparent" Name="RefreshButton" Content="Button" HorizontalAlignment="Left" Margin="104,17,0,0" VerticalAlignment="Top" Height ="30" Width="30" Click="RefreshButton_Click"/>
+        <Button x:Name="DeleteTweetButton" Content="Button" HorizontalAlignment="Left" Margin="50,237,0,0" VerticalAlignment="Top" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="DeleteTweetButton_Click" />
     </Grid>
 </UserControl>

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace SocialManager_Client.UI
 {
@@ -21,7 +22,7 @@ namespace SocialManager_Client.UI
     /// </summary>
     public partial class SocialManagerMain : Window
     {
-        private Timer checkFriends;
+        private System.Timers.Timer checkFriends;
         private Dictionary<string, Expander> instantiatedChats; //< Reference to chats, <username, chat>
         private UserControl openedFrame; //< Reference to opened user control
 
@@ -39,7 +40,7 @@ namespace SocialManager_Client.UI
             instantiatedChats = new Dictionary<string, Expander>();
 
             // Set timer to check which contacts are online
-            checkFriends = new Timer()
+            checkFriends = new System.Timers.Timer()
             {
                 Enabled = true,
                 Interval = 3000 // Check every 3 seconds
@@ -93,7 +94,8 @@ namespace SocialManager_Client.UI
 
         private void TwitterButton_Click(object sender, RoutedEventArgs e)
         {
-            UserControl nUserControl = new TwitterUI(ClientController.client.TwitterLogin());
+            ClientController.client.TwitterLogin();
+            UserControl nUserControl = new TwitterUI(ClientController.client.Twitter);
             SetOpenFrame(nUserControl);
             ContentFrame.Navigate(nUserControl);
         }
