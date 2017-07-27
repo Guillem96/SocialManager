@@ -272,6 +272,11 @@ namespace SocialManager_Client
                 Twitter = null;
         }
 
+        internal void TwitterLogout()
+        {
+            Twitter = null;
+        }
+
         public void DebugInfo(string message)
         {
             Console.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] " + message);

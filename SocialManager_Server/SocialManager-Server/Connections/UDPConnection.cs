@@ -20,6 +20,7 @@ namespace SocialManager_Server.Connections
         public UDPConnection()
         {
             socket = new UdpClient(PortUDP);
+            socket.Client.ReceiveTimeout = 2000;
         }
 
         /// <summary>
@@ -29,7 +30,19 @@ namespace SocialManager_Server.Connections
         /// <returns></returns>
         public override byte[] RecieveMessage(ref IPEndPoint address)
         {
-            return socket.Receive(ref address);
+            try
+            {
+                return socket.Receive(ref address);
+
+            }
+            catch (SocketException ex)
+            {
+                if ((SocketError)ex.ErrorCode == SocketError.TimedOut)
+                    return null;
+                else
+                    throw new Exception("Unexpected socket error");
+
+            }
         }
 
         /// <summary>

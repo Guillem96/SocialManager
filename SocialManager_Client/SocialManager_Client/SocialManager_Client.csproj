@@ -149,6 +149,9 @@
     <Compile Include="UI\TwitterUI.xaml.cs">
       <DependentUpon>TwitterUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\TwitterUI_Search.xaml.cs">
+      <DependentUpon>TwitterUI_Search.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\TwitterUI_Tweets.xaml.cs">
       <DependentUpon>TwitterUI_Tweets.xaml</DependentUpon>
     </Compile>
@@ -204,6 +207,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\TwitterUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\TwitterUI_Search.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

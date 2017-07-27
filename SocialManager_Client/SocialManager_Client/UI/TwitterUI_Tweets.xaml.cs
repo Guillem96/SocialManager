@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-
+using System.Windows.Media;
 using Tweetinvi.Models;
 
 namespace SocialManager_Client.UI
@@ -20,7 +20,7 @@ namespace SocialManager_Client.UI
     /// </summary>
     public partial class TwitterUI_Tweets : UserControl
     {
-        private class TweetView
+        public class TweetView
         {
             public ITweet Tweet { get; set; }
             public object UserImage { get; set; }
@@ -41,8 +41,10 @@ namespace SocialManager_Client.UI
             InitializeComponent();
 
             // Set up open file dialog
-            ofd = new OpenFileDialog();
-            ofd.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
+            ofd = new OpenFileDialog()
+            {
+                Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif"
+            };
             ofd.FileOk += (o, e) => SetMediaPath();
 
             this.twitter = twitter;
@@ -72,6 +74,10 @@ namespace SocialManager_Client.UI
 
             // Fill list views
             new Thread(new ThreadStart(() => LoadTweets())).Start();
+
+            // Banner background
+            new Thread(new ThreadStart(() => LoadBannerImage())).Start();
+
         }
 
         private void LoadTweets()
@@ -82,12 +88,17 @@ namespace SocialManager_Client.UI
 
             // Fill both listviews
             // If filled correctly end loading, else continue loading until the next refresh
-            if(FillTweets(OwnTimeLineContainer, true))
-                Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid1)));
+            new Thread(new ThreadStart(() => 
+            {
+                if (FillTweets(OwnTimeLineContainer, true))
+                    Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid1)));
+            })).Start();
 
-            if(FillTweets(HomeTweetsContainer, false))
-                Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid2)));
-
+            new Thread(new ThreadStart(() =>
+            {
+                if (FillTweets(HomeTweetsContainer, false))
+                    Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid2)));
+            })).Start();
         }
 
         // Fill the containers
@@ -113,6 +124,7 @@ namespace SocialManager_Client.UI
 
                 Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(delegate
                 {
+
                     int SelectedIndex = Container.SelectedIndex;
                     for (int i = 0; i < tweets.Count; i++)
                     {
@@ -123,7 +135,6 @@ namespace SocialManager_Client.UI
                             UserImage = PathUtilities.GetImageSourceFromUri(urls[i])
                         });
                     }
-
                     Container.ItemsSource = tweetList;
                     Container.SelectedIndex = SelectedIndex;
                 }));
@@ -136,6 +147,19 @@ namespace SocialManager_Client.UI
             }
         }
 
+        private void LoadBannerImage()
+        {
+            string bannerUrl = twitter.GetBannerImageUrl();
+
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Render, new Action(() => {
+                MainGrid.Background = new ImageBrush()
+                {
+                    ImageSource = bannerUrl == null ? null : PathUtilities.GetImageSourceFromUri(bannerUrl),
+                    Stretch = Stretch.UniformToFill,
+                    Opacity = 0.2
+                };
+            })); 
+        }
         // Enable or disable the buttons depending on the selected item
         private void HomeTweetsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -207,13 +231,13 @@ namespace SocialManager_Client.UI
         }
 
         // Twitter user actions
-        private void FavoriteTweet(ITweet t)
+        internal static void FavoriteTweet(SocialNetworksLogic.Twitter twitter, ITweet t)
         {
             twitter.FavoriteTweet(t.Id);
             MessageBox.Show("Has añadido el tweet de " + t.CreatedBy.ScreenName + " a favoritos.");
         }
 
-        private void Retweet(ITweet t)
+        internal static void Retweet(SocialNetworksLogic.Twitter twitter, ITweet t)
         {
             twitter.Retweet(t.Id);
             MessageBox.Show("Has retweeteado el tweet de " + t.CreatedBy.ScreenName + ".");
@@ -223,45 +247,59 @@ namespace SocialManager_Client.UI
         {
             if (TweetBody.Text == "") return;
 
-            if (IsReply.IsPressed)
+            if (IsReply.IsChecked.Value)
             {
                 var tweetToReply = HomeTweetsContainer.SelectedItem == null 
                                         ? ((TweetView)OwnTimeLineContainer.SelectedItem).Tweet 
                                         : ((TweetView)HomeTweetsContainer.SelectedItem).Tweet;
-                twitter.ReplyTweet(tweetToReply.Id, TweetBody.Text);
+
+                if(twitter.ReplyTweet(tweetToReply.Id, TweetBody.Text) == null)
+                {
+                    // Error
+                    MessageBox.Show("Error al publicar el tweet.");
+                    return;
+                }
+
+                MessageBox.Show("Has respondido el tweet de " + tweetToReply.CreatedBy.ScreenName + " correctamente.");
             }
             else
             {
-                twitter.PublishTweet(TweetBody.Text, mediaPath);
+                if(twitter.PublishTweet(TweetBody.Text, mediaPath) == null)
+                {
+                    // Error
+                    MessageBox.Show("Error al publicar el tweet.");
+                    return;
+                }
 
                 // Reset media path for the next tweet
                 mediaPath = "";
                 ImageName.Content = "";
 
-                TweetBody.Text = "En que estás pensando...";
+                MessageBox.Show("Has tweeteado el tweet \"" + TweetBody.Text + "\" correctamente.");
             }
-            
+
+            TweetBody.Text = "En que estás pensando...";
         }
 
         // Following 4 functions fav or retweet any selected tweet
         private void RetButton2_Click(object sender, RoutedEventArgs e)
         {
-            Retweet(((TweetView)HomeTweetsContainer.SelectedItem).Tweet);
+            Retweet(twitter, ((TweetView)HomeTweetsContainer.SelectedItem).Tweet);
         }
 
         private void FavButton2_Click(object sender, RoutedEventArgs e)
         {
-            FavoriteTweet(((TweetView)HomeTweetsContainer.SelectedItem).Tweet);
+            FavoriteTweet(twitter, ((TweetView)HomeTweetsContainer.SelectedItem).Tweet);
         }
 
         private void FavButton1_Click(object sender, RoutedEventArgs e)
         {
-            FavoriteTweet(((TweetView)OwnTimeLineContainer.SelectedItem).Tweet);
+            FavoriteTweet(twitter, ((TweetView)OwnTimeLineContainer.SelectedItem).Tweet);
         }
 
         private void RetButton1_Click(object sender, RoutedEventArgs e)
         {
-            Retweet(((TweetView)OwnTimeLineContainer.SelectedItem).Tweet);
+            Retweet(twitter, ((TweetView)OwnTimeLineContainer.SelectedItem).Tweet);
         }
 
         // Reload the tweets

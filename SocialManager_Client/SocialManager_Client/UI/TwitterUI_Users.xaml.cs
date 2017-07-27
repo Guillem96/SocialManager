@@ -61,6 +61,8 @@ namespace SocialManager_Client.UI
 
             // Fill the containers
             new Thread(new ThreadStart(() => LoadData())).Start();
+
+            new Thread(new ThreadStart(() => LoadBannerImage())).Start();
         }
 
         void LoadData()
@@ -87,6 +89,22 @@ namespace SocialManager_Client.UI
                     Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGridTraitors)));
             })).Start();
 
+        }
+
+        void LoadBannerImage()
+        {
+            string bannerUrl = twitter.GetBannerImageUrl();
+
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Render, new Action(() =>
+            {
+                MainGrid.Background = new ImageBrush()
+                {
+                    ImageSource = bannerUrl == null ? null : PathUtilities.GetImageSourceFromUri(bannerUrl),
+                    Stretch = Stretch.UniformToFill,
+                    Opacity = 0.2
+                };
+            }));
+            
         }
 
         bool FillUserContainers(UserType type)
@@ -144,6 +162,7 @@ namespace SocialManager_Client.UI
                             TraitorsNumber.Content = users.Count.ToString();
                             break;
                     }
+
                     int SelectedIndex = Container.SelectedIndex;
                     for (int i = 0; i < users.Count; i++)
                     {

@@ -9,14 +9,13 @@
     <Grid>
         <Image x:Name="TwitterLogo" HorizontalAlignment="Left" Height="70" Margin="26,10,0,0" VerticalAlignment="Top" Width="70"/>
         <Image x:Name="TwitterText" HorizontalAlignment="Left" Height="39" Margin="131,35,0,0" VerticalAlignment="Top" Width="286"/>
-        <Grid Name="MainGrid" HorizontalAlignment="Left" Height="336" Margin="26,99,0,0" VerticalAlignment="Top" Width="660">
+        <Grid Name="MainGrid" HorizontalAlignment="Left" Height="346" Margin="26,99,0,0" VerticalAlignment="Top" Width="682">
             <StackPanel Height="25" VerticalAlignment="Top" Orientation="Horizontal">
                 <Button x:Name="TweetsButton" Content="Tweets" HorizontalAlignment="Left" Width="115" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#FFEAC9C9" BorderBrush="{x:Null}" Click="TweetsButton_Click"/>
                 <Button x:Name="UsersButton" Content="Usuarios y amigos" HorizontalAlignment="Left" Width="115" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#FFD3EEC7" BorderBrush="{x:Null}" Click="UsersButton_Click"/>
-                <Button Content="Button" HorizontalAlignment="Left" Width="115" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#FFBDCCEE" BorderBrush="{x:Null}"/>
-                <Button Content="Button" HorizontalAlignment="Left" Width="115" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#FFEAE6BE" BorderBrush="{x:Null}"/>
+                <Button x:Name="SearchUsersButton" Content="Buscar Usuarios" HorizontalAlignment="Left" Width="115" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#FFBDCCEE" BorderBrush="{x:Null}" Click="SearchUsersButton_Click"/>
             </StackPanel>
-            <Frame x:Name="contentFrame" Content="Frame" Margin="0,25,0,0" Background="Gainsboro"/>
+            <Frame x:Name="contentFrame" Background="White" Content="Frame" Margin="0,25,0,10"/>
         </Grid>
         <Grid x:Name="LoadingGrid" HorizontalAlignment="Left" Height="435" Margin="-4,10,0,0" VerticalAlignment="Top" Width="722"/>
 

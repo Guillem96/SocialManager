@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SocialManager_Server.Connections
@@ -16,6 +17,7 @@ namespace SocialManager_Server.Connections
         public TCPConnection()
         {
             listener = new TcpListener(IPAddress.Parse(ServerIP), PortTCP);
+            listener.Server.ReceiveTimeout = 1000;
             listener.Start();
         }
 
@@ -26,11 +28,21 @@ namespace SocialManager_Server.Connections
         /// <returns></returns>
         public byte[] RecieveMessage(ref TcpClient client)
         {
-            client = listener.AcceptTcpClient();
-            NetworkStream ns = client.GetStream();
-            byte[] data = new byte[client.ReceiveBufferSize];
-            ns.Read(data, 0, data.Length);
-            return data;
+            if (listener.Pending())
+            {
+                client = listener.AcceptTcpClient();
+                if(client != null)
+                {
+                    NetworkStream ns = client.GetStream();
+                    byte[] data = new byte[client.ReceiveBufferSize];
+                    ns.Read(data, 0, data.Length);
+                    return data;
+                }
+            }
+            else //< 2 Seconds timeout recieve
+                Thread.Sleep(2000);
+            
+            return null;
         }
 
         /// <summary>

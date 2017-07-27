@@ -23,7 +23,7 @@ namespace SocialManager_Client.UI
     public partial class TwitterUI : UserControl
     {
         private SocialNetworksLogic.Twitter twitter;
-        private UserControl openedFrame = null;
+        private bool logged = false;
 
         private double loadingGridHeight;
         private double loadingGridWidth;
@@ -43,7 +43,9 @@ namespace SocialManager_Client.UI
             TwitterText.Source = PathUtilities.GetImageSource("twittertext.png");
 
             // Load twitter
-            new Thread(() => LoadData()).Start();
+            Thread t = new Thread(() => LoadData());
+            t.Start();
+            
         }
 
         
@@ -52,14 +54,29 @@ namespace SocialManager_Client.UI
 
             Dispatcher.BeginInvoke(new Action(() => Loading.StartLoading(loadingGridHeight, loadingGridWidth, LoadingGrid, "Twitter login...")));
 
-            if (twitter == null)
-            {
-                MainGrid.Children.Clear();
-            }
-            else
-            {
+            
+                if (twitter == null)
+                {
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        MainGrid.Children.Clear();
+                        MainGrid.Children.Add(new TextBlock()
+                        {
+                            Text = "Configura tu twitter en la opción Configurar Twitter/Instagram para usar esta función. Gracias.",
+                            Width = 250,
+                            FontSize = 20,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            TextWrapping = TextWrapping.Wrap
+                        });
+                    }));
+                }
+                else
+                {
                 this.twitter.Login();
-            }
+                Dispatcher.BeginInvoke(new Action(() => contentFrame.Navigate(new TwitterUI_Tweets(twitter))));
+                }
+            
             Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid)));
         }
 
@@ -73,6 +90,12 @@ namespace SocialManager_Client.UI
         private void UsersButton_Click(object sender, RoutedEventArgs e)
         {
             UserControl uc = new TwitterUI_Users(twitter);
+            contentFrame.Navigate(uc);
+        }
+
+        private void SearchUsersButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserControl uc = new TwitterUI_Search(twitter);
             contentFrame.Navigate(uc);
         }
     }

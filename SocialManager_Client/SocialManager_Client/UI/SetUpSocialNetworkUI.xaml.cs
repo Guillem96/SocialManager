@@ -71,7 +71,6 @@ namespace SocialManager_Client.UI
 
             CheckLinkController(socialNet);
 
-
             Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid)));
         }
 
@@ -250,6 +249,13 @@ namespace SocialManager_Client.UI
         {
             var sn = ClientController.client.Profile.SocialNets
                                     .Single(c => c.Name.Equals(socialNet));
+
+
+            if(sn.Name == "Twitter")
+            {
+                ClientController.client.TwitterLogout();
+            }
+
             if(!ClientController.client.DeleteLinkNewSocialNetwork( sn, out string message))
                 MessageBox.Show(message);
             else
@@ -258,6 +264,7 @@ namespace SocialManager_Client.UI
 
             new Thread(() => LoadData("All")).Start();
         }
+
 
         // Call the specific method depending on the social net
         private void CheckLinkController(string name)

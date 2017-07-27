@@ -4,9 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SocialManager_Client.UI"
-             mc:Ignorable="d" 
-             d:DesignHeight="320" d:DesignWidth="660" Background="White">
-    <Grid>
+             mc:Ignorable="d" d:DesignWidth="660" Background="White" Height="326">
+    <Grid Name="MainGrid">
         <Label Content="USUARIOS Y AMIGOS" HorizontalAlignment="Left" Margin="25,13,0,0" VerticalAlignment="Top" Width="182" FontSize="18" Background="{x:Null}" Foreground="#FF7698F1"/>
         <ListView Name="FollowersContainer" HorizontalAlignment="Left" Height="192" Margin="35,80,0,0" VerticalAlignment="Top" Width="180" SelectionChanged="FollowersContainer_SelectionChanged">
             <ListView.ItemTemplate>

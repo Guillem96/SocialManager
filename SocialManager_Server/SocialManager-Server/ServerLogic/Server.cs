@@ -23,26 +23,26 @@ namespace SocialManager_Server.ServerLogic
             try
             {
                 DebugInfo("UDP process started.");
-                while (true)
+                while (serverUp)
                 {
                     // Recieve the packet; TODO: Read the port from file
                     IPEndPoint tmp = new IPEndPoint(IPAddress.Any, Udp.PortUDP);
                     var data = Udp.RecieveMessage(ref tmp);
 
-                    // New request
-                    DebugInfo("Crearting new thread to attend the Udp request.");
-                    Thread t = new Thread(() => UdpRequests(data, tmp));
-                    t.Start();
+                    if(data != null)
+                    {
+                        // New request
+                        DebugInfo("Crearting new thread to attend the Udp request.");
+                        Thread t = new Thread(() => UdpRequests(data, tmp));
+                        t.Start();
+                    }
                 }
-            }
-            catch(ThreadAbortException)
-            {
-                return;
             }
             catch (Exception e)
             {
                 DebugInfo("Unexpected error UDP: "+  e.ToString());
             }
+            DebugInfo("UDP Service is down.");
         }
 
         private void UdpRequests(byte[] data, IPEndPoint tmp)
@@ -133,27 +133,28 @@ namespace SocialManager_Server.ServerLogic
             try
             {
                 Tcp = new Connections.TCPConnection();
+                DebugInfo("TCP process has started.");
 
-                while (true)
+                while (serverUp)
                 {
                     // Recieve the message
                     TcpClient client = null;
-                    DebugInfo("Waiting for TCP requests.");
                     var data = Tcp.RecieveMessage(ref client);
 
-                    // New request
-                    DebugInfo("Crearting new thread to attend the Tcp request.");
-                    Thread t = new Thread(() => TcpRequests(data, client));
-                    t.Start();
+                    if (data != null)
+                    {
+                        // New request
+                        DebugInfo("Crearting new thread to attend the Tcp request.");
+                        Thread t = new Thread(() => TcpRequests(data, client));
+                        t.Start();
+                    }
                 }
-            } catch (ThreadAbortException)
-            {
-                return;
             }
             catch (Exception e)
             {
                 DebugInfo("Unexpected error TCP: " + e.ToString());
             }
+            DebugInfo("TCP Service is down.");
         }
 
         private void TcpRequests(byte[] data, TcpClient client)

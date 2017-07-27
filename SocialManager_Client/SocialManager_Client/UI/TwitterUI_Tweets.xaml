@@ -4,9 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SocialManager_Client.UI"
-             mc:Ignorable="d" 
-             d:DesignHeight="320" d:DesignWidth="660" Background="White">
-    <Grid>
+             mc:Ignorable="d" d:DesignWidth="660" Background="White" Height="324.667">
+    <Grid Name="MainGrid">
         <ListView x:Name="OwnTimeLineContainer" HorizontalAlignment="Left" Height="138" Margin="25,60,0,0" VerticalAlignment="Top" Width="283" SelectionChanged="OwnTimeLineContainer_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -35,8 +34,8 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <GroupBox Header="Publicar tweet" HorizontalAlignment="Left" Height="103" Margin="124,207,0,0" VerticalAlignment="Top" Width="403">
-            <Grid Margin="0,0,-12.667,-5.667">
+        <GroupBox  Header="Publicar tweet" HorizontalAlignment="Left" Height="108" Margin="124,207,0,0" VerticalAlignment="Top" Width="403" Background="#99FFFFFF">
+            <Grid Margin="0,0,-12.333,-13.667">
                 <CheckBox x:Name="IsReply" Content="Contestar a &#xD;&#xA;tweet &#xA;seleccionado" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" IsEnabled="False" Width="93"/>
                 <Button x:Name="AddImageButton" Content="Button" HorizontalAlignment="Left" Margin="285,18,0,0" VerticalAlignment="Top" Width="29" Height="27" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" Click="AddImageButton_Click"/>
                 <Button Content="Twittear" HorizontalAlignment="Left" Margin="285,52,0,0" VerticalAlignment="Top" Width="65" Height="27" Click="PublishTweetButton_Click" Background="#FFCCE0F1" BorderBrush="{x:Null}"/>

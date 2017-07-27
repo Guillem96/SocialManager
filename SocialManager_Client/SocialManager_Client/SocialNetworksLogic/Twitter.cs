@@ -61,6 +61,11 @@ namespace SocialManager_Client.SocialNetworksLogic
             return true;
         }
 
+        public void Logout()
+        {
+            LoggedIn = false;
+        }
+
         // Get the pin code using web scraping
         private string GetPinCode()
         {
@@ -123,6 +128,10 @@ namespace SocialManager_Client.SocialNetworksLogic
             }
         }
 
+        internal IUser GetUserByScreenName(string text)
+        {
+            return User.GetUserFromScreenName(text);
+        }
 
         public ITweet ReplyTweet(long tweetId, string text)
         {
@@ -134,19 +143,16 @@ namespace SocialManager_Client.SocialNetworksLogic
             return Tweet.PublishTweetInReplyTo(textToPublish, tweetId);
         }
 
+        internal string GetBannerImageUrl()
+        {
+            return User.GetAuthenticatedUser().ProfileBannerURL;
+        }
 
         public ITweet Retweet(long id) { return Tweet.PublishRetweet(id); }
 
         public bool FavoriteTweet(long id) { return Tweet.FavoriteTweet(id); }
 
         public bool DeleteTweet(long id) { return Tweet.DestroyTweet(id); }
-
-
-        public void GetNewTweets(int many)
-        {
-
-        }
-
 
         public IEnumerable<ITweet> GetProfileTweets(int many)
         {
@@ -182,6 +188,11 @@ namespace SocialManager_Client.SocialNetworksLogic
             return User.GetUserFromId(id);
         }
 
+        public IRelationshipDetails GetFriendShipWith(long id)
+        {
+            return Friendship.GetRelationshipDetailsBetween(User.GetAuthenticatedUser().Id, id);
+        }
+
         public bool Unfollow(IUser user)
         {
             return Friendship.FriendshipController.DestroyFriendshipWith(user.UserIdentifier);
@@ -190,6 +201,17 @@ namespace SocialManager_Client.SocialNetworksLogic
         public bool Follow(IUser user)
         {
             return Friendship.FriendshipController.CreateFriendshipWith(user.UserIdentifier);
+        }
+
+        public List<IUser> SearchUsers(string text)
+        {
+            var parameters = new SearchUsersParameters(text)
+            {
+                MaximumNumberOfResults = 10,
+                
+            };
+            var res = Search.SearchUsers(text, 10);
+            return res?.ToList();
         }
     }
 }

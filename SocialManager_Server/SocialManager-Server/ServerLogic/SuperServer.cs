@@ -18,6 +18,12 @@ namespace SocialManager_Server.ServerLogic
         private Dictionary<string, TcpClient> clientsOnChat;  //< Clients ready for chat
         private List<Thread> tasks;                                 //< Store a reference to all server tasks
 
+        // Alive timer
+        System.Timers.Timer timer;
+
+        // True if server is up
+        protected bool serverUp;
+
         public UDPConnection Udp { get => udp; set => udp = value; }
         public TCPConnection Tcp { get => tcp; set => tcp = value; }
         public List<ClientStatus> Clients { get => clients; set => clients = value; }
@@ -30,6 +36,8 @@ namespace SocialManager_Server.ServerLogic
             Clients = new List<ClientStatus>();
             ClientsOnChat = new Dictionary<string, TcpClient>();
 
+            serverUp = true;
+
             using (Models.ServerDatabase db = new Models.ServerDatabase())
             {
                 Clients.AddRange(db.Clients.ToArray().Select(c => new ClientStatus(c)));
@@ -37,10 +45,12 @@ namespace SocialManager_Server.ServerLogic
 
             // Establish timer to check alives every 3 seconds. 
             // When a user has't sent an AliveInf Packet in 12 seconds its status changes to disconnected.
-            System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Interval = 3000;
+            timer = new System.Timers.Timer()
+            {
+                Interval = 3000,
+                Enabled = true
+            };
             timer.Elapsed += (sender, e) => UdpUtilities.CheckAlives((Server)this);
-            timer.Enabled = true;
         }
 
         protected abstract void UDP();
@@ -54,15 +64,21 @@ namespace SocialManager_Server.ServerLogic
             DebugInfo("Server is running...");
             tasks = new List<Thread>
             {
-                new Thread(() => UDP()),
-                new Thread(() => TCP()),
+                new Thread(new ThreadStart(() => UDP())),
+                new Thread(new ThreadStart(() => TCP())),
+                new Thread(new ThreadStart(() => Commands())),
             };
             
             // Start all tasks
             foreach (Thread t in tasks)
                 t.Start();
 
-            Commands();
+            // Wait all tasks
+            foreach (Thread t in tasks)
+                t.Join();
+
+            Console.Write("Press a key to close the window.");
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -71,7 +87,7 @@ namespace SocialManager_Server.ServerLogic
         private void Commands()
         {
             DebugInfo("STDIN listening to commands.");
-            while (true)
+            while (serverUp)
             {
                 switch (Console.ReadLine())
                 {
@@ -96,9 +112,11 @@ namespace SocialManager_Server.ServerLogic
                         ListClientChat();
                         break;
                     case "exit":
-                        foreach (var t in tasks)
-                            t.Abort();
-                        Environment.Exit(0);
+                        serverUp = false;
+                        timer.Enabled = false;
+                        timer.Dispose();
+                        DebugInfo("Alive timer is disabled.");
+                        DebugInfo("Closing server.");
                         return;
                     default:
                         DebugInfo("This command does not exist. Type help to know more about commands.");
