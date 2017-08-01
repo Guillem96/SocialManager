@@ -23,9 +23,11 @@ namespace SocialManager_Client
         private Thread tcpTask;
         private Packets.MessagePacket buffer;
 
-        private SocialNetworksLogic.Twitter twitter = null;
-        internal Twitter Twitter { get => twitter; set => twitter = value; }
+        private Twitter twitter = null;
+        private Instagram instagram = null;
 
+        internal Twitter Twitter { get => twitter; set => twitter = value; }
+        internal Instagram Instagram { get => instagram; set => instagram = value; }
         internal UDPConnection Udp { get => udp; set => udp = value; }
         internal TCPConnection Tcp { get => tcp; set => tcp = value; }
         public Profile Profile { get => profile; set => profile = value; }
@@ -275,6 +277,24 @@ namespace SocialManager_Client
         internal void TwitterLogout()
         {
             Twitter = null;
+        }
+
+        internal void InstagramLogin()
+        {
+            if (Instagram != null) return;
+
+            if (profile.SocialNets.Any(c => c.Name == "Instagram"))
+            {
+                SocialNetwork t = profile.SocialNets.Single(c => c.Name == "Instagram");
+                Instagram = new SocialNetworksLogic.Instagram(t.Username, t.Password);
+            }
+            else
+                Instagram = null;
+        }
+
+        internal void InstagramLogout()
+        {
+            Instagram = null;
         }
 
         public void DebugInfo(string message)

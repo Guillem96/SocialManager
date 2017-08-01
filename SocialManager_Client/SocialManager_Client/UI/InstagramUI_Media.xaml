@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="SocialManager_Client.UI.InstagramUI_Media"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SocialManager_Client.UI"
+             mc:Ignorable="d" d:DesignWidth="660" Background="White" Width ="682" Height="324.667">
+    <Grid Name="MainGrid">
+        <Label Content="PUBLICACIONES" HorizontalAlignment="Left" Margin="27,23,0,0" VerticalAlignment="Top" FontSize="18" Foreground="#FFF74AF2"/>
+        <ListView ScrollViewer.HorizontalScrollBarVisibility="Hidden" Name="OwnRecentMediaContainer" HorizontalAlignment="Left" Height="188" Margin="21,96,0,0" VerticalAlignment="Top" Width="300" SelectionChanged="OwnRecentMediaContainer_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <Ellipse VerticalAlignment="Center" Width="60" Height="60" Margin="5">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding Path=MediaImageUrl}"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <StackPanel Margin="5" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Image VerticalAlignment="Center" Width="20" Height="20" Source="{Binding Path=HeartImage}"/>
+                            <Label VerticalAlignment="Center" Content="{Binding LikesCount}"></Label>
+                        </StackPanel>
+                        <StackPanel Margin="5" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Image VerticalAlignment="Center" Width="20" Height="20" Source="{Binding Path=CommentImage}"/>
+                            <Label VerticalAlignment="Center" Content="{Binding CommentsCount}"></Label>
+                        </StackPanel>
+                        <StackPanel Margin="5" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Image VerticalAlignment="Center" Width="30" Height="30" Source="{Binding Path=LocationImage}"/>
+                            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Background="Transparent" Foreground="Gray" Width="55" Text="{Binding LocationName}"></TextBlock>
+                        </StackPanel>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView ScrollViewer.HorizontalScrollBarVisibility="Hidden" Name="FollowsMediaContainer" HorizontalAlignment="Left" Height="188" Margin="344,96,0,0" VerticalAlignment="Top" Width="300" SelectionChanged="FollowsMediaContainer_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <Ellipse VerticalAlignment="Center" Width="60" Height="60" Margin="5">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding Path=MediaImageUrl}"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <StackPanel Margin="5" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Image VerticalAlignment="Center" Width="20" Height="20" Source="{Binding Path=HeartImage}"/>
+                            <Label VerticalAlignment="Center" Content="{Binding LikesCount}"></Label>
+                        </StackPanel>
+                        <StackPanel Margin="5" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Image VerticalAlignment="Center" Width="20" Height="20" Source="{Binding Path=CommentImage}"/>
+                            <Label VerticalAlignment="Center" Content="{Binding CommentsCount}"></Label>
+                        </StackPanel>
+                        <StackPanel Margin="5" VerticalAlignment="Center" Orientation="Horizontal">
+                            <Ellipse VerticalAlignment="Center" Width="35" Height="35" Margin="5">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding Path=ProfileImage}"></ImageBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Background="Transparent" Foreground="Gray" Width="55"><Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="{Binding UserUri}"><Run Text="{Binding Username}"/></Hyperlink></TextBlock>
+
+                        </StackPanel>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Label ScrollViewer.VerticalScrollBarVisibility="Hidden" Content="Tus publicaciones" HorizontalAlignment="Left" Margin="216,59,0,0" VerticalAlignment="Top"/>
+        <Label Content="Publicaciones Seguidos&#xD;&#xA; " HorizontalAlignment="Left" Margin="502,65,0,0" VerticalAlignment="Top"/>
+        <Grid x:Name="LoadingOwnMedia" HorizontalAlignment="Left" Height="188" Margin="21,96,0,0" VerticalAlignment="Top" Width="300"/>
+        <Ellipse x:Name="ProfileImage" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="30" Margin="186,57,0,0" Stroke="Black" VerticalAlignment="Top" Width="30"/>
+        <Grid x:Name="LoadingFollowsMedia" HorizontalAlignment="Left" Height="188" Margin="344,96,0,0" VerticalAlignment="Top" Width="300"/>
+        <Button Background="Transparent" Foreground="Transparent" BorderBrush="Transparent" Name="ViewOwnButton" Content="Button" HorizontalAlignment="Left" Margin="281,284,0,0" VerticalAlignment="Top" Height="25" Width="25" Click="ViewOwnButton_Click"/>
+        <Button Background="Transparent" Foreground="Transparent" BorderBrush="Transparent" Name="ViewFollowsButton" Content="Button" HorizontalAlignment="Left" Margin="604,284,0,0" VerticalAlignment="Top" Height="25" Width="25" Click="ViewFollowsButton_Click"/>
+
+    </Grid>
+</UserControl>

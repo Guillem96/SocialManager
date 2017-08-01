@@ -69,16 +69,16 @@
         <Label Content="Seguidos:" HorizontalAlignment="Left" Margin="244,49,0,0" VerticalAlignment="Top"/>
         <Label Content="Traidores: " HorizontalAlignment="Left" Margin="453,49,0,0" VerticalAlignment="Top"/>
         <Label Content="Tu les sigues pero ellos a ti no." HorizontalAlignment="Left" Margin="453,61,0,0" VerticalAlignment="Top" Foreground="#FF857F7F" FontSize="8"/>
-        <Button Name="FollowFollower" BorderBrush="Transparent" Background="Transparent" Foreground="Transparent" Content="Button" HorizontalAlignment="Left" Margin="88,282,0,0" VerticalAlignment="Top" Height="30" Width="30" Click="FollowFollower_Click"/>
-        <Label Content="Seguir" HorizontalAlignment="Left" Margin="123,286,0,0" VerticalAlignment="Top"/>
+        <Button Name="FollowFollower" BorderBrush="Transparent" Background="Transparent" Foreground="Transparent" Content="Button" HorizontalAlignment="Left" Margin="142,282,0,0" VerticalAlignment="Top" Height="25" Width="25" Click="FollowFollower_Click"/>
+        <Label Content="Seguir" HorizontalAlignment="Left" Margin="172,282,0,0" VerticalAlignment="Top"/>
         <Label x:Name="FollowersNumber" Content="" HorizontalAlignment="Left" Margin="107,49,0,0" VerticalAlignment="Top" Width="33"/>
         <Label x:Name="FollowingNumber" Content="" HorizontalAlignment="Left" Margin="310,49,0,0" VerticalAlignment="Top" Width="33"/>
         <Label x:Name="TraitorsNumber" Content="" HorizontalAlignment="Left" Margin="517,49,0,0" VerticalAlignment="Top" Width="33"/>
-        <Button x:Name="UnFollowFollowing" BorderBrush="Transparent" Background="Transparent" Foreground="Transparent" Content="Button" HorizontalAlignment="Left" Margin="275,282,0,0" VerticalAlignment="Top" Height="30" Width="30" Click="UnFollowFollowing_Click"/>
-        <Label Content="Dejar de Seguir" HorizontalAlignment="Left" Margin="310,286,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="UnFollowTraitor" BorderBrush="Transparent" Background="Transparent" Foreground="Transparent" Content="Button" HorizontalAlignment="Left" Margin="487,284,0,0" VerticalAlignment="Top" Height="30" Width="30" Click="UnFollowTraitor_Click"/>
+        <Button x:Name="UnFollowFollowing" BorderBrush="Transparent" Background="Transparent" Foreground="Transparent" Content="Button" HorizontalAlignment="Left" Margin="303,282,0,0" VerticalAlignment="Top" Height="25" Width="25" Click="UnFollowFollowing_Click"/>
+        <Label Content="Dejar de Seguir" HorizontalAlignment="Left" Margin="333,282,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="UnFollowTraitor" BorderBrush="Transparent" Background="Transparent" Foreground="Transparent" Content="Button" HorizontalAlignment="Left" Margin="512,282,0,0" VerticalAlignment="Top" Height="25" Width="25" Click="UnFollowTraitor_Click"/>
         <Button x:Name="Refresh" BorderBrush="Transparent" Background="Transparent" Foreground="Transparent" Content="Button" HorizontalAlignment="Left" Margin="212,13,0,0" VerticalAlignment="Top" Height="30" Width="30" Click="Refresh_Click"/>
-        <Label Content="Dejar de Seguir" HorizontalAlignment="Left" Margin="522,286,0,0" VerticalAlignment="Top"/>
+        <Label Content="Dejar de Seguir" HorizontalAlignment="Left" Margin="542,282,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </UserControl>

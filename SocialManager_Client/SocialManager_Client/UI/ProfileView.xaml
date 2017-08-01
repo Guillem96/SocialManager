@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SocialManager_Client.UI"
-             mc:Ignorable="d" Height="398" Width="592.858">
+             ResizeMode="CanMinimize" mc:Ignorable="d" Height="398" Width="592.858">
     <Grid Margin="0,0,23.333,-0.333">
         <GroupBox x:Name="ProfileGroup" Header="GroupBox" HorizontalAlignment="Left" Height="339" VerticalAlignment="Top" Width="542" Margin="10,10,0,0" BorderBrush="#FF717476">
             <Grid HorizontalAlignment="Left" Height="323" Margin="10,0,-11.667,-13" VerticalAlignment="Top" Width="587">

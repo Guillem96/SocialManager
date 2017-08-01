@@ -87,7 +87,6 @@ namespace SocialManager_Client.SocialNetworksLogic
 
                     phantom.Navigate().GoToUrl(authenticationContext.AuthorizationURL);
 
-                    Console.WriteLine(phantom.Url);
                     var userField = phantom.FindElementById("username_or_email");
                     var passField = phantom.FindElementById("password");
                     var loginButton = phantom.FindElementById("allow");
@@ -163,6 +162,7 @@ namespace SocialManager_Client.SocialNetworksLogic
         {
             return Timeline.GetHomeTimeline(many);
         }
+
         public string GetProfileImage()
         {
             return User.GetAuthenticatedUser().ProfileImageUrl400x400;

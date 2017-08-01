@@ -100,6 +100,13 @@ namespace SocialManager_Client.UI
             ContentFrame.Navigate(nUserControl);
         }
 
+        private void Instagram_Click(object sender, RoutedEventArgs e)
+        {
+            ClientController.client.InstagramLogin();
+            UserControl nUserControl = new InstagramUI(ClientController.client.Instagram);
+            SetOpenFrame(nUserControl);
+            ContentFrame.Navigate(nUserControl);
+        }
 
         // Upper right buttons actions
         private void LogoutButton_Click(object sender, RoutedEventArgs e)

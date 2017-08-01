@@ -94,7 +94,11 @@ namespace SocialManager_Client.UI
                     imageUrl = ClientController.client.Twitter.GetProfileImage();
                 }
                 else
-                    instagram = ClientController.client.Profile.SocialNets.SingleOrDefault(c => c.Name == "Instagram");
+                {
+                    ClientController.client.InstagramLogin();
+                    ClientController.client.Instagram.Login();
+                    imageUrl = ClientController.client.Instagram.GetProfileImageUrl();
+                }
 
 
                 // UI Actions
@@ -144,11 +148,11 @@ namespace SocialManager_Client.UI
                    });
 
                    // Link to account
-                   var link = new Hyperlink(new Run(ClientController.client.Twitter != null ? ClientController.client.Twitter.Username : instagram.Username))
+                   var link = new Hyperlink(new Run(name.Equals("Twitter") ? ClientController.client.Twitter.Username : ClientController.client.Instagram.Username))
                    {
                        NavigateUri = name.Equals("Twitter")
                                ? new Uri("https://twitter.com/" + ClientController.client.Twitter.Username)
-                               : new Uri("https://instagram.com/" + instagram.Username),
+                               : new Uri("https://instagram.com/" + ClientController.client.Instagram.Username),
                    };
 
                    // Open the account uri on an externar browser
@@ -169,6 +173,8 @@ namespace SocialManager_Client.UI
 
                    if (name.Equals("Twitter"))
                        AddTwitterImage(imageUrl);
+                   else
+                       AddInstagramImage(imageUrl);
                }));
                 
             }
@@ -217,7 +223,7 @@ namespace SocialManager_Client.UI
 
             new Thread(() =>
             {
-                Dispatcher.BeginInvoke(new Action(() => Loading.StartLoading(loadingGridHeight, loadingGridWidth, LoadingGrid, "Comprovando cuenta de " + socialNet + "...")));
+                Dispatcher.BeginInvoke(new Action(() => Loading.StartLoading(loadingGridHeight, loadingGridWidth, LoadingGrid, "Comprobando cuenta de " + socialNet + "...")));
 
                 // Check if login is correct
                 if (socialNet.Equals("Twitter"))
@@ -239,7 +245,28 @@ namespace SocialManager_Client.UI
 
                         Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid)));
 
-                        LoadData("All");
+                        LoadData("Twitter");
+                    }
+                }
+                else
+                {
+                    if(!new SocialNetworksLogic.Instagram(sn.Username, sn.Password).Login())
+                    {
+                        MessageBox.Show("Cuenta de instagram incorrecta.");
+                        Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid)));
+
+                        return;
+                    }
+                    else
+                    {
+                        if (!ClientController.client.LinkNewSocialNetwork(sn, out string message))
+                            MessageBox.Show(message);
+                        else
+                            MessageBox.Show("Se ha vinculado a " + socialNet + " correctamente.");
+
+                        Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid)));
+
+                        LoadData("Instagram");
                     }
                 }
             }).Start();
@@ -289,6 +316,14 @@ namespace SocialManager_Client.UI
         private void AddTwitterImage(string url)
         {
             TwitterProfileImage.Fill = new ImageBrush()
+            {
+                ImageSource = PathUtilities.GetImageSourceFromUri(url)
+            };
+        }
+
+        private void AddInstagramImage(string url)
+        {
+            InstagramProfileImage.Fill = new ImageBrush()
             {
                 ImageSource = PathUtilities.GetImageSourceFromUri(url)
             };

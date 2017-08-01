@@ -20,17 +20,18 @@
                 </Button.Content>
             </Button>
         </Grid>
-        <StackPanel HorizontalAlignment="Left" Height="342" Margin="718,86,0,0" VerticalAlignment="Top" Width="188">
-            <Button x:Name="ContactsButton" Height="80" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFFFAEAE" Click="ContactsButton_Click" >
+        <StackPanel HorizontalAlignment="Left" Height="440" Margin="718,86,0,0" VerticalAlignment="Top" Width="188">
+            <Button x:Name="ContactsButton" Height="88" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFFFAEAE" Click="ContactsButton_Click" >
                 <Label FontSize="16" Content="Contactos"/>
             </Button>
-            <Button x:Name="AgendaButton" Content="Agenda" Height="80" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFAEFFB5" FontSize="16" Click="AgendaButton_Click"/>
-            <Button x:Name="SNSetUp" Content="     Configurar &#xD;&#xA;Twitter/Instagram" Height="80" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFFAFFAE" FontSize="16" Click="SNSetUp_Click" HorizontalContentAlignment="Center"/>
-            <Button x:Name="TwitterButton" Content="Twitter" Height="80" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="SkyBlue" FontSize="16" HorizontalContentAlignment="Center" Click="TwitterButton_Click"/>
+            <Button x:Name="AgendaButton" Content="Agenda" Height="88" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFAEFFB5" FontSize="16" Click="AgendaButton_Click"/>
+            <Button x:Name="SNSetUp" Content="     Configurar &#xD;&#xA;Twitter/Instagram" Height="88" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFFAFFAE" FontSize="16" Click="SNSetUp_Click" HorizontalContentAlignment="Center"/>
+            <Button x:Name="TwitterButton" Content="Twitter" Height="88" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="SkyBlue" FontSize="16" HorizontalContentAlignment="Center" Click="TwitterButton_Click"/>
+            <Button x:Name="Instagram" Content="Instagram" Height="88" Margin="0,0,0.333,0" BorderBrush="{x:Null}" Background="#FFF291EF" FontSize="16" HorizontalContentAlignment="Center" Click="Instagram_Click"/>
         </StackPanel>
-        <Frame x:Name="ContentFrame" Content="Frame" HorizontalAlignment="Left" Height="445" Margin="0,86,0,0" VerticalAlignment="Top" Width="718" NavigationUIVisibility="Hidden"/>
+        <Frame x:Name="ContentFrame" Content="Frame" HorizontalAlignment="Left" Height="458" Margin="0,86,0,0" VerticalAlignment="Top" Width="718" NavigationUIVisibility="Hidden"/>
         <Rectangle Fill="#FFD0FA9D" HorizontalAlignment="Left" Height="27" Margin="694,531,0,0" VerticalAlignment="Top" Width="210"/>
-        <Expander Header="Chat " HorizontalAlignment="Left" Height="237" Margin="694,321,0,0" VerticalAlignment="Top" Width="212" ExpandDirection="Up" Background="{x:Null}" BorderBrush="{x:Null}">
+        <Expander Header="Chat " HorizontalAlignment="Left" Height="237" Margin="695,321,0,0" VerticalAlignment="Top" Width="212" ExpandDirection="Up" Background="{x:Null}" BorderBrush="{x:Null}">
             <Grid>
                 <ListView x:Name="ConnectedFriends" HorizontalAlignment="Left" Height="215" VerticalAlignment="Top" Width="210" Margin="0,0,0,-0.333" BorderBrush="#7F000000">
                     <ListView.Background>
