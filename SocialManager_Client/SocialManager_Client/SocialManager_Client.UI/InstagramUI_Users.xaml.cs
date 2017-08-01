@@ -61,7 +61,7 @@ namespace SocialManager_Client.UI
             loadingGridWidth = LoadingGridFollowers.Width;
 
             // Fill the containers
-            new Thread(new ThreadStart(() => LoadData())).Start();
+            new Thread(new ThreadStart(() => LoadData())) { IsBackground = true }.Start();
 
         }
 
@@ -75,21 +75,24 @@ namespace SocialManager_Client.UI
             {
                 if (FillUserContainers(UserType.Follower))
                     Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGridFollowers)));
-            })).Start();
+            }))
+            { IsBackground = true }.Start();
 
             new Thread(new ThreadStart(() =>
             {
                 if (FillUserContainers(UserType.Following))
                     Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGridFriends)));
-            })).Start();
+            }))
+            { IsBackground = true }.Start();
 
             new Thread(new ThreadStart(() =>
             {
                 if (FillUserContainers(UserType.Requested))
                     Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGridTraitors)));
-            })).Start();
+            }))
+            { IsBackground = true }.Start();
 
-            new Thread(new ThreadStart(() => SetRandomBackground())).Start();
+            new Thread(new ThreadStart(() => SetRandomBackground())) { IsBackground = true }.Start();
 
         }
 
@@ -308,7 +311,7 @@ namespace SocialManager_Client.UI
             UnFollowFollowing.IsEnabled = false;
 
             // Fill the containers
-            new Thread(new ThreadStart(() => LoadData())).Start();
+            new Thread(new ThreadStart(() => LoadData())) { IsBackground = true }.Start();
         }
 
         private void ApproveButton_Click(object sender, RoutedEventArgs e)

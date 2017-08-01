@@ -42,7 +42,7 @@ namespace SocialManager_Client.UI
             InstagramHeader.Source = PathUtilities.GetImageSource("InstagramHeader.png");
 
             // Load instagram
-            Thread t = new Thread(() => LoadData());
+            Thread t = new Thread(() => LoadData()) { IsBackground = true };
             t.Start();
         }
 

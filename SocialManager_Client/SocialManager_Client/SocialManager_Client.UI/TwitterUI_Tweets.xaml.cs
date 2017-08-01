@@ -73,10 +73,10 @@ namespace SocialManager_Client.UI
             gridWidth = LoadingGrid1.Width;
 
             // Fill list views
-            new Thread(new ThreadStart(() => LoadTweets())).Start();
+            new Thread(new ThreadStart(() => LoadTweets())) { IsBackground = true }.Start();
 
             // Banner background
-            new Thread(new ThreadStart(() => LoadBannerImage())).Start();
+            new Thread(new ThreadStart(() => LoadBannerImage())) { IsBackground = true }.Start();
 
         }
 
@@ -92,13 +92,15 @@ namespace SocialManager_Client.UI
             {
                 if (FillTweets(OwnTimeLineContainer, true))
                     Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid1)));
-            })).Start();
+            }))
+            { IsBackground = true }.Start();
 
             new Thread(new ThreadStart(() =>
             {
                 if (FillTweets(HomeTweetsContainer, false))
                     Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGrid2)));
-            })).Start();
+            }))
+            { IsBackground = true }.Start();
         }
 
         // Fill the containers
@@ -305,7 +307,7 @@ namespace SocialManager_Client.UI
         // Reload the tweets
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            new Thread(new ThreadStart(() => LoadTweets())).Start();
+            new Thread(new ThreadStart(() => LoadTweets())) { IsBackground = true }.Start();
         }
 
         // Add an image to your tweet
@@ -325,7 +327,7 @@ namespace SocialManager_Client.UI
         {
             twitter.DeleteTweet(((TweetView)OwnTimeLineContainer.SelectedItem).Tweet.Id);
             MessageBox.Show("Tweet eliminado correctamente.");
-            new Thread(new ThreadStart(() => LoadTweets())).Start();
+            new Thread(new ThreadStart(() => LoadTweets())) { IsBackground = true }.Start();
         }
     }
 }

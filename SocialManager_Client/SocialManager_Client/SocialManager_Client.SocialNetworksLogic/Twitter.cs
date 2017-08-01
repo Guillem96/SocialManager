@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium.PhantomJS;
+﻿
+using OpenQA.Selenium.PhantomJS;
 
 using System;
 using System.Collections.Generic;

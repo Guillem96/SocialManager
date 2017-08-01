@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
+using System.ComponentModel;
 
 namespace SocialManager_Client.UI
 {
@@ -46,6 +47,10 @@ namespace SocialManager_Client.UI
                 Interval = 3000 // Check every 3 seconds
             };
             checkFriends.Elapsed += (s, e) => CheckFriends();
+
+            UserControl nUserControl = new SetUpSocialNetworkUI();
+            SetOpenFrame(nUserControl);
+            ContentFrame.Navigate(nUserControl);
         }
 
         private void SetOpenFrame(UserControl newUserControl)
@@ -270,6 +275,11 @@ namespace SocialManager_Client.UI
 
             instantiatedChats.Add(to.Profile.Username, e);
         }
-        
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            ClientController.client.Logout(out string msg);
+            Environment.Exit(0);
+        }
     }
 }

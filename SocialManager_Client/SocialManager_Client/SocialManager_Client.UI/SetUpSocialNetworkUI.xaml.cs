@@ -58,7 +58,7 @@ namespace SocialManager_Client.UI
             loadingGridWidth = LoadingGrid.Width;
             loadingGridHeight = LoadingGrid.Height;
 
-            new Thread(() => LoadData("All")).Start();
+            new Thread(() => LoadData("All")) { IsBackground = true }.Start();
         }
 
         public void LoadData(string socialNet)
@@ -266,7 +266,7 @@ namespace SocialManager_Client.UI
                         LoadData("Instagram");
                     }
                 }
-            }).Start();
+            }){ IsBackground = true }.Start();
         }
 
         private void DeleteLink(string socialNet)
@@ -286,7 +286,7 @@ namespace SocialManager_Client.UI
                 MessageBox.Show(socialNet + " ha sido desvinculada.");
 
 
-            new Thread(() => LoadData("All")).Start();
+            new Thread(() => LoadData("All")) { IsBackground = true }.Start();
         }
 
 

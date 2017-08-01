@@ -75,7 +75,7 @@ namespace SocialManager_Client.UI
             loadingInfoHeight = LoadingInfoGrid.Height;
 
             // Load Data
-            new Thread(new ThreadStart(() => LoadData())).Start();
+            new Thread(new ThreadStart(() => LoadData())) { IsBackground = true }.Start();
         }
 
         // Autocomplete search box
@@ -147,7 +147,7 @@ namespace SocialManager_Client.UI
             prevQuery = "";
 
             // Load data
-            Thread t = new Thread(new ThreadStart(() => LoadData()));
+            Thread t = new Thread(new ThreadStart(() => LoadData())) { IsBackground = true };
             t.Start();
             t.Join();
         }
@@ -177,7 +177,8 @@ namespace SocialManager_Client.UI
                     {
                         Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingGridTweets)));
                     }
-                })).Start();
+                }))
+                { IsBackground = true }.Start();
 
                 // Start loading user's profile image
                 Dispatcher.BeginInvoke(new Action(() => Loading.StartLoading(loadingImageHeight, loadingImageGridWidth, LoadingProfileImage, "Cargando imagen...", 50, 50)));
@@ -191,7 +192,8 @@ namespace SocialManager_Client.UI
                     {
                         Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingProfileImage)));
                     }
-                })).Start();
+                }))
+                { IsBackground = true }.Start();
 
                 // Start loading user's profile image
                 Dispatcher.BeginInvoke(new Action(() => Loading.StartLoading(loadingInfoHeight, loadingInfoGridWidth, LoadingInfoGrid, "Cargando info...", 50, 50)));
@@ -205,7 +207,8 @@ namespace SocialManager_Client.UI
                     {
                         Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingInfoGrid)));
                     }
-                })).Start();
+                }))
+                { IsBackground = true }.Start();
             }
         }
 

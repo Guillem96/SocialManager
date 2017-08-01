@@ -68,7 +68,7 @@ namespace SocialManager_Client.UI
             ProfileImage.Fill = new ImageBrush(PathUtilities.GetImageSourceFromUri(media.CreatedBy.ProfileImageUrl));
             Username.Content = media.CreatedBy.Username;
 
-            new Thread(new ThreadStart(() => FillComments())).Start();
+            new Thread(new ThreadStart(() => FillComments())) { IsBackground = true }.Start();
         }
 
         private void FillComments()
@@ -102,7 +102,7 @@ namespace SocialManager_Client.UI
             if(instagram.PostComment(media.Id, CommentText.Text))
             {
                 MessageBox.Show("Comentario publicado correctamente.");
-                new Thread(new ThreadStart(() => FillComments())).Start();
+                new Thread(new ThreadStart(() => FillComments())) { IsBackground = true }.Start();
                 CommentText.Text = "Escribe tu comentario...";
             }
             else
@@ -116,7 +116,7 @@ namespace SocialManager_Client.UI
             if (instagram.DeleteComment(media.Id, (CommentsContainer.SelectedItem as CommentView).Comment.Id))
             {
                 MessageBox.Show("Comentario eliminado correctamente.");
-                new Thread(new ThreadStart(() => FillComments())).Start();
+                new Thread(new ThreadStart(() => FillComments())) { IsBackground = true }.Start();
             }
             else
             {

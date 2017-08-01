@@ -68,7 +68,7 @@ namespace SocialManager_Client.UI
             RefreshButton.Content = new Image() { Source = PathUtilities.GetImageSource("refresh.png") };
 
             // Load medias
-            new Thread(new ThreadStart(() => LoadMedias())).Start();
+            new Thread(new ThreadStart(() => LoadMedias())) { IsBackground = true }.Start();
         }
 
         private void LoadMedias()
@@ -83,15 +83,17 @@ namespace SocialManager_Client.UI
             {
                 if (FillMedia(OwnRecentMediaContainer, true))
                     Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingOwnMedia)));
-            })).Start();
+            }))
+            { IsBackground = true }.Start();
 
-            new Thread(new ThreadStart(() => SetRandomBackground())).Start();
+            new Thread(new ThreadStart(() => SetRandomBackground())) { IsBackground = true }.Start();
 
             new Thread(new ThreadStart(() =>
             {
                 if (FillMedia(FollowsMediaContainer, false))
                     Dispatcher.BeginInvoke(new Action(() => Loading.EndLoading(LoadingFollowsMedia)));
-            })).Start();
+            }))
+            { IsBackground = true }.Start();
         }
 
         private void SetRandomBackground()
@@ -218,7 +220,7 @@ namespace SocialManager_Client.UI
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             // Load medias
-            new Thread(new ThreadStart(() => LoadMedias())).Start();
+            new Thread(new ThreadStart(() => LoadMedias())) { IsBackground = true }.Start();
         }
     }
 }

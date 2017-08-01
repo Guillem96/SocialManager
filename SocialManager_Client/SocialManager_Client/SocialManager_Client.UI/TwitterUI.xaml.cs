@@ -42,7 +42,7 @@ namespace SocialManager_Client.UI
             TwitterText.Source = PathUtilities.GetImageSource("twittertext.png");
 
             // Load twitter
-            Thread t = new Thread(() => LoadData());
+            Thread t = new Thread(() => LoadData()) { IsBackground = true };
             t.Start();
             
         }

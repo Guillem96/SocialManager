@@ -71,7 +71,7 @@ namespace SocialManager_Client
             if (b)
             {
                 DebugInfo("Tcp chat started.");
-                tcpTask = new Thread(() => TcpChat());
+                tcpTask = new Thread(() => TcpChat()) { IsBackground = true };
                 tcpTask.Start();
             }
             
