@@ -33,6 +33,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
@@ -89,169 +109,176 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SocialManager_Client.UI\InstagramUI_Search.xaml.cs">
+      <DependentUpon>InstagramUI_Search.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClientController.cs" />
-    <Compile Include="ClientLogic\AgendaEvent.cs" />
-    <Compile Include="ClientLogic\Client.cs" />
-    <Compile Include="ClientLogic\Message.cs" />
-    <Compile Include="ClientLogic\SocialNetwork.cs" />
-    <Compile Include="ColorMath.cs" />
-    <Compile Include="Connections\Connection.cs" />
-    <Compile Include="ClientLogic\Contact.cs" />
-    <Compile Include="ClientLogic\ContactRequest.cs" />
-    <Compile Include="Connections\TCPConnection.cs" />
-    <Compile Include="Loading.cs" />
-    <Compile Include="Packets\AckErrorPacket.cs" />
-    <Compile Include="Packets\AgendaEventPacket.cs" />
-    <Compile Include="Packets\BasicReqPacket.cs" />
-    <Compile Include="Packets\ClientQueryPacket.cs" />
-    <Compile Include="Packets\ContactReqListPacket.cs" />
-    <Compile Include="Packets\ContactReqPacket.cs" />
-    <Compile Include="Packets\LinkSocialNetworkPacket.cs" />
-    <Compile Include="Packets\LoginReqPacket.cs" />
-    <Compile Include="Packets\MessagePacket.cs" />
-    <Compile Include="Packets\Packet.cs" />
-    <Compile Include="PathUtilities.cs" />
-    <Compile Include="ClientLogic\Profile.cs" />
-    <Compile Include="Packets\ProfilePacket.cs" />
-    <Compile Include="Packets\Types.cs" />
+    <Compile Include="SocialManager_Client.Logic\AgendaEvent.cs" />
+    <Compile Include="SocialManager_Client.Logic\Client.cs" />
+    <Compile Include="SocialManager_Client.Logic\Message.cs" />
+    <Compile Include="SocialManager_Client.Logic\SocialNetwork.cs" />
+    <Compile Include="SocialManager_Client.Utilities\ColorMath.cs" />
+    <Compile Include="SocialManager_Client.Connections\Connection.cs" />
+    <Compile Include="SocialManager_Client.Logic\Contact.cs" />
+    <Compile Include="SocialManager_Client.Logic\ContactRequest.cs" />
+    <Compile Include="SocialManager_Client.Connections\TCPConnection.cs" />
+    <Compile Include="SocialManager_Client.Utilities\Loading.cs" />
+    <Compile Include="SocialManager_Client.Packets\AckErrorPacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\AgendaEventPacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\BasicReqPacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\ClientQueryPacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\ContactReqListPacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\ContactReqPacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\LinkSocialNetworkPacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\LoginReqPacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\MessagePacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\Packet.cs" />
+    <Compile Include="SocialManager_Client.Utilities\PathUtilities.cs" />
+    <Compile Include="SocialManager_Client.Logic\Profile.cs" />
+    <Compile Include="SocialManager_Client.Packets\ProfilePacket.cs" />
+    <Compile Include="SocialManager_Client.Packets\Types.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Connections\UDPConnection.cs" />
-    <Compile Include="SocialNetworksLogic\Instagram.cs" />
-    <Compile Include="SocialNetworksLogic\Twitter.cs" />
-    <Compile Include="UdpUtilities\UdpUtilities.Account.cs" />
-    <Compile Include="UdpUtilities\UdpUtilities.Agenda.cs" />
-    <Compile Include="UdpUtilities\UdpUtilities.Alive.cs" />
-    <Compile Include="UdpUtilities\UdpUtilities.Contact.cs" />
-    <Compile Include="UI\AgendaUI.xaml.cs">
+    <Compile Include="SocialManager_Client.Connections\UDPConnection.cs" />
+    <Compile Include="SocialManager_Client.SocialNetworksLogic\Instagram.cs" />
+    <Compile Include="SocialManager_Client.SocialNetworksLogic\Twitter.cs" />
+    <Compile Include="SocialManager_Client.UdpUtilities\UdpUtilities.Account.cs" />
+    <Compile Include="SocialManager_Client.UdpUtilities\UdpUtilities.Agenda.cs" />
+    <Compile Include="SocialManager_Client.UdpUtilities\UdpUtilities.Alive.cs" />
+    <Compile Include="SocialManager_Client.UdpUtilities\UdpUtilities.Contact.cs" />
+    <Compile Include="SocialManager_Client.UI\AgendaUI.xaml.cs">
       <DependentUpon>AgendaUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\App.xaml.cs" />
-    <Compile Include="UI\Chat.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\App.xaml.cs" />
+    <Compile Include="SocialManager_Client.UI\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ContactsUI.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\ContactsUI.xaml.cs">
       <DependentUpon>ContactsUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\EditProfileWindow.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\EditProfileWindow.xaml.cs">
       <DependentUpon>EditProfileWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\InstagramUI.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\InstagramUI.xaml.cs">
       <DependentUpon>InstagramUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\InstagramUI_Media.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\InstagramUI_Media.xaml.cs">
       <DependentUpon>InstagramUI_Media.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\InstagramUI_Users.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\InstagramUI_Users.xaml.cs">
       <DependentUpon>InstagramUI_Users.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\InstagramUI_ViewMedia.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\InstagramUI_ViewMedia.xaml.cs">
       <DependentUpon>InstagramUI_ViewMedia.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\LoginWindow.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ProfileView.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\ProfileView.xaml.cs">
       <DependentUpon>ProfileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\SetUpSocialNetworkUI.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\SetUpSocialNetworkUI.xaml.cs">
       <DependentUpon>SetUpSocialNetworkUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\SignUpWindow.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\SignUpWindow.xaml.cs">
       <DependentUpon>SignUpWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\SocialManagerMain.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\SocialManagerMain.xaml.cs">
       <DependentUpon>SocialManagerMain.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\TwitterUI.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\TwitterUI.xaml.cs">
       <DependentUpon>TwitterUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\TwitterUI_Search.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\TwitterUI_Search.xaml.cs">
       <DependentUpon>TwitterUI_Search.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\TwitterUI_Tweets.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\TwitterUI_Tweets.xaml.cs">
       <DependentUpon>TwitterUI_Tweets.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\TwitterUI_Users.xaml.cs">
+    <Compile Include="SocialManager_Client.UI\TwitterUI_Users.xaml.cs">
       <DependentUpon>TwitterUI_Users.xaml</DependentUpon>
     </Compile>
-    <Compile Include="XmlUtilities.cs" />
+    <Compile Include="SocialManager_Client.Utilities\XmlUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Compile Include="UdpUtilities\UdpUtilities.SocialNetwork.cs" />
+    <Compile Include="SocialManager_Client.UdpUtilities\UdpUtilities.SocialNetwork.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UI\AgendaUI.xaml">
+    <Page Include="SocialManager_Client.UI\AgendaUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\App.xaml">
+    <Page Include="SocialManager_Client.UI\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Chat.xaml">
+    <Page Include="SocialManager_Client.UI\Chat.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ContactsUI.xaml">
+    <Page Include="SocialManager_Client.UI\ContactsUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\EditProfileWindow.xaml">
+    <Page Include="SocialManager_Client.UI\EditProfileWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\InstagramUI.xaml">
+    <Page Include="SocialManager_Client.UI\InstagramUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\InstagramUI_Media.xaml">
+    <Page Include="SocialManager_Client.UI\InstagramUI_Media.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\InstagramUI_Users.xaml">
+    <Page Include="SocialManager_Client.UI\InstagramUI_Search.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\InstagramUI_ViewMedia.xaml">
+    <Page Include="SocialManager_Client.UI\InstagramUI_Users.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\LoginWindow.xaml">
+    <Page Include="SocialManager_Client.UI\InstagramUI_ViewMedia.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ProfileView.xaml">
+    <Page Include="SocialManager_Client.UI\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\SetUpSocialNetworkUI.xaml">
+    <Page Include="SocialManager_Client.UI\ProfileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\SignUpWindow.xaml">
+    <Page Include="SocialManager_Client.UI\SetUpSocialNetworkUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\SocialManagerMain.xaml">
+    <Page Include="SocialManager_Client.UI\SignUpWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\TwitterUI.xaml">
+    <Page Include="SocialManager_Client.UI\SocialManagerMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\TwitterUI_Search.xaml">
+    <Page Include="SocialManager_Client.UI\TwitterUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\TwitterUI_Tweets.xaml">
+    <Page Include="SocialManager_Client.UI\TwitterUI_Search.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\TwitterUI_Users.xaml">
+    <Page Include="SocialManager_Client.UI\TwitterUI_Tweets.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SocialManager_Client.UI\TwitterUI_Users.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,7 +296,5 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.31.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.31.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
   </Target>
-  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.31.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.31.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
 </Project>

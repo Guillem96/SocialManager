@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,188 +13,27 @@ namespace SocialManager_Client
 {
     class Program
     {
-        // This part won't exist in a few days, it's here only for testing
-        private static string Ask(string msg)
-        {
-            Console.Write(msg);
-            return Console.ReadLine();
-        }
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
 
-        static void Register(Client c)
-        {
-            Profile p = new Profile();
-            p.FirstName = Ask("First name: ");
-            p.LastName = Ask("Last name: ");
-            p.Age = int.Parse(Ask("Age: "));
-            p.Gender = Ask("Gender (M o F): ").Equals("M") ? Profile.Sex.Male : Profile.Sex.Female;
-            p.Email = Ask("Email: ");
-            p.PhoneNumber = Ask("Phone number: ");
-            p.Username = Ask("Usrname: ");
-            p.Password = Ask("Password: ");
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-            string message = "";
-
-            c.Register(p, out message);
-
-            Console.WriteLine(message);
-        }
-
-        static bool Login(Client c)
-        {
-            string username = Ask("Username: ");
-            string password = Ask("Password: ");
-
-            string message = "";
-            bool res = c.Login(username, password, out message);
-            Console.WriteLine(message);
-            return res;
-        }
-
-        static void AddContactMenu(Client c)
-        {
-            string message = "";
-            // Until Logout
-            while (true)
-            {
-                int op = int.Parse(Ask("1. Exit" + Environment.NewLine +
-                                        "2. Show Contacts Requests" + Environment.NewLine +
-                                        "3. New Contact Requests " + Environment.NewLine +
-                                        "4. Accept Contact Requests " + Environment.NewLine +
-                                        "5. Decline Contact Request" + Environment.NewLine + 
-                                        "Option: "));
-
-                switch (op)
-                {
-                    case 1:
-                        Console.WriteLine("------------------------------");
-                        return;
-                    case 2:
-                        c.GetContactRequestList(out message);
-                        Console.WriteLine("Recieved -----------" + Environment.NewLine + "- " 
-                                            + String.Join(Environment.NewLine + "- ", 
-                                                            c.Profile.RecievedContactRequests
-                                                            .Select(r => r.From.Username)
-                                                            .ToList())
-                                        );
-
-                        c.GetContactRequestList(out message);
-                        Console.WriteLine("Sent -----------" + Environment.NewLine + "- "
-                                            + String.Join(Environment.NewLine + "- ",
-                                                            c.Profile.SentContactRequests
-                                                            .Select(r => r.To.Username)
-                                                            .ToList())
-                                        );
-                        break;
-                    case 3:
-                        string usernameTo = Ask("Send Request to? ");
-                        c.SendContactRequest(usernameTo, out message);
-                        break;
-
-                    case 4:
-                        string usernameFrom = Ask("Accept from? ");
-                        c.GetContactRequestList(out message);
-                        c.AnswerContactRequest(c.Profile.RecievedContactRequests.Single(r => r.From.Username == usernameFrom), true, out message);
-                        break;
-
-                    case 5:
-                        usernameFrom = Ask("Decline from? ");
-                        c.AnswerContactRequest(c.Profile.RecievedContactRequests.Single(r => r.From.Username == usernameFrom), false, out message);
-                        break;
-
-                    default:
-                        Console.WriteLine("Unexpected option.");
-                        break;
-                }
-            }
-        }
-
-        static void Alive(Client c)
-        {
-            string message = "";
-
-            // Until Logout
-            while (true)
-            {
-                int op = int.Parse(Ask("1. Logout" + Environment.NewLine +
-                                        "2. Show Profile" + Environment.NewLine +
-                                        "3. Add Contact" + Environment.NewLine +
-                                        "4. Send Message " + Environment.NewLine +
-                                        "5. Remove acount." + Environment.NewLine +
-                                        "Option: "));
-
-                switch (op)
-                {
-                    case 1:
-                        if(c.Logout(out message))
-                        {
-                            Console.WriteLine("------------------------------");
-                            return;
-                        }
-                        else
-                        {
-                            Console.WriteLine(message);
-                        }
-
-                        break;
-                    case 2:
-                        Console.WriteLine(c.Profile.ToString());
-                        break;
-                    case 3:
-                        AddContactMenu(c);
-                        break;
-                    case 4:
-                        string to = Ask("Message to? ");
-                        string content = Ask("Content? ");
-                        if(!c.SendChatMessage(to, content, out message))
-                        {
-                            Console.WriteLine(message);
-                        }
-                        break;
-                    case 5:
-                        if(c.DeleteAccount(out message))
-                        {
-                            return;
-                        }
-                        break;
-                    default:
-                        Console.WriteLine("Unexpected option.");
-                        break;
-                }
-            }
-        }
-
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
         [STAThread]
         static void Main(string[] args)
         {
+            // Hide console
+            var handle = GetConsoleWindow();
+
+            // Hide
+            ShowWindow(handle, SW_HIDE);
+
             // Start user interface
             Window w = new UI.LoginWindow();
 
             w.ShowDialog();
-            //Client c = new Client();
-
-            //while (true)
-            //{
-            //    int op = int.Parse(Ask("1. Register" + Environment.NewLine +
-            //                            "2. Login" + Environment.NewLine +
-            //                            "3. Exit" + Environment.NewLine +
-            //                            "Option: "));
-
-            //    switch (op)
-            //    {
-            //        case 1:
-            //            Register(c);
-            //            break;
-            //        case 2:
-            //            if (Login(c))
-            //            {
-            //                Alive(c);
-            //            }
-            //            break;
-            //        case 3:
-            //            return;
-            //    }
-            //}
-
         }
     }
 }

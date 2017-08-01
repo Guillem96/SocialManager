@@ -13,7 +13,22 @@ namespace SocialManager_Server
     {
         private static void Main(String[] args)
         {
-
+            using(var db = new Models.ServerDatabase())
+            {
+                if (!db.DatabaseExists())
+                {
+                    db.CreateDatabase();
+                    db.SocialNetworks.InsertOnSubmit(new Models.SocialNetwork()
+                    {
+                        Name = "Twitter"
+                    });
+                    db.SocialNetworks.InsertOnSubmit(new Models.SocialNetwork()
+                    {
+                        Name = "Instagram"
+                    });
+                    db.SubmitChanges();
+                }
+            }
             // Start server
             ServerLogic.Server server = new ServerLogic.Server("Social Manager server");
             server.MainLoop();
