@@ -1,5 +1,10 @@
 # SocialManager
+
+<img src="Logo.png" alt="SocialManager Logo" style="width: 200px;"/>
+
 Desktop application that allows you to organize socialsocial networks and chat with your friends.
+
+Video de mustra de las funcionalidades de la aplicación [aquí](https://youtu.be/4VNhM-VQUGs).
 
 ## Getting Started
 
@@ -15,6 +20,13 @@ clientes.
 * El servidor almazena en una base de datos todos los datos de los clientes.
  Si estos quieren sus datos deben realizar una petición.
 * Los clientes podrán manejar sus contactos(agregar, eliminar ...), los datos de su perfil(modificarlos) y sus redes sociales(Leer las últimas publicaciones, añadir nuevas publicaciones...).
+
+### Estructura cliente - servidor
+
+* La aplicación esta formada por un cliente con UI y un servidor en modo consola.
+* El servidor almazena los datos de todos los clientes registrados en una base de datos SQLServer.
+* El servidor se encarga de atender las peticiones de los clientes de forma concurrente.
+* El cliente hace las llamadas a las apis respectivas de las redes sociales.
 
 ### Requests Types and ACKs
 
@@ -34,7 +46,7 @@ clientes.
 * *LinkSocialNetworkReq* : Petición de vincular una red social y almacenar los datos en el servidor (UDP).
 * *DeleteLinkSocialNetReq* : Petición para eliminar el vínculo de la res social.
 
-### Server Prerequisites
+## Server Prerequisites
 
 Nuget packages.
 
@@ -42,7 +54,7 @@ Nuget packages.
 None
 ```
 
-### Client Prerequisites
+## Client Prerequisites
 
 Nuget packages.
 
@@ -67,7 +79,11 @@ InstagramLib.InstagramGot es un nuget package desarrollado por mí. Tambien pued
 * [Tweetinvi](https://github.com/linvi/tweetinvi) - Twitter api calls.
 * [InstagramGot](http://www.github.com/Guillem96/InstagramGot) - Instagram api calls.
 
-## Building the client
+## Build
+
+Como compilar el proyecto.
+
+### Building the client
 1. Abrir el proyecto ServerManager_Client con Visual Studio.
 2. Añadir los siguientes archivos a la carpeta de compilación.
 	* Carpeta Images
@@ -76,7 +92,7 @@ InstagramLib.InstagramGot es un nuget package desarrollado por mí. Tambien pued
  `SocialManager\SocialManager_Client\SocialManager_Client\bin\Debug`
 4. Ejecutar SocialManager_Client.exe.
 
-## Building the server
+### Building the server
 1. Abrir el proyecto ServerManager_Server con Visual Studio.
 2. Compilamos.
 4. Ejecutar SocialManager_Server.exe.
